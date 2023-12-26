@@ -142,6 +142,7 @@
     <ClCompile Include="..\Core\Renderer\renderApi.cpp" />
     <ClCompile Include="..\Core\Renderer\renderer.cpp" />
     <ClCompile Include="..\Core\Renderer\Vulkan\vulkanApi.cpp" />
+    <ClCompile Include="..\CrashHandler\CrashHandler.cpp" />
     <ClCompile Include="..\Engine\nexus.cpp" />
     <ClCompile Include="..\TestProgram\main.cpp" />
   </ItemGroup>
@@ -149,6 +150,7 @@
     <ClInclude Include="..\Core\Renderer\renderApi.h" />
     <ClInclude Include="..\Core\Renderer\renderer.h" />
     <ClInclude Include="..\Core\Renderer\Vulkan\vulkanApi.h" />
+    <ClInclude Include="..\CrashHandler\CrashHandler.h" />
     <ClInclude Include="..\Engine\nexus.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

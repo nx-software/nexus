@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <vector>
 
 #include "../renderApi.h"
 
@@ -20,6 +21,7 @@ namespace Nexus {
 		// Internal Funcs
 		// Create VKInstance
 		void vulkanCreateInstance();
+		void vulkanDevicePick();
 	public:
 		VulkanAPI();
 

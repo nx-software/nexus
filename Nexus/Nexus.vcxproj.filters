@@ -30,6 +30,9 @@
     <ClCompile Include="..\Core\Renderer\renderApi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\CrashHandler\CrashHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Core\Renderer\renderer.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Core\Renderer\renderApi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CrashHandler\CrashHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

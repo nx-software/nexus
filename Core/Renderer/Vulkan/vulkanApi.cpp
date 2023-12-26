@@ -2,6 +2,7 @@
 
 Nexus::VulkanAPI::VulkanAPI() {
 	vulkanCreateInstance();
+	vulkanDevicePick();
 }
 
 
@@ -33,8 +34,21 @@ void Nexus::VulkanAPI::vulkanCreateInstance() {
 
 	if (result != VK_SUCCESS) {
 		// Somethign went wrong (ow)
-		printf("[Nexus] Fatal: Failed to create Vulkan instance! Press ENTER to terminate!\n");
-		getchar();
-		exit(-1);
+		Error("Failed to create Vulkan instance!");
 	}
+}
+
+void Nexus::VulkanAPI::vulkanDevicePick() {
+	// Get device count
+	uint32_t devCnt = 0;
+	vkEnumeratePhysicalDevices(vkInstance, &devCnt, nullptr);
+
+	// Are there any devices at all?
+	if (devCnt == 0) {
+		// Uh oh, we done here
+		Error("No devices that support Vulkan found!");
+	}
+
+	std::vector<VkPhysicalDevice> devices;
+	vkEnumeratePhysicalDevices(vkInstance, &devCnt, devices.data());
 }
