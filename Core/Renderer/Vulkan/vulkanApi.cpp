@@ -1,8 +1,11 @@
 #include "vulkanApi.h"
 
-Nexus::VulkanAPI::VulkanAPI() {
+Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	vulkanCreateInstance();
+	InitConnectionToWindow(window);
 	vulkanDevicePick();
+	// Surface needs to exist for this (bad)
+	vulkanCreateLogicDev();
 }
 
 
@@ -32,9 +35,6 @@ void Nexus::VulkanAPI::InitConnectionToWindow(GLFWwindow* window) {
 	if (glfwCreateWindowSurface(vkInstance, window, nullptr, &vkSurface) != VK_SUCCESS) {
 		Error("GLFW: Failed to create window surface!");
 	}
-
-	// Surface needs to exist for this (bad)
-	vulkanCreateLogicDev();
 
 #endif
 }
@@ -82,18 +82,21 @@ void Nexus::VulkanAPI::vulkanDevicePick() {
 	vkEnumeratePhysicalDevices(vkInstance, &devCnt, devices.data());
 
 	for (const auto& dev : devices) {
-		vkPhysDevice = dev;
+		if (isDeviceOk(dev)) {
+			vkPhysDevice = dev;
+			break;
+		}
 	}
 }
 
-Nexus::QueueFamilyIndicies Nexus::VulkanAPI::findQueueFams() {
+Nexus::QueueFamilyIndicies Nexus::VulkanAPI::findQueueFams(VkPhysicalDevice dev) {
 	QueueFamilyIndicies ind;
 
 	uint32_t queueCnt = 0;
-	vkGetPhysicalDeviceQueueFamilyProperties(vkPhysDevice, &queueCnt, nullptr);
+	vkGetPhysicalDeviceQueueFamilyProperties(dev, &queueCnt, nullptr);
 
 	std::vector<VkQueueFamilyProperties> queueFam(queueCnt);
-	vkGetPhysicalDeviceQueueFamilyProperties(vkPhysDevice, &queueCnt, queueFam.data());
+	vkGetPhysicalDeviceQueueFamilyProperties(dev, &queueCnt, queueFam.data());
 
 	
 
@@ -102,7 +105,7 @@ Nexus::QueueFamilyIndicies Nexus::VulkanAPI::findQueueFams() {
 	for (const auto& queueF : queueFam) {
 		// Queries for draw support (uncomment later and fix)
 		VkBool32 presSupport = false;
-		vkGetPhysicalDeviceSurfaceSupportKHR(vkPhysDevice, i, vkSurface, &presSupport);
+		vkGetPhysicalDeviceSurfaceSupportKHR(dev, i, vkSurface, &presSupport);
 		if (presSupport) {
 			ind.presentFam = i;
 		}
@@ -117,8 +120,74 @@ Nexus::QueueFamilyIndicies Nexus::VulkanAPI::findQueueFams() {
 	return ind;
 }
 
+bool Nexus::VulkanAPI::isDeviceOk(VkPhysicalDevice dev) {
+	QueueFamilyIndicies ind = findQueueFams(dev);
+
+	bool swapChainGood = false;
+	bool extSupport = checkDevExtSupport(dev);
+
+	if (extSupport) {
+		SwapChainSupportDetails scS = getSwapChainSupport(dev);
+		swapChainGood = !scS.formats.empty() && !scS.preModes.empty();
+	}
+
+	return ind.isComplete() && extSupport && swapChainGood;
+}
+
+bool Nexus::VulkanAPI::checkDevExtSupport(VkPhysicalDevice dev) {
+	uint32_t extCount;
+	vkEnumerateDeviceExtensionProperties(dev, nullptr, &extCount, nullptr);
+
+	// Vector to hold em
+	std::vector<VkExtensionProperties> avaExt(extCount);
+	vkEnumerateDeviceExtensionProperties(dev, nullptr, &extCount, avaExt.data());
+
+	std::set<std::string> reqExt(deviceExtensions.begin(), deviceExtensions.end());
+
+	for (const auto& ext : avaExt) {
+		reqExt.erase(ext.extensionName);
+	}
+
+	return reqExt.empty();
+}
+
+Nexus::SwapChainSupportDetails Nexus::VulkanAPI::getSwapChainSupport(VkPhysicalDevice dev) {
+	SwapChainSupportDetails details;
+
+	// Get basic surface capabilities
+	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(dev, vkSurface, &details.caps);
+
+	// get formats 
+	uint32_t formatCnt;
+	vkGetPhysicalDeviceSurfaceFormatsKHR(dev, vkSurface, &formatCnt, nullptr);
+
+	if (formatCnt != 0) {
+		details.formats.resize(formatCnt);
+		vkGetPhysicalDeviceSurfaceFormatsKHR(dev, vkSurface, &formatCnt, details.formats.data());
+	}
+	else {
+		// Log it
+	}
+
+	// same thign but with present modes
+	uint32_t presModeCnt;
+	vkGetPhysicalDeviceSurfacePresentModesKHR(dev, vkSurface, &presModeCnt, nullptr);
+
+	if (formatCnt != 0) {
+		details.preModes.resize(presModeCnt);
+		vkGetPhysicalDeviceSurfacePresentModesKHR(dev, vkSurface, &presModeCnt, details.preModes.data());
+	}
+	else {
+		// Log it
+	}
+
+
+	return details;
+}
+
+
 void Nexus::VulkanAPI::vulkanCreateLogicDev() {
-	QueueFamilyIndicies ind = findQueueFams();
+	QueueFamilyIndicies ind = findQueueFams(vkPhysDevice);
 
 	std::vector<VkDeviceQueueCreateInfo> queueCrInfs;
 	std::set<uint32_t> uniqQueueFam = {
@@ -145,6 +214,10 @@ void Nexus::VulkanAPI::vulkanCreateLogicDev() {
 	crInf.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	crInf.pQueueCreateInfos = queueCrInfs.data();
 	crInf.queueCreateInfoCount = static_cast<uint32_t>(queueCrInfs.size());
+
+	// Enable extensions
+	crInf.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
+	crInf.ppEnabledExtensionNames = deviceExtensions.data();
 
 	crInf.pEnabledFeatures = &deviceFeat;
 

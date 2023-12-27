@@ -15,10 +15,6 @@
 #include <iostream>
 
 namespace Nexus {
-	/*
-	* The engine is cross platform (or it should be at least)
-	* so it uses Vulkan and GLFW. 
-	*/
 	class Renderer {
 	private:
 		GLFWwindow* window;
@@ -31,8 +27,6 @@ namespace Nexus {
 		
 		// Stuff to do when kill
 		void terminationTasks();
-		// Pick a device
-		void pickDevice();
 
 	public:
 		// Create Renderer

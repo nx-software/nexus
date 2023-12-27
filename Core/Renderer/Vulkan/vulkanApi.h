@@ -24,6 +24,18 @@ namespace Nexus {
 		}
 	};
 
+	// Swap chains may not be compatible with our surface,
+	// so lets make sure it has the stuff we need
+	struct SwapChainSupportDetails {
+		VkSurfaceCapabilitiesKHR caps;
+		std::vector<VkSurfaceFormatKHR> formats;
+		std::vector<VkPresentModeKHR> preModes;
+	};
+
+	const std::vector<const char*> deviceExtensions = {
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME
+	};
+
 	class VulkanAPI : public GraphicAPI {
 	private:
 		// Vulkan
@@ -46,10 +58,21 @@ namespace Nexus {
 		// Create logical device
 		void vulkanCreateLogicDev();
 
+		// All these functions have a VkPhysicalDevice as a prarm
+		// because we check multiple devices in order to choose the one
+		// we set as our vkPhysDevice. 
+
+		// Check if the device is good
+		bool isDeviceOk(VkPhysicalDevice dev);
+
+		bool checkDevExtSupport(VkPhysicalDevice dev);
+
 		// Find Qeueus
-		QueueFamilyIndicies findQueueFams();
+		QueueFamilyIndicies findQueueFams(VkPhysicalDevice dev);
+		// Get details about swap chains
+		SwapChainSupportDetails getSwapChainSupport(VkPhysicalDevice device);
 	public:
-		VulkanAPI();
+		VulkanAPI(GLFWwindow* window);
 
 		void InitConnectionToWindow(GLFWwindow* window) ;
 		void Clean();

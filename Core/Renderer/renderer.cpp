@@ -19,8 +19,7 @@ Nexus::Renderer::Renderer(std::string title, int height, int width) {
 	window = glfwCreateWindow(height, width, title.c_str(), nullptr, nullptr);
 
 	// Create Vulkan
-	gApi = new VulkanAPI();
-	gApi->InitConnectionToWindow(window);
+	gApi = new VulkanAPI(window);
 }
 
 void Nexus::Renderer::Tick() {
