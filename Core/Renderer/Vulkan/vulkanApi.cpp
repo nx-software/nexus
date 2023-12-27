@@ -137,9 +137,6 @@ void Nexus::VulkanAPI::vulkanCreateLogicDev() {
 		queueCrInfs.push_back(queueInf);
 	}
 
-	
-
-
 	// Device features
 	VkPhysicalDeviceFeatures deviceFeat{};
 
