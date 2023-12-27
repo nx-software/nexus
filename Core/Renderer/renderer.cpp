@@ -20,6 +20,7 @@ Nexus::Renderer::Renderer(std::string title, int height, int width) {
 
 	// Create Vulkan
 	gApi = new VulkanAPI();
+	gApi->InitConnectionToWindow(window);
 }
 
 void Nexus::Renderer::Tick() {

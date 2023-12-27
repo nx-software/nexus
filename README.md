@@ -8,3 +8,8 @@ Contains the core of the engine (eg. Rendering, Input, Audio)
 Contains the actual Engine part (eg. Physics, manages/creates graphics)
 ### TestProgram
 Test program showing off the capabilities of the engine
+
+
+
+## TO DO LIST:
+- [ ] `Core/Rendering/Vulkan/vulkanAPI.cpp` : Check that Graphics Cards are compatible with program
