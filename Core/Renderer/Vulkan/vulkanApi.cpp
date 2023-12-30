@@ -1,15 +1,31 @@
 #include "vulkanApi.h"
 
 Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
+	// Set defaults
+#ifndef __ANDROID__
+#ifdef _WIN32 || __linux__ || mac
+	glfwGetFramebufferSize(window, &width, &height);
+#endif
+	// Nice tradeoff (avoid tearing, low latency) 
+	vkPreferedSwapPresentationMode = VK_PRESENT_MODE_MAILBOX_KHR;
+#else 
+	// If energy is a concern (ie. on mobile devices), use FIFO
+	preferedSwapPresentationMode = VK_PRESENT_MODE_FIFO_KHR;
+#endif
+
 	vulkanCreateInstance();
 	InitConnectionToWindow(window);
 	vulkanDevicePick();
 	// Surface needs to exist for this (bad)
 	vulkanCreateLogicDev();
+	// Create swap chain
+	vulkanCreateSwapChain();
 }
 
 
 void Nexus::VulkanAPI::Clean() {
+	// Destroy swap chain
+	vkDestroySwapchainKHR(vkDevice, vkSwapChain, nullptr);
 	// Destroy surfaces
 	vkDestroySurfaceKHR(vkInstance, vkSurface, nullptr);
 
@@ -40,7 +56,13 @@ void Nexus::VulkanAPI::InitConnectionToWindow(GLFWwindow* window) {
 }
 
 /*
+* ================================
 *	Internal
+* ================================
+*/
+
+/*
+* Initilization functions
 */
 void Nexus::VulkanAPI::vulkanCreateInstance() {
 	VkInstanceCreateInfo crInfo{};
@@ -89,6 +111,10 @@ void Nexus::VulkanAPI::vulkanDevicePick() {
 	}
 }
 
+
+/*
+*	Find Queue Families for a Physical Device
+*/
 Nexus::QueueFamilyIndicies Nexus::VulkanAPI::findQueueFams(VkPhysicalDevice dev) {
 	QueueFamilyIndicies ind;
 
@@ -120,6 +146,10 @@ Nexus::QueueFamilyIndicies Nexus::VulkanAPI::findQueueFams(VkPhysicalDevice dev)
 	return ind;
 }
 
+
+/*
+*	Check if a device is suitable for our game
+*/
 bool Nexus::VulkanAPI::isDeviceOk(VkPhysicalDevice dev) {
 	QueueFamilyIndicies ind = findQueueFams(dev);
 
@@ -134,6 +164,10 @@ bool Nexus::VulkanAPI::isDeviceOk(VkPhysicalDevice dev) {
 	return ind.isComplete() && extSupport && swapChainGood;
 }
 
+
+/*
+*	Check Extension support
+*/
 bool Nexus::VulkanAPI::checkDevExtSupport(VkPhysicalDevice dev) {
 	uint32_t extCount;
 	vkEnumerateDeviceExtensionProperties(dev, nullptr, &extCount, nullptr);
@@ -151,6 +185,9 @@ bool Nexus::VulkanAPI::checkDevExtSupport(VkPhysicalDevice dev) {
 	return reqExt.empty();
 }
 
+/*
+*	Check swap chain support
+*/
 Nexus::SwapChainSupportDetails Nexus::VulkanAPI::getSwapChainSupport(VkPhysicalDevice dev) {
 	SwapChainSupportDetails details;
 
@@ -185,7 +222,9 @@ Nexus::SwapChainSupportDetails Nexus::VulkanAPI::getSwapChainSupport(VkPhysicalD
 	return details;
 }
 
-
+/*
+*	Create a logical device
+*/
 void Nexus::VulkanAPI::vulkanCreateLogicDev() {
 	QueueFamilyIndicies ind = findQueueFams(vkPhysDevice);
 
@@ -231,6 +270,159 @@ void Nexus::VulkanAPI::vulkanCreateLogicDev() {
 	
 
 	// Get graphics queue
-	vkGetDeviceQueue(vkDevice, ind.graphicsFam.value(), 0, &graphicsQueue);
+	vkGetDeviceQueue(vkDevice, ind.graphicsFam.value(), 0, &vkGraphicsQueue);
 
+}
+
+/*
+* Swap setting setup
+*/
+void Nexus::VulkanAPI::vulkanCreateSwapChain() {
+	SwapChainSupportDetails swapChainS = getSwapChainSupport(vkPhysDevice);
+
+	// Get settings
+	VkSurfaceFormatKHR surfForm = chooseSwapSurfFormat(swapChainS.formats);
+	VkPresentModeKHR presMode = chooseSwapPresMode(swapChainS.preModes);
+	VkExtent2D extent = chooseSwapExt(swapChainS.caps);
+
+	// Set images in swap chain
+	uint32_t imageCount = swapChainS.caps.minImageCount + 1;
+	// Make sure we dont exceed the max imageCount when we do the "+1"
+	if (swapChainS.caps.maxImageCount > 0 && imageCount > swapChainS.caps.maxImageCount) {
+		imageCount = swapChainS.caps.maxImageCount;
+	}
+	
+	// Fill the swap chain structure
+	VkSwapchainCreateInfoKHR crInfoSwap{};
+	crInfoSwap.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+	crInfoSwap.surface = vkSurface;
+	crInfoSwap.minImageCount = imageCount;
+	crInfoSwap.imageFormat = surfForm.format;
+	crInfoSwap.imageColorSpace = surfForm.colorSpace;
+	crInfoSwap.imageExtent = extent;
+	crInfoSwap.imageArrayLayers = 1; // layers each image has
+	/*
+	*	If we doin post-processing, change this
+	*/
+	crInfoSwap.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT; // what tf we doin? we directly renedering em
+
+	// How to handle swap chain images over multiple queue fams
+	QueueFamilyIndicies inds = findQueueFams(vkPhysDevice);
+	uint32_t queFamInd[] = {
+		inds.graphicsFam.value(),
+		inds.presentFam.value()
+	};
+
+	// Are they not the same?
+	if (inds.graphicsFam != inds.presentFam) {
+		// Then they must be in differnt queue fams
+		crInfoSwap.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+		crInfoSwap.queueFamilyIndexCount = 2;
+		crInfoSwap.pQueueFamilyIndices = queFamInd;
+	}
+	else {
+		// They're the same
+		crInfoSwap.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+	}
+
+	// We dont want any transformation
+	crInfoSwap.preTransform = swapChainS.caps.currentTransform;
+
+	// This is actually pretty f**king cool, we can blend with other windows
+	// but alas, no need for that now
+	crInfoSwap.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+
+	crInfoSwap.presentMode = presMode;
+	crInfoSwap.clipped = VK_TRUE;
+	// We'll deal with resizing later
+	crInfoSwap.oldSwapchain = VK_NULL_HANDLE;
+
+	// Finally, create the swap chain
+	if (vkCreateSwapchainKHR(vkDevice, &crInfoSwap, nullptr, &vkSwapChain) != VK_SUCCESS) {
+		Error("Vulkan: Failed to create swap chain!");
+	}
+
+	// Prepare vector of images
+	vkGetSwapchainImagesKHR(vkDevice, vkSwapChain, &imageCount, nullptr);
+	vkSwapChainImgs.resize(imageCount);
+	vkGetSwapchainImagesKHR(vkDevice, vkSwapChain, &imageCount, vkSwapChainImgs.data());
+
+	// Set extent and format data
+	vkSwapChainImgFmt = surfForm.format;
+	vkSwapChainExt = extent;
+}
+
+VkSurfaceFormatKHR Nexus::VulkanAPI::chooseSwapSurfFormat(const std::vector<VkSurfaceFormatKHR>& avaForm) {
+	// VkSurfaceFormatKHR contains format and colorSpace.
+	// For format, we want VK_FORMAT_B8G8R8A8_SRGB (B, G, R, A 32 bit per pixel)
+	// For color space, we want VK_COLOR_SPACE_SRGB_NONLINEAR_KHR (SRGB, standard color space for images)
+
+	// Check if its avaliable
+	for (const auto& avalFormat : avaForm) {
+		if (avalFormat.format == VK_FORMAT_B8G8R8A8_SRGB && avalFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+			debugPrint("Nexus::VulkanAPI::chooseSwapSurfFormat", "Got prefered surface format and color space!", LOG_INFO);
+			// Got it
+			return avalFormat;
+		}
+	}
+	// gpu dosent have it. ugh. Fine, just use whats avlaible
+	debugPrint("Nexus::VulkanAPI::chooseSwapSurfFormat", "Did not get prefered surface format and color space!", LOG_WARNING);
+	return avaForm[0];
+}
+
+VkPresentModeKHR Nexus::VulkanAPI::chooseSwapPresMode(const std::vector<VkPresentModeKHR>& avaPres) {
+	// 4 modes, but only VK_PRESENT_MODE_FIFO_KHR is guarenteed, so return that if all goes sad
+	
+	for (const auto& avalPres : avaPres) {
+		if (avalPres == vkPreferedSwapPresentationMode) {
+			debugPrint("Nexus::VulkanAPI::chooseSwapPresMode", "Got prefered presentation mode.", LOG_INFO);
+			// Got it
+			return avalPres;
+		}
+	}
+	debugPrint("Nexus::VulkanAPI::chooseSwapPresMode", "Did not get prefered presentation mode! Defaulting to FIFO.", LOG_WARNING);
+	return VK_PRESENT_MODE_FIFO_KHR;
+}
+
+VkExtent2D Nexus::VulkanAPI::chooseSwapExt(const VkSurfaceCapabilitiesKHR& caps) {
+	// The Swap extent is the resoultion 
+	if (caps.currentExtent.width != 0xFFFFFFFF) {
+		return caps.currentExtent;
+	}
+	else {
+		debugPrint("Nexus::VulkanAPI::chooseSwapExt", "caps.currentExtent.width is equal to 0xFFFFFFFF, manually setting swap extent.", LOG_INFO);
+		// We have to manually set it
+		// Create temp extent
+		VkExtent2D tmp = {
+			(uint32_t)width,
+			(uint32_t)height
+		};
+
+		// Clamp into the allowed values
+		tmp.width = std::clamp(tmp.width, caps.minImageExtent.width, caps.maxImageExtent.width);
+		tmp.height = std::clamp(tmp.height, caps.minImageExtent.height, caps.maxImageExtent.height);
+
+		return tmp;
+	}
+}
+
+/*
+* === END INIT FUNCS ===
+*/
+
+
+void Nexus::VulkanAPI::debugPrint(std::string caller, std::string text, int level) {
+#if GRAPHICS_LOG == 1
+	switch (level) {
+	case LOG_INFO:
+		PLOG_INFO << caller << " : " << text;
+		break;
+	case LOG_WARNING:
+		PLOG_WARNING << caller << " : " << text;
+		break;
+	case LOG_ERROR:
+		PLOG_ERROR << caller << " : " << text;
+		break;
+	}
+#endif
 }

@@ -9,8 +9,22 @@
 #include <vector>
 #include <optional>
 #include <set>
+#include <cstdint>
+#include <limits>
+#include <algorithm>
 
 #include "../renderApi.h"
+#include "../../../Engine/config.h"
+
+// Logging
+
+#include <plog/Log.h>
+#include <plog/Initializers/ConsoleInitializer.h>
+#include <plog/Appenders/ConsoleAppender.h>
+
+#define LOG_INFO 0
+#define LOG_WARNING 1
+#define LOG_ERROR 2
 
 namespace Nexus {
 	// All the Vulkan stuff has queues, so we gotta get them queues
@@ -38,25 +52,40 @@ namespace Nexus {
 
 	class VulkanAPI : public GraphicAPI {
 	private:
+		// height/width
+		int width, height;
 		// Vulkan
 		VkInstance vkInstance;
 		VkPhysicalDevice vkPhysDevice;
 		VkDevice vkDevice;
 
 		// Queues
-		VkQueue graphicsQueue;
-		VkQueue presentQueue;
+		VkQueue vkGraphicsQueue;
+		VkQueue vkPresentQueue;
 
 		// Surface
 		VkSurfaceKHR vkSurface;
 
+		// Swap Chain
+		VkSwapchainKHR vkSwapChain;
+		std::vector<VkImage> vkSwapChainImgs;
+		VkFormat vkSwapChainImgFmt;
+		VkExtent2D vkSwapChainExt;
+
+		// Prefered Swap Presentation mode
+		VkPresentModeKHR vkPreferedSwapPresentationMode;
+
 		// Internal Funcs
+		// 
+		// Init stuff
 		// Create VKInstance
 		void vulkanCreateInstance();
 		// Pick device to use
 		void vulkanDevicePick();
 		// Create logical device
 		void vulkanCreateLogicDev();
+		// Create Swap chain
+		void vulkanCreateSwapChain();
 
 		// All these functions have a VkPhysicalDevice as a prarm
 		// because we check multiple devices in order to choose the one
@@ -71,6 +100,18 @@ namespace Nexus {
 		QueueFamilyIndicies findQueueFams(VkPhysicalDevice dev);
 		// Get details about swap chains
 		SwapChainSupportDetails getSwapChainSupport(VkPhysicalDevice device);
+
+		// Choose swap chain settings
+		// Choose surface format
+		VkSurfaceFormatKHR chooseSwapSurfFormat(const std::vector<VkSurfaceFormatKHR>& avaForm);
+		// Choose present mode
+		VkPresentModeKHR chooseSwapPresMode(const std::vector<VkPresentModeKHR>& avaPres);
+		// Choose swap extent
+		VkExtent2D chooseSwapExt(const VkSurfaceCapabilitiesKHR& caps);
+
+
+		void debugPrint(std::string caller, std::string text, int level);
+
 	public:
 		VulkanAPI(GLFWwindow* window);
 
