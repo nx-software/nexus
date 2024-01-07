@@ -1,3 +1,7 @@
+/*
+*	Graphics rendering via the Vulkan Graphics API
+*/
+
 #include "vulkanApi.h"
 
 Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
@@ -10,7 +14,7 @@ Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	vkPreferedSwapPresentationMode = VK_PRESENT_MODE_MAILBOX_KHR;
 #else 
 	// If energy is a concern (ie. on mobile devices), use FIFO
-	preferedSwapPresentationMode = VK_PRESENT_MODE_FIFO_KHR;
+	vkPreferedSwapPresentationMode = VK_PRESENT_MODE_FIFO_KHR;
 #endif
 
 	vulkanCreateInstance();
@@ -20,10 +24,16 @@ Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	vulkanCreateLogicDev();
 	// Create swap chain
 	vulkanCreateSwapChain();
+	// Create swap chain images
+	vulkanCreateImageViews();
 }
 
 
 void Nexus::VulkanAPI::Clean() {
+	// Destroy image views
+	for (auto imageView : vkSwapChainImgViews) {
+		vkDestroyImageView(vkDevice, imageView, nullptr);
+	}
 	// Destroy swap chain
 	vkDestroySwapchainKHR(vkDevice, vkSwapChain, nullptr);
 	// Destroy surfaces
@@ -215,7 +225,7 @@ Nexus::SwapChainSupportDetails Nexus::VulkanAPI::getSwapChainSupport(VkPhysicalD
 		vkGetPhysicalDeviceSurfacePresentModesKHR(dev, vkSurface, &presModeCnt, details.preModes.data());
 	}
 	else {
-		// Log it
+		
 	}
 
 
@@ -403,6 +413,36 @@ VkExtent2D Nexus::VulkanAPI::chooseSwapExt(const VkSurfaceCapabilitiesKHR& caps)
 		tmp.height = std::clamp(tmp.height, caps.minImageExtent.height, caps.maxImageExtent.height);
 
 		return tmp;
+	}
+}
+
+void Nexus::VulkanAPI::vulkanCreateImageViews() {
+	// Resize vector to fit images
+	vkSwapChainImgViews.resize(vkSwapChainImgs.size());
+	
+	// Loop over each image and create an image view
+	for (size_t i = 0; i < vkSwapChainImgs.size(); i++) {
+		VkImageViewCreateInfo crInfo{};
+		crInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		crInfo.image = vkSwapChainImgs[i];
+
+		// Keep default colors
+		crInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+		crInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+		crInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+		crInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+		// Only color targets
+		crInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		crInfo.subresourceRange.baseArrayLayer = 0;
+		crInfo.subresourceRange.baseMipLevel = 0;
+		crInfo.subresourceRange.levelCount = 1;
+		crInfo.subresourceRange.layerCount = 1;
+
+		// Create image view
+		if (vkCreateImageView(vkDevice, &crInfo, nullptr, &vkSwapChainImgViews[i]) != VK_SUCCESS) {
+			Error("Vulkan: Failed to create image views!");
+		}
 	}
 }
 

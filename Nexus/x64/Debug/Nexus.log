@@ -28,5 +28,4 @@ E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(136,1): message : see previous d
 E:\Electro\Nexus\Nexus\Core\Renderer\vulkan\vulkanApi.h(27,1): warning C4005: 'LOG_ERROR': macro redefinition
 E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(137,1): message : see previous definition of 'LOG_ERROR'
   Generating Code...
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Nexus.vcxproj -> E:\Electro\Nexus\Nexus\x64\Debug\Nexus.exe

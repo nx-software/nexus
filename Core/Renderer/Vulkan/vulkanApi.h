@@ -71,6 +71,8 @@ namespace Nexus {
 		std::vector<VkImage> vkSwapChainImgs;
 		VkFormat vkSwapChainImgFmt;
 		VkExtent2D vkSwapChainExt;
+		
+		std::vector<VkImageView> vkSwapChainImgViews;
 
 		// Prefered Swap Presentation mode
 		VkPresentModeKHR vkPreferedSwapPresentationMode;
@@ -86,6 +88,8 @@ namespace Nexus {
 		void vulkanCreateLogicDev();
 		// Create Swap chain
 		void vulkanCreateSwapChain();
+		// Create image views
+		void vulkanCreateImageViews();
 
 		// All these functions have a VkPhysicalDevice as a prarm
 		// because we check multiple devices in order to choose the one

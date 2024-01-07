@@ -11,3 +11,7 @@
 2023-12-30 16:32:04.069 DEBUG [6416] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
 2023-12-30 16:32:04.516 INFO  [6416] [Nexus::VulkanAPI::debugPrint@419] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
 2023-12-30 16:32:04.517 INFO  [6416] [Nexus::VulkanAPI::debugPrint@419] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2023-12-31 09:58:58.620 DEBUG [7676] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2023-12-31 10:32:48.373 DEBUG [1108] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2023-12-31 10:32:48.919 INFO  [1108] [Nexus::VulkanAPI::debugPrint@454] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2023-12-31 10:32:48.920 INFO  [1108] [Nexus::VulkanAPI::debugPrint@454] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
