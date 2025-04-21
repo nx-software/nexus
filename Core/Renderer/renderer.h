@@ -2,7 +2,7 @@
 
 // Includes 
 #include "renderApi.h"
-#include "vulkan/vulkanApi.h"
+#include "Vulkan/vulkanApi.h"
 // We use Vulkan so
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>

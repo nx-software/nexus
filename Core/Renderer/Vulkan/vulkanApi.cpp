@@ -63,6 +63,25 @@ void Nexus::VulkanAPI::InitConnectionToWindow(GLFWwindow* window) {
 	}
 
 #endif
+#ifdef __linux__
+	VkXcbSurfaceCreateInfoKHR crInfo{};
+	crInfo.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
+	Display* x11_display = glfwGetX11Display();
+	Window x11_window = glfwGetX11Window(window);
+	xcb_connection_t* xcb_connection = XGetXCBConnection(glfwGetX11Display());
+	crInfo.flags = 0;
+	crInfo.pNext = NULL;
+	crInfo.connection = xcb_connection;
+	crInfo.window = x11_window;
+	if (vkCreateXcbSurfaceKHR(vkInstance, &crInfo, nullptr, &vkSurface) != VK_SUCCESS){
+		Error("Vulkan: Failed to create window surface (Linux)!");
+	}
+
+	// GLFW should create it now
+	if (glfwCreateWindowSurface(vkInstance, window, nullptr, &vkSurface) != VK_SUCCESS) {
+		Error("GLFW: Failed to create window surface!");
+	}
+#endif
 }
 
 /*
@@ -141,7 +160,9 @@ Nexus::QueueFamilyIndicies Nexus::VulkanAPI::findQueueFams(VkPhysicalDevice dev)
 	for (const auto& queueF : queueFam) {
 		// Queries for draw support (uncomment later and fix)
 		VkBool32 presSupport = false;
+//#ifndef __linux__
 		vkGetPhysicalDeviceSurfaceSupportKHR(dev, i, vkSurface, &presSupport);
+//#endif
 		if (presSupport) {
 			ind.presentFam = i;
 		}

@@ -4,6 +4,8 @@
 # vs folder1!!
 .vs/
 
+build
+
 *.icph
 
 # User-specific files
