@@ -101,6 +101,8 @@ namespace Nexus {
 		void vulkanCreateSwapChain();
 		// Create image views
 		void vulkanCreateImageViews();
+		// Create graphics pipeline
+		void vulkanCreateGraphicsPipeline();
 
 		// All these functions have a VkPhysicalDevice as a prarm
 		// because we check multiple devices in order to choose the one
@@ -123,6 +125,7 @@ namespace Nexus {
 		VkPresentModeKHR chooseSwapPresMode(const std::vector<VkPresentModeKHR>& avaPres);
 		// Choose swap extent
 		VkExtent2D chooseSwapExt(const VkSurfaceCapabilitiesKHR& caps);
+	
 
 
 		void debugPrint(std::string caller, std::string text, int level);
@@ -130,7 +133,7 @@ namespace Nexus {
 	public:
 		VulkanAPI(GLFWwindow* window);
 
-		void InitConnectionToWindow(GLFWwindow* window) ;
+		void InitConnectionToWindow(GLFWwindow* window) override;
 		void Clean();
 	};
 }

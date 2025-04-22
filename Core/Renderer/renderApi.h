@@ -17,12 +17,20 @@
 #endif
 
 namespace Nexus {
+	typedef struct GraphicsCard{
+		std::string name;
+	};
+	
 	class GraphicAPI {
 	private:
+	protected:
+		GraphicsCard chosenGraphicsCard;	
 	public:
 		GraphicAPI();
 
 		virtual void InitConnectionToWindow(GLFWwindow* window) = 0;
+
+		GraphicsCard getGraphicsCard();
 
 		virtual void Clean() = 0;
 	};

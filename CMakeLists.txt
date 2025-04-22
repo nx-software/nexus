@@ -21,6 +21,7 @@ set(SOURCES
     TestProgram/main.cpp
     Engine/nexus.cpp
     CrashHandler/CrashHandler.cpp
+    Core/Renderer/shader.cpp
     Core/Renderer/renderApi.cpp
     Core/Renderer/renderer.cpp
     Core/Renderer/Vulkan/vulkanApi.cpp

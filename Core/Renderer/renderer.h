@@ -23,6 +23,7 @@ namespace Nexus {
 		
 		// API
 		GraphicAPI* gApi;
+		GraphicsCard chosenCard;
 
 		
 		// Stuff to do when kill
