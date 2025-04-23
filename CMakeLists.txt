@@ -22,6 +22,7 @@ set(SOURCES
     Engine/nexus.cpp
     Engine/transform.cpp
     Engine/gameObject.cpp
+    Engine/scene.cpp
     CrashHandler/CrashHandler.cpp
     Core/Renderer/shader.cpp
     Core/Renderer/renderApi.cpp

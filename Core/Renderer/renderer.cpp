@@ -44,10 +44,8 @@ Nexus::Renderer::~Renderer() {
 /*
 *	Internal
 */
-
-
 void Nexus::Renderer::terminationTasks() {
-	gApi->Clean(); // Tell our current Graphics API to clean up afteritself
+	gApi->Clean(); // Tell our current Graphics API to clean up after itself
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }

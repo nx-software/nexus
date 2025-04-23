@@ -5,6 +5,7 @@
 *	of Nexus GUI editor
 */
 #include "../Engine/nexus.h"
+#include "../Engine/scene.h"
 
 int main() {
 	// Create properties so Nexus knows whats up
@@ -13,9 +14,9 @@ int main() {
 	gm.windowHeight = 800;
 	gm.windowWidth = 600;
 
-
-
 	Nexus::Engine* engine = new Nexus::Engine(gm);
+
+	Nexus::Scene testScene("Test Scene");
 
 	while (1) {
 		engine->Update();
