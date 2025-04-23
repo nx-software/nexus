@@ -20,6 +20,8 @@ include_directories(
 set(SOURCES
     TestProgram/main.cpp
     Engine/nexus.cpp
+    Engine/transform.cpp
+    Engine/gameObject.cpp
     CrashHandler/CrashHandler.cpp
     Core/Renderer/shader.cpp
     Core/Renderer/renderApi.cpp

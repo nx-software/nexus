@@ -4,6 +4,10 @@ Nexus::Shader::Shader(std::string fileName){
     this->fileName = fileName;
 }
 
+Nexus::Shader::Shader(){
+    // Do nothing, hope no one calls readShader
+}
+
 std::vector<char> Nexus::Shader::readShader(){
     std::ifstream file(fileName, std::ios::ate | std::ios::binary);
 

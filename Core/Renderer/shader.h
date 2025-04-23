@@ -16,6 +16,8 @@ namespace Nexus{
     public:
         Shader(std::string fileName);
 
+        Shader();
+
         std::vector<char> readShader();
     };
 }
