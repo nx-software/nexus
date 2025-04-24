@@ -12,7 +12,9 @@ Nexus::Error::Error(std::string text) {
 #ifdef _WIN32
 	MessageBox(NULL, std::wstring(text.begin(), text.end()).c_str(), std::wstring(title.begin(), title.end()).c_str(), MB_OK | MB_ICONERROR);
 #endif
-
+#ifdef __linux__
+	
+#endif
 	// We done, exit
 	exit(-1);
 }

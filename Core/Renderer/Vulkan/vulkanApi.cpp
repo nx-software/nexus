@@ -472,7 +472,7 @@ void Nexus::VulkanAPI::vulkanCreateImageViews() {
 }
 
 void Nexus::VulkanAPI::vulkanCreateGraphicsPipeline(){
-	
+
 }
 
 /*

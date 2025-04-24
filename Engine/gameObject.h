@@ -14,12 +14,13 @@ namespace Nexus{
     protected:
         std::string name;
         Transform::Transform transform;
-        Shader shader;
+        Shader vertShader, fragShader;
     public:
         GameObject(std::string name, Transform::Transform transform);
         GameObject(std::string name);
 
-        void loadShader(std::string file);
+        void loadVertShader(std::string file);
+        void loadFragShader(std::string file);
 
 
         // Setters
@@ -33,8 +34,12 @@ namespace Nexus{
             return this->id;
         }
 
-        Shader getShader(){
-            return this->shader;
+        Shader getVertShader(){
+            return this->vertShader;
+        }
+
+        Shader getFragShader(){
+            return this->fragShader;
         }
 
 
