@@ -45,6 +45,8 @@ namespace Nexus {
 	public:
 		Engine(GameProperties);
 
+		void InitScene(Scene* scene);
+
 		void Update(Scene* scene);
 
 		~Engine();
