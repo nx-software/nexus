@@ -83,6 +83,19 @@ void Nexus::VulkanAPI::InitConnectionToWindow(GLFWwindow* window) {
 #endif
 }
 
+void Nexus::VulkanAPI::InitShaders(Scene* scene){
+	for(auto& gm : scene->getObjects()){
+		auto vert = gm->getVertShader().readShader();
+		auto frag = gm->getFragShader().readShader();
+
+		// Create shader modules
+		VkShaderModule vertShaderMod = createShaderModule(vert);
+		VkShaderModule fragShaderMod = createShaderModule(frag);
+
+		// 
+	}
+}
+
 /*
 * ================================
 *	Internal
@@ -471,8 +484,22 @@ void Nexus::VulkanAPI::vulkanCreateImageViews() {
 	}
 }
 
+VkShaderModule Nexus::VulkanAPI::createShaderModule(const std::vector<char>& code){
+	VkShaderModuleCreateInfo shaderModCrInfo{};
+	shaderModCrInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+	shaderModCrInfo.codeSize = code.size();
+	shaderModCrInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
+
+	VkShaderModule shaderMod;
+	if(vkCreateShaderModule(vkDevice, &shaderModCrInfo, nullptr, &shaderMod) != VK_SUCCESS){
+		Error("Failed to create shader module!\n");
+	}
+
+	return shaderMod;
+}
+
 void Nexus::VulkanAPI::vulkanCreateGraphicsPipeline(){
-	
+
 }
 
 /*

@@ -19,7 +19,11 @@ Nexus::Engine::Engine(GameProperties gameProperties) {
 	renderer = new Renderer(gameProperties.gameName, gameProperties.windowHeight, gameProperties.windowWidth);
 }
 
-void Nexus::Engine::Update() {
+void Nexus::Engine::InitScene(Scene* scene){
+
+}
+
+void Nexus::Engine::Update(Scene* scene) {
 	renderer->Tick();
 }
 

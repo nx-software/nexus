@@ -3,6 +3,7 @@
 */
 #pragma once
 #include "../../CrashHandler/CrashHandler.h"
+#include "../../Engine/scene.h"
 #ifdef _WIN32
 #define VK_USE_PLATFORM_WIN32_KHR
 #endif
@@ -29,9 +30,11 @@ namespace Nexus {
 		GraphicAPI();
 
 		virtual void InitConnectionToWindow(GLFWwindow* window) = 0;
+		virtual void InitShaders(Scene* scene) = 0;
 
 		GraphicsCard getGraphicsCard();
 
 		virtual void Clean() = 0;
 	};
+
 }

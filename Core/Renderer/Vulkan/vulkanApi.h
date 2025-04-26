@@ -3,8 +3,6 @@
 */
 #pragma once
 
-
-
 #include <iostream>
 #include <vector>
 #include <optional>
@@ -21,7 +19,6 @@
 #define GLFW_EXPOSE_NATIVE_X11
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
-
 #endif
 
 #include "../renderApi.h"
@@ -125,6 +122,9 @@ namespace Nexus {
 		VkPresentModeKHR chooseSwapPresMode(const std::vector<VkPresentModeKHR>& avaPres);
 		// Choose swap extent
 		VkExtent2D chooseSwapExt(const VkSurfaceCapabilitiesKHR& caps);
+
+		// Shaders
+		VkShaderModule createShaderModule(const std::vector<char>& code);
 	
 
 
@@ -134,6 +134,13 @@ namespace Nexus {
 		VulkanAPI(GLFWwindow* window);
 
 		void InitConnectionToWindow(GLFWwindow* window) override;
+		void InitShaders(Scene* scene) override;	
 		void Clean();
+	};
+
+	class VulkanShader : GraphicsShader{
+	public:
+		VkShaderModule vert;
+		VkShaderModule frag;
 	};
 }

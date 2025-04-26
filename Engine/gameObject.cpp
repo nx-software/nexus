@@ -10,6 +10,10 @@ Nexus::GameObject::GameObject(std::string name){
     this->transform = Transform::Transform(0.0, 0.0, 0.0, 0.0);
 }
 
-void Nexus::GameObject::loadShader(std::string file){
-    this->shader = Shader(file);
+void Nexus::GameObject::loadVertShader(std::string file){
+    this->vertShader = Shader(file);
+}
+
+void Nexus::GameObject::loadFragShader(std::string file){
+    this->fragShader = Shader(file);
 }

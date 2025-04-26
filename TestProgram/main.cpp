@@ -5,6 +5,7 @@
 *	of Nexus GUI editor
 */
 #include "../Engine/nexus.h"
+#include "../Engine/gameObject.h"
 #include "../Engine/scene.h"
 
 int main() {
@@ -18,7 +19,12 @@ int main() {
 
 	Nexus::Scene testScene("Test Scene");
 
+	Nexus::GameObject gameObject("Test Object");
+
+	gameObject.loadVertShader("../shaders/vert.spv");
+	gameObject.loadFragShader("../shaders/frag.spv");
+
 	while (1) {
-		engine->Update();
+		engine->Update(&testScene);
 	}
 }

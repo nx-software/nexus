@@ -15,6 +15,14 @@
 #include <iostream>
 
 namespace Nexus {
+	// Holder for the seperate graphics things that the 
+	// different graphics APIs
+	class GraphicsShader{
+	private:
+	public:
+	};
+
+	
 	class Renderer {
 	private:
 		GLFWwindow* window;

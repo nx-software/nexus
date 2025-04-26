@@ -4,6 +4,7 @@
 #pragma once
 // Internal Files
 #include "../Core/Renderer/renderer.h"
+#include "scene.h"
 #include "config.h"
 
 #include <iostream>
@@ -44,7 +45,9 @@ namespace Nexus {
 	public:
 		Engine(GameProperties);
 
-		void Update();
+		void InitScene(Scene* scene);
+
+		void Update(Scene* scene);
 
 		~Engine();
 	};
