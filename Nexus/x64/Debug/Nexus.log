@@ -1,31 +1,21 @@
-﻿  vulkanApi.cpp
-E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(25,1): warning C4005: 'LOG_INFO': macro redefinition
-E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(135,1): message : see previous definition of 'LOG_INFO'
-E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(26,1): warning C4005: 'LOG_WARNING': macro redefinition
-E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(136,1): message : see previous definition of 'LOG_WARNING'
-E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(27,1): warning C4005: 'LOG_ERROR': macro redefinition
-E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(137,1): message : see previous definition of 'LOG_ERROR'
-E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.cpp(6,1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  renderer.cpp
-E:\Electro\Nexus\Nexus\Core\Renderer\vulkan\vulkanApi.h(25,1): warning C4005: 'LOG_INFO': macro redefinition
-E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(135,1): message : see previous definition of 'LOG_INFO'
-E:\Electro\Nexus\Nexus\Core\Renderer\vulkan\vulkanApi.h(26,1): warning C4005: 'LOG_WARNING': macro redefinition
-E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(136,1): message : see previous definition of 'LOG_WARNING'
-E:\Electro\Nexus\Nexus\Core\Renderer\vulkan\vulkanApi.h(27,1): warning C4005: 'LOG_ERROR': macro redefinition
-E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(137,1): message : see previous definition of 'LOG_ERROR'
-  nexus.cpp
-E:\Electro\Nexus\Nexus\Core\Renderer\vulkan\vulkanApi.h(25,1): warning C4005: 'LOG_INFO': macro redefinition
-E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(135,1): message : see previous definition of 'LOG_INFO'
-E:\Electro\Nexus\Nexus\Core\Renderer\vulkan\vulkanApi.h(26,1): warning C4005: 'LOG_WARNING': macro redefinition
-E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(136,1): message : see previous definition of 'LOG_WARNING'
-E:\Electro\Nexus\Nexus\Core\Renderer\vulkan\vulkanApi.h(27,1): warning C4005: 'LOG_ERROR': macro redefinition
-E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(137,1): message : see previous definition of 'LOG_ERROR'
-  main.cpp
-E:\Electro\Nexus\Nexus\Core\Renderer\vulkan\vulkanApi.h(25,1): warning C4005: 'LOG_INFO': macro redefinition
-E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(135,1): message : see previous definition of 'LOG_INFO'
-E:\Electro\Nexus\Nexus\Core\Renderer\vulkan\vulkanApi.h(26,1): warning C4005: 'LOG_WARNING': macro redefinition
-E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(136,1): message : see previous definition of 'LOG_WARNING'
-E:\Electro\Nexus\Nexus\Core\Renderer\vulkan\vulkanApi.h(27,1): warning C4005: 'LOG_ERROR': macro redefinition
-E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(137,1): message : see previous definition of 'LOG_ERROR'
-  Generating Code...
+﻿  main.cpp
+E:\Electro\Nexus\Nexus\Core\Renderer\renderApi.h(20,17): warning C4091: 'typedef ': ignored on left of 'Nexus::GraphicsCard' when no variable is declared
+  (compiling source file '../TestProgram/main.cpp')
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(36,9): warning C4005: 'LOG_INFO': macro redefinition
+  (compiling source file '../TestProgram/main.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(135,9):
+      see previous definition of 'LOG_INFO'
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(37,9): warning C4005: 'LOG_WARNING': macro redefinition
+  (compiling source file '../TestProgram/main.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(136,9):
+      see previous definition of 'LOG_WARNING'
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(38,9): warning C4005: 'LOG_ERROR': macro redefinition
+  (compiling source file '../TestProgram/main.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(137,9):
+      see previous definition of 'LOG_ERROR'
+  
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Nexus.vcxproj -> E:\Electro\Nexus\Nexus\x64\Debug\Nexus.exe
