@@ -23,6 +23,8 @@
 
 #include "../renderApi.h"
 #include "../../../Engine/config.h"
+//#include "../shader.h"
+#include "../../../Engine/gameObject.h"
 
 // Logging
 
@@ -58,6 +60,14 @@ namespace Nexus {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
 
+	// While most pipeline states in Vulkan need to be baked, we
+	// can keep some stuff dynamic, such as the viewport and
+	// scissor sizes
+	std::vector<VkDynamicState> dynamicStates = {
+		VK_DYNAMIC_STATE_VIEWPORT,
+		VK_DYNAMIC_STATE_SCISSOR
+	};
+
 	class VulkanAPI : public GraphicAPI {
 	private:
 		// height/width
@@ -84,6 +94,9 @@ namespace Nexus {
 
 		// Prefered Swap Presentation mode
 		VkPresentModeKHR vkPreferedSwapPresentationMode;
+
+		// Dynamic state creation info
+		VkPipelineDynamicStateCreateInfo dynamicState{};
 
 		// Internal Funcs
 		// 
@@ -135,12 +148,16 @@ namespace Nexus {
 
 		void InitConnectionToWindow(GLFWwindow* window) override;
 		void InitShaders(Scene* scene) override;	
+		void CleanScene(Scene* scene) override;
 		void Clean();
+		
 	};
 
-	class VulkanShader : GraphicsShader{
+	class VulkanShader : public GraphicsShader{
 	public:
 		VkShaderModule vert;
 		VkShaderModule frag;
+		VkPipelineShaderStageCreateInfo vertPipelineInfo, fragPipelineInfo;
+		VkPipelineVertexInputStateCreateInfo vertCrInfo{};
 	};
 }

@@ -14,15 +14,9 @@
 
 #include <iostream>
 
-namespace Nexus {
-	// Holder for the seperate graphics things that the 
-	// different graphics APIs
-	class GraphicsShader{
-	private:
-	public:
-	};
+namespace Nexus {	
+	class GraphicAPI;
 
-	
 	class Renderer {
 	private:
 		GLFWwindow* window;
@@ -40,6 +34,10 @@ namespace Nexus {
 	public:
 		// Create Renderer
 		Renderer(std::string title, int height, int width);
+
+		GraphicAPI* getApi(){
+			return gApi;
+		}
 
 		// Tick
 		void Tick();

@@ -7,6 +7,7 @@
 #include <vector>
 
 namespace Nexus{
+    class GraphicsShader;
     // All things in a scene extend from this
     class GameObject{
     private:
@@ -22,12 +23,13 @@ namespace Nexus{
         void loadVertShader(std::string file);
         void loadFragShader(std::string file);
 
+        // For the graphics APIs
+        GraphicsShader* gShader;
 
         // Setters
         void setId(int id){
             this->id = id;
         }
-
 
         // Getters
         int getId(){

@@ -30,6 +30,14 @@ Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	vulkanCreateGraphicsPipeline();
 }
 
+void Nexus::VulkanAPI::CleanScene(Scene* scene){
+	for(auto& gm : scene->getObjects()){
+		VulkanShader* shader = (VulkanShader*)(gm->gShader);
+		vkDestroyShaderModule(vkDevice, shader->vert, nullptr);
+		vkDestroyShaderModule(vkDevice, shader->frag, nullptr);
+	}
+}
+
 
 void Nexus::VulkanAPI::Clean() {
 	// Destroy image views
@@ -84,6 +92,16 @@ void Nexus::VulkanAPI::InitConnectionToWindow(GLFWwindow* window) {
 }
 
 void Nexus::VulkanAPI::InitShaders(Scene* scene){
+	// Create pipeline
+	
+	// Start with dynamic pipeline stuff
+	dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+	dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
+	dynamicState.pDynamicStates = dynamicStates.data();
+	// Woah, now we can modify this stuff at runtime without
+	// having to recreate the entire pipeline
+
+	// Create things for each
 	for(auto& gm : scene->getObjects()){
 		auto vert = gm->getVertShader().readShader();
 		auto frag = gm->getFragShader().readShader();
@@ -92,8 +110,49 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		VkShaderModule vertShaderMod = createShaderModule(vert);
 		VkShaderModule fragShaderMod = createShaderModule(frag);
 
+		// Create pipelines
+		VkPipelineShaderStageCreateInfo vertPipe, fragPipe;
+
+		// First vertex 
+		vertPipe.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		vertPipe.stage = VK_SHADER_STAGE_VERTEX_BIT;
+		vertPipe.pName = "main";
+
+		// Fragment
+		fragPipe.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		fragPipe.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+		fragPipe.pName = "main";
+
 		// 
+		VulkanShader vkShader;
+		vkShader.vert = vertShaderMod;
+		vkShader.frag = fragShaderMod;
+
+		vertPipe.module = vkShader.vert;
+		fragPipe.module = vkShader.frag;
+
+		vkShader.vertPipelineInfo = vertPipe;
+		vkShader.fragPipelineInfo = fragPipe;
+
+		// TODO: RIGHT NOW THIS JUST SAYS THE DATA IS IN THE SHADER
+		// NEED TO MAKE IT READ FROM MESHES LATER ON
+		vkShader.vertCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+		vkShader.vertCrInfo.vertexBindingDescriptionCount = 0;
+		vkShader.vertCrInfo.pVertexBindingDescriptions = nullptr;
+		vkShader.vertCrInfo.vertexAttributeDescriptionCount = 0;
+		vkShader.vertCrInfo.pVertexBindingDescriptions = nullptr;
+
+
+		gm->gShader = &vkShader;
+
+
+
+		debugPrint("Nexus::VulkanAPI::InitShaders", std::string{"Loaded 1 object"}, 0);
 	}
+
+	
+
+	// 
 }
 
 /*
@@ -521,4 +580,13 @@ void Nexus::VulkanAPI::debugPrint(std::string caller, std::string text, int leve
 		break;
 	}
 #endif
+
+/*
+	=== Vulkan Shader Holder ===
+*/
+
+// Nexus::VulkanShader::VulkanShader(){
+
+// }
+
 }

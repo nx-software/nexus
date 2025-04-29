@@ -24,6 +24,10 @@ int main() {
 	gameObject.loadVertShader("../shaders/vert.spv");
 	gameObject.loadFragShader("../shaders/frag.spv");
 
+	testScene.addObject(&gameObject);
+
+	engine->InitScene(&testScene);
+
 	while (1) {
 		engine->Update(&testScene);
 	}

@@ -18,6 +18,7 @@
 #endif
 
 namespace Nexus {
+
 	typedef struct GraphicsCard{
 		std::string name;
 	};
@@ -34,7 +35,16 @@ namespace Nexus {
 
 		GraphicsCard getGraphicsCard();
 
+		virtual void CleanScene(Scene* scene) = 0;
 		virtual void Clean() = 0;
 	};
 
+
+	// Holder for the seperate graphics things that the 
+	// different graphics APIs
+	class GraphicsShader{
+	private:
+	public:
+		GraphicsShader();
+	};
 }

@@ -20,7 +20,7 @@ Nexus::Engine::Engine(GameProperties gameProperties) {
 }
 
 void Nexus::Engine::InitScene(Scene* scene){
-
+	renderer->getApi()->InitShaders(scene);
 }
 
 void Nexus::Engine::Update(Scene* scene) {

@@ -18,16 +18,17 @@ include_directories(
 
 # Source files
 set(SOURCES
-    TestProgram/main.cpp
+    Core/Renderer/renderer.cpp
+    Core/Renderer/renderApi.cpp
+    Core/Renderer/Vulkan/vulkanApi.cpp
+    Core/Renderer/shader.cpp
     Engine/nexus.cpp
     Engine/transform.cpp
     Engine/gameObject.cpp
     Engine/scene.cpp
     CrashHandler/CrashHandler.cpp
-    Core/Renderer/shader.cpp
-    Core/Renderer/renderApi.cpp
-    Core/Renderer/renderer.cpp
-    Core/Renderer/Vulkan/vulkanApi.cpp
+    TestProgram/main.cpp
+
 )
 
 # Add executable

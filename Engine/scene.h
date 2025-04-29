@@ -3,11 +3,12 @@
 */
 #pragma once
 
-#include "gameObject.h"
-
+#include <string>
 #include <vector>
 
 namespace Nexus{
+    class GameObject;
+
     class Scene{
     private:
         // Scene name
