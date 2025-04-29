@@ -15,3 +15,10 @@
 2023-12-31 10:32:48.373 DEBUG [1108] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
 2023-12-31 10:32:48.919 INFO  [1108] [Nexus::VulkanAPI::debugPrint@454] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
 2023-12-31 10:32:48.920 INFO  [1108] [Nexus::VulkanAPI::debugPrint@454] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2024-08-18 16:32:38.017 DEBUG [28008] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2024-08-18 16:32:39.971 INFO  [28008] [Nexus::VulkanAPI::debugPrint@458] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2024-08-18 16:32:39.971 INFO  [28008] [Nexus::VulkanAPI::debugPrint@458] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-04-23 21:53:28.277 DEBUG [44960] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2025-04-23 21:53:29.946 INFO  [44960] [Nexus::VulkanAPI::debugPrint@487] Nexus::VulkanAPI::vulkanDevicePick : Chose device NVIDIA GeForce RTX 4050 Laptop GPU
+2025-04-23 21:53:30.033 INFO  [44960] [Nexus::VulkanAPI::debugPrint@487] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-04-23 21:53:30.034 INFO  [44960] [Nexus::VulkanAPI::debugPrint@487] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
