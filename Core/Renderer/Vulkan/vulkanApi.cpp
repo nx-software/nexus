@@ -40,6 +40,8 @@ void Nexus::VulkanAPI::CleanScene(Scene* scene){
 
 
 void Nexus::VulkanAPI::Clean() {
+	// Destroy pipeline layout
+	vkDestroyPipelineLayout(vkDevice, vkPipelineLayout, nullptr);
 	// Destroy image views
 	for (auto imageView : vkSwapChainImgViews) {
 		vkDestroyImageView(vkDevice, imageView, nullptr);
@@ -142,12 +144,69 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		vkShader.vertCrInfo.vertexAttributeDescriptionCount = 0;
 		vkShader.vertCrInfo.pVertexBindingDescriptions = nullptr;
 
+		// Input assembly
+		vkShader.inputAsmCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+		vkShader.inputAsmCrInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		vkShader.inputAsmCrInfo.primitiveRestartEnable = VK_FALSE;
+
 
 		gm->gShader = &vkShader;
 
 
 
 		debugPrint("Nexus::VulkanAPI::InitShaders", std::string{"Loaded 1 object"}, 0);
+	}
+
+	// Create viewport stuff
+	vkViewport.x = 0.0f;
+	vkViewport.y = 0.0f;
+	// Since swap chain sizes may differ from window size,
+	// so we'll use the swap chain sizes instead
+	vkViewport.width = (float) vkSwapChainExt.width;
+	vkViewport.height = (float) vkSwapChainExt.height;
+	// Not doing anything interesting rn so 
+	// we might as well keep it at normal range
+	vkViewport.minDepth = 0.0f;
+	vkViewport.maxDepth = 1.0f;
+
+	// Scissor viewports define where pixels
+	// where actually be stored, for now lets
+	// just keep it at the whole window
+	vkScissor.offset = {0, 0};
+	vkScissor.extent = vkSwapChainExt;
+
+	// Creation info for viewport stuff
+	vkPipeLineViewPortCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+	vkPipeLineViewPortCrInfo.viewportCount = 1;
+	vkPipeLineViewPortCrInfo.pViewports = &vkViewport;
+	vkPipeLineViewPortCrInfo.scissorCount = 1;
+	vkPipeLineViewPortCrInfo.pScissors = &vkScissor;
+
+	// Creation stuff for raster
+	vkRasterCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+	vkRasterCrInfo.depthClampEnable = VK_FALSE;
+	// How we want to draw things
+	vkRasterCrInfo.polygonMode = VK_POLYGON_MODE_FILL;
+	// How thick the lines shoulc be
+	vkRasterCrInfo.lineWidth = 1.0f;
+	// Culling mode
+	vkRasterCrInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+	vkRasterCrInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
+
+	// Color blending stuff
+	// Defines how we blend the fragment shader from our current
+	// frame to the next
+	vkColorBlendState.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT;
+	vkColorBlendState.blendEnable = VK_FALSE;
+	// Theres some other features but we dont need them rn
+
+
+	// Lets create it
+	vkPipeLineLayoutCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+	// Some other optional stuff, but we're ok for now
+
+	if(vkCreatePipelineLayout(vkDevice, &vkPipeLineLayoutCrInfo, nullptr, &vkPipelineLayout) != VK_SUCCESS){
+		Error("Vulkan: Failed to create pipeline layout!");
 	}
 
 	

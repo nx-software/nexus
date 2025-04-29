@@ -63,7 +63,7 @@ namespace Nexus {
 	// While most pipeline states in Vulkan need to be baked, we
 	// can keep some stuff dynamic, such as the viewport and
 	// scissor sizes
-	std::vector<VkDynamicState> dynamicStates = {
+	const std::vector<VkDynamicState> dynamicStates = {
 		VK_DYNAMIC_STATE_VIEWPORT,
 		VK_DYNAMIC_STATE_SCISSOR
 	};
@@ -97,6 +97,16 @@ namespace Nexus {
 
 		// Dynamic state creation info
 		VkPipelineDynamicStateCreateInfo dynamicState{};
+
+		// Rendering stuff
+		VkViewport vkViewport{};
+		VkRect2D vkScissor{};
+		VkPipelineViewportStateCreateInfo vkPipeLineViewPortCrInfo{};
+		VkPipelineRasterizationStateCreateInfo vkRasterCrInfo{};
+		VkPipelineColorBlendAttachmentState vkColorBlendState{};
+		
+		VkPipelineLayout vkPipelineLayout;
+		VkPipelineLayoutCreateInfo vkPipeLineLayoutCrInfo{};
 
 		// Internal Funcs
 		// 
@@ -159,5 +169,6 @@ namespace Nexus {
 		VkShaderModule frag;
 		VkPipelineShaderStageCreateInfo vertPipelineInfo, fragPipelineInfo;
 		VkPipelineVertexInputStateCreateInfo vertCrInfo{};
+		VkPipelineInputAssemblyStateCreateInfo inputAsmCrInfo{};
 	};
 }
