@@ -126,6 +126,9 @@ namespace Nexus {
 		VkPipelineLayout vkPipelineLayout;
 		VkPipelineLayoutCreateInfo vkPipeLineLayoutCrInfo{};
 
+		// Drawing stuff
+		std::vector<VkFramebuffer> vkSwapChainFrameBuf;
+
 		// Internal Funcs
 		// 
 		// Check if validation layers are supported
@@ -145,6 +148,8 @@ namespace Nexus {
 		void vulkanCreateRenderPass();
 		// Create graphics pipeline
 		void vulkanCreateGraphicsPipeline();
+		// Create frame buffers
+		void vulkanCreateFramebuffers();
 
 		// All these functions have a VkPhysicalDevice as a prarm
 		// because we check multiple devices in order to choose the one

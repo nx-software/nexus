@@ -1,6 +1,6 @@
 /*
-*	Graphics rendering via the Vulkan Graphics API
-*/
+ *	Graphics rendering via the Vulkan Graphics API
+ */
 
 #include "vulkanApi.h"
 
@@ -30,6 +30,8 @@ Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	vulkanCreateRenderPass();
 	// We wait to create the pipeline until
 	// a scene is initlized
+	// Create frame buffers
+	vulkanCreateFramebuffers();
 }
 
 void Nexus::VulkanAPI::CleanScene(Scene* scene){
@@ -43,6 +45,10 @@ void Nexus::VulkanAPI::CleanScene(Scene* scene){
 
 
 void Nexus::VulkanAPI::Clean() {
+	// Destroy framebuffer
+	for (auto framebuffer : vkSwapChainFrameBuf) {
+        vkDestroyFramebuffer(vkDevice, framebuffer, nullptr);
+    }
 	// Destroy pipeline layout
 	vkDestroyPipelineLayout(vkDevice, vkPipelineLayout, nullptr);
 	// Destroy Render pass
@@ -735,6 +741,30 @@ void Nexus::VulkanAPI::vulkanCreateRenderPass(){
 
 void Nexus::VulkanAPI::vulkanCreateGraphicsPipeline(){
 	
+}
+
+void Nexus::VulkanAPI::vulkanCreateFramebuffers(){
+	vkSwapChainFrameBuf.resize(vkSwapChainImgViews.size());
+	// Iterate over and create buffers	
+	for(size_t i = 0; i < vkSwapChainImgViews.size(); i++){
+		VkImageView attachments[] = {
+			vkSwapChainImgViews[i]
+		};
+
+		VkFramebufferCreateInfo frameBufCrInfo{};
+		frameBufCrInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+		frameBufCrInfo.renderPass = vkRenderPass;
+		frameBufCrInfo.attachmentCount = 1;
+		frameBufCrInfo.pAttachments = attachments;
+		frameBufCrInfo.width = vkSwapChainExt.width;
+		frameBufCrInfo.height = vkSwapChainExt.height;
+		frameBufCrInfo.layers = 1;
+
+		// create it!
+		if(vkCreateFramebuffer(vkDevice, &frameBufCrInfo, nullptr, &vkSwapChainFrameBuf[i]) != VK_SUCCESS){
+			Error(std::string{"Failed to create framebuffer number" + std::to_string(i)});
+		}
+	}
 }
 
 /*
