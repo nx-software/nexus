@@ -26,8 +26,10 @@ Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	vulkanCreateSwapChain();
 	// Create swap chain images
 	vulkanCreateImageViews();
-	// Create graphics pipeline
-	vulkanCreateGraphicsPipeline();
+	// Create render pass
+	vulkanCreateRenderPass();
+	// We wait to create the pipeline until
+	// a scene is initlized
 }
 
 void Nexus::VulkanAPI::CleanScene(Scene* scene){
@@ -42,6 +44,8 @@ void Nexus::VulkanAPI::CleanScene(Scene* scene){
 void Nexus::VulkanAPI::Clean() {
 	// Destroy pipeline layout
 	vkDestroyPipelineLayout(vkDevice, vkPipelineLayout, nullptr);
+	// Destroy Render pass
+	vkDestroyRenderPass(vkDevice, vkRenderPass, nullptr);
 	// Destroy image views
 	for (auto imageView : vkSwapChainImgViews) {
 		vkDestroyImageView(vkDevice, imageView, nullptr);
@@ -103,60 +107,6 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 	// Woah, now we can modify this stuff at runtime without
 	// having to recreate the entire pipeline
 
-	// Create things for each
-	for(auto& gm : scene->getObjects()){
-		auto vert = gm->getVertShader().readShader();
-		auto frag = gm->getFragShader().readShader();
-
-		// Create shader modules
-		VkShaderModule vertShaderMod = createShaderModule(vert);
-		VkShaderModule fragShaderMod = createShaderModule(frag);
-
-		// Create pipelines
-		VkPipelineShaderStageCreateInfo vertPipe, fragPipe;
-
-		// First vertex 
-		vertPipe.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-		vertPipe.stage = VK_SHADER_STAGE_VERTEX_BIT;
-		vertPipe.pName = "main";
-
-		// Fragment
-		fragPipe.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-		fragPipe.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-		fragPipe.pName = "main";
-
-		// 
-		VulkanShader vkShader;
-		vkShader.vert = vertShaderMod;
-		vkShader.frag = fragShaderMod;
-
-		vertPipe.module = vkShader.vert;
-		fragPipe.module = vkShader.frag;
-
-		vkShader.vertPipelineInfo = vertPipe;
-		vkShader.fragPipelineInfo = fragPipe;
-
-		// TODO: RIGHT NOW THIS JUST SAYS THE DATA IS IN THE SHADER
-		// NEED TO MAKE IT READ FROM MESHES LATER ON
-		vkShader.vertCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vkShader.vertCrInfo.vertexBindingDescriptionCount = 0;
-		vkShader.vertCrInfo.pVertexBindingDescriptions = nullptr;
-		vkShader.vertCrInfo.vertexAttributeDescriptionCount = 0;
-		vkShader.vertCrInfo.pVertexBindingDescriptions = nullptr;
-
-		// Input assembly
-		vkShader.inputAsmCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-		vkShader.inputAsmCrInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-		vkShader.inputAsmCrInfo.primitiveRestartEnable = VK_FALSE;
-
-
-		gm->gShader = &vkShader;
-
-
-
-		debugPrint("Nexus::VulkanAPI::InitShaders", std::string{"Loaded 1 object"}, 0);
-	}
-
 	// Create viewport stuff
 	vkViewport.x = 0.0f;
 	vkViewport.y = 0.0f;
@@ -200,6 +150,16 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 	vkColorBlendState.blendEnable = VK_FALSE;
 	// Theres some other features but we dont need them rn
 
+	// Color blend creation
+	vkColorBlendCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+	vkColorBlendCrInfo.logicOpEnable = VK_FALSE;
+	vkColorBlendCrInfo.logicOp = VK_LOGIC_OP_COPY;
+	vkColorBlendCrInfo.attachmentCount = 1;
+
+	// Disable multisampling for now
+	vkMultisampleCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+	vkMultisampleCrInfo.sampleShadingEnable = VK_FALSE;
+	vkMultisampleCrInfo.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 
 	// Lets create it
 	vkPipeLineLayoutCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -209,9 +169,86 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		Error("Vulkan: Failed to create pipeline layout!");
 	}
 
-	
+	// Create things for each
+	for(auto& gm : scene->getObjects()){
+		auto vert = gm->getVertShader().readShader();
+		auto frag = gm->getFragShader().readShader();
 
-	// 
+		// Create shader modules
+		VkShaderModule vertShaderMod = createShaderModule(vert);
+		VkShaderModule fragShaderMod = createShaderModule(frag);
+
+		// Create pipelines
+		VkPipelineShaderStageCreateInfo vertPipe, fragPipe;
+
+		// First vertex 
+		vertPipe.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		vertPipe.stage = VK_SHADER_STAGE_VERTEX_BIT;
+		vertPipe.pName = "main";
+
+		// Fragment
+		fragPipe.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		fragPipe.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+		fragPipe.pName = "main";
+
+		// 
+		VulkanShader vkShader;
+		vkShader.vert = vertShaderMod;
+		vkShader.frag = fragShaderMod;
+
+		vertPipe.module = vkShader.vert;
+		fragPipe.module = vkShader.frag;
+
+		vkShader.vertPipelineInfo = vertPipe;
+		vkShader.fragPipelineInfo = fragPipe;
+		vkShader.shaderStages[0] = vertPipe;
+		vkShader.shaderStages[1] = fragPipe;
+
+		// TODO: RIGHT NOW THIS JUST SAYS THE DATA IS IN THE SHADER
+		// NEED TO MAKE IT READ FROM MESHES LATER ON
+		vkShader.vertCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+		vkShader.vertCrInfo.vertexBindingDescriptionCount = 0;
+		vkShader.vertCrInfo.pVertexBindingDescriptions = nullptr;
+		vkShader.vertCrInfo.vertexAttributeDescriptionCount = 0;
+		vkShader.vertCrInfo.pVertexBindingDescriptions = nullptr;
+
+		// Input assembly
+		vkShader.inputAsmCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+		vkShader.inputAsmCrInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+		vkShader.inputAsmCrInfo.primitiveRestartEnable = VK_FALSE;
+
+		VkGraphicsPipelineCreateInfo pipelineCrInfo{};
+		pipelineCrInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+		pipelineCrInfo.stageCount = 2;
+		pipelineCrInfo.pStages = vkShader.shaderStages;
+		pipelineCrInfo.pVertexInputState = &(vkShader.vertCrInfo);
+		pipelineCrInfo.pInputAssemblyState = &(vkShader.inputAsmCrInfo);
+		pipelineCrInfo.pViewportState = &vkPipeLineViewPortCrInfo;
+		pipelineCrInfo.pRasterizationState = &vkRasterCrInfo;
+		pipelineCrInfo.pMultisampleState = &vkMultisampleCrInfo;
+		pipelineCrInfo.pDepthStencilState = nullptr;
+		pipelineCrInfo.pColorBlendState = &vkColorBlendCrInfo;
+		pipelineCrInfo.pDynamicState = &dynamicState;
+		pipelineCrInfo.layout = vkPipelineLayout;
+		pipelineCrInfo.renderPass = vkRenderPass;
+		pipelineCrInfo.subpass = 0;
+		// Other renderpasses can be used but we dont need em rn
+		pipelineCrInfo.basePipelineHandle = VK_NULL_HANDLE;
+		pipelineCrInfo.basePipelineIndex = -1;
+
+		// Create the pipline
+		if(vkCreateGraphicsPipelines(vkDevice, VK_NULL_HANDLE, 1, &pipelineCrInfo, nullptr, &(vkShader.grPipeline)) != VK_SUCCESS){
+			Error("Vulkan: Failed to create graphics pipline!");
+		}
+
+		gm->gShader = &vkShader;
+
+		debugPrint("Nexus::VulkanAPI::InitShaders", std::string{"Loaded 1 object"}, 0);
+	}
+
+
+	// Create graphics pipeline
+	vulkanCreateGraphicsPipeline();
 }
 
 /*
@@ -616,8 +653,51 @@ VkShaderModule Nexus::VulkanAPI::createShaderModule(const std::vector<char>& cod
 	return shaderMod;
 }
 
-void Nexus::VulkanAPI::vulkanCreateGraphicsPipeline(){
+void Nexus::VulkanAPI::vulkanCreateRenderPass(){
+	// Color attachment
+	VkAttachmentDescription colorAttach{};
+	colorAttach.format = vkSwapChainImgFmt;
+	// since we're not sampling, we just
+	// stick to 1 sample
+	colorAttach.samples = VK_SAMPLE_COUNT_1_BIT;
+	// what we do before and after rendering
+	colorAttach.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; // clear values before rendering
+	colorAttach.storeOp = VK_ATTACHMENT_STORE_OP_STORE; // keep them afterwards
+	// we dont really care about the stencil buffer
+	colorAttach.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	colorAttach.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	// framebuffers are represented with VkImage, so
+	// we can choose what we do with the layout in 
+	// memory
+	colorAttach.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED; 
+	colorAttach.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR; // swap chain images format
 
+	// VkAttachmentRefrence
+	VkAttachmentReference colorAttachRef{};
+	colorAttachRef.attachment = 0; // we have 1, colorAttach
+	colorAttachRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL; // best preformance
+
+	// Our subpass
+	VkSubpassDescription subpassDesc{};
+	subpassDesc.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+	subpassDesc.colorAttachmentCount = 1;
+	subpassDesc.pColorAttachments = &colorAttachRef;
+
+	VkRenderPassCreateInfo renderPassInfo{};
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+	renderPassInfo.attachmentCount = 1;
+	renderPassInfo.pAttachments = &colorAttach;
+	renderPassInfo.subpassCount = 1;
+	renderPassInfo.pSubpasses = &subpassDesc;
+
+	if(vkCreateRenderPass(vkDevice, &renderPassInfo, nullptr, &vkRenderPass) != VK_SUCCESS){
+		Error("Vulkan: Failed to create render pass!");
+	}
+
+}
+
+void Nexus::VulkanAPI::vulkanCreateGraphicsPipeline(){
+	
 }
 
 /*

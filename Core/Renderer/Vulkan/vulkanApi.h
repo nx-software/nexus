@@ -103,8 +103,11 @@ namespace Nexus {
 		VkRect2D vkScissor{};
 		VkPipelineViewportStateCreateInfo vkPipeLineViewPortCrInfo{};
 		VkPipelineRasterizationStateCreateInfo vkRasterCrInfo{};
+		VkPipelineMultisampleStateCreateInfo vkMultisampleCrInfo{};
 		VkPipelineColorBlendAttachmentState vkColorBlendState{};
+		VkPipelineColorBlendStateCreateInfo vkColorBlendCrInfo{};
 		
+		VkRenderPass vkRenderPass;
 		VkPipelineLayout vkPipelineLayout;
 		VkPipelineLayoutCreateInfo vkPipeLineLayoutCrInfo{};
 
@@ -121,6 +124,8 @@ namespace Nexus {
 		void vulkanCreateSwapChain();
 		// Create image views
 		void vulkanCreateImageViews();
+		// Create render pass
+		void vulkanCreateRenderPass();
 		// Create graphics pipeline
 		void vulkanCreateGraphicsPipeline();
 
@@ -168,7 +173,9 @@ namespace Nexus {
 		VkShaderModule vert;
 		VkShaderModule frag;
 		VkPipelineShaderStageCreateInfo vertPipelineInfo, fragPipelineInfo;
+		VkPipelineShaderStageCreateInfo shaderStages[2];
 		VkPipelineVertexInputStateCreateInfo vertCrInfo{};
 		VkPipelineInputAssemblyStateCreateInfo inputAsmCrInfo{};
+		VkPipeline grPipeline;
 	};
 }
