@@ -36,6 +36,8 @@
 #define LOG_WARNING 1
 #define LOG_ERROR 2
 
+#define DEBUG 1
+
 namespace Nexus {
 	// All the Vulkan stuff has queues, so we gotta get them queues
 	struct QueueFamilyIndicies {
@@ -68,10 +70,23 @@ namespace Nexus {
 		VK_DYNAMIC_STATE_SCISSOR
 	};
 
+	// Validation layer
+	const std::vector<const char*> validLayers = {
+		"VK_LAYER_KHRONOS_validation"
+	};
+
 	class VulkanAPI : public GraphicAPI {
 	private:
 		// height/width
 		int width, height;
+
+		// Validation layers
+#ifndef DEBUG
+		const bool validLayer = false;
+#else
+		const bool validLayer = true;
+#endif
+
 		// Vulkan
 		VkInstance vkInstance;
 		VkPhysicalDevice vkPhysDevice;
@@ -113,6 +128,8 @@ namespace Nexus {
 
 		// Internal Funcs
 		// 
+		// Check if validation layers are supported
+		bool checkValidLayer();
 		// Init stuff
 		// Create VKInstance
 		void vulkanCreateInstance();
@@ -168,6 +185,9 @@ namespace Nexus {
 		
 	};
 
+
+	/*
+	*/
 	class VulkanShader : public GraphicsShader{
 	public:
 		VkShaderModule vert;

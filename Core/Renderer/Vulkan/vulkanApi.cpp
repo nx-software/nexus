@@ -35,6 +35,7 @@ Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 void Nexus::VulkanAPI::CleanScene(Scene* scene){
 	for(auto& gm : scene->getObjects()){
 		VulkanShader* shader = (VulkanShader*)(gm->gShader);
+		vkDestroyPipeline(vkDevice, shader->grPipeline, nullptr);
 		vkDestroyShaderModule(vkDevice, shader->vert, nullptr);
 		vkDestroyShaderModule(vkDevice, shader->frag, nullptr);
 	}
@@ -154,6 +155,7 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 	vkColorBlendCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
 	vkColorBlendCrInfo.logicOpEnable = VK_FALSE;
 	vkColorBlendCrInfo.logicOp = VK_LOGIC_OP_COPY;
+	vkColorBlendCrInfo.pAttachments = &vkColorBlendState;
 	vkColorBlendCrInfo.attachmentCount = 1;
 
 	// Disable multisampling for now
@@ -186,7 +188,7 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		vertPipe.stage = VK_SHADER_STAGE_VERTEX_BIT;
 		vertPipe.pName = "main";
 
-		// Fragment
+		// Then Fragment
 		fragPipe.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		fragPipe.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 		fragPipe.pName = "main";
@@ -235,7 +237,7 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		// Other renderpasses can be used but we dont need em rn
 		pipelineCrInfo.basePipelineHandle = VK_NULL_HANDLE;
 		pipelineCrInfo.basePipelineIndex = -1;
-
+		
 		// Create the pipline
 		if(vkCreateGraphicsPipelines(vkDevice, VK_NULL_HANDLE, 1, &pipelineCrInfo, nullptr, &(vkShader.grPipeline)) != VK_SUCCESS){
 			Error("Vulkan: Failed to create graphics pipline!");
@@ -257,10 +259,40 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 * ================================
 */
 
+bool Nexus::VulkanAPI::checkValidLayer(){
+	uint32_t lCount;
+	vkEnumerateInstanceLayerProperties(&lCount, nullptr);
+
+	std::vector<VkLayerProperties> avaLayers(lCount);
+	vkEnumerateInstanceLayerProperties(&lCount, avaLayers.data());
+
+	for(const char* lName : validLayers){
+		bool layerFound = false;
+		for(const auto& layerProps : avaLayers){
+			if(strcmp(lName, layerProps.layerName) == 0){
+				layerFound = true;
+				break;
+			}
+		}
+
+		if(!layerFound){
+			return false;
+		}
+	}
+
+	return true;
+}
+
 /*
 * Initilization functions
 */
 void Nexus::VulkanAPI::vulkanCreateInstance() {
+	// check if validation layers
+	if(validLayer && !checkValidLayer()){
+		Error("Vulkan: Validation layers requested but not supported");
+	}else if(validLayer){
+		debugPrint("Nexus::VulkanAPI::vulkanCreateInstance", "Validation layers supported.", 0);
+	}
 	VkInstanceCreateInfo crInfo{};
 	crInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 
@@ -274,7 +306,12 @@ void Nexus::VulkanAPI::vulkanCreateInstance() {
 	crInfo.ppEnabledExtensionNames = glfwExtName;
 
 	// Global validation layers
-	crInfo.enabledLayerCount = 0;
+	if(validLayer){
+		crInfo.enabledLayerCount = static_cast<uint32_t>(validLayers.size());
+		crInfo.ppEnabledLayerNames = validLayers.data();
+	}else{
+		crInfo.enabledLayerCount = 0;
+	}
 
 	// Create
 	VkResult result = vkCreateInstance(&crInfo, nullptr, &vkInstance);
