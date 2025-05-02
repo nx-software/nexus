@@ -161,8 +161,8 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 	vkColorBlendCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
 	vkColorBlendCrInfo.logicOpEnable = VK_FALSE;
 	vkColorBlendCrInfo.logicOp = VK_LOGIC_OP_COPY;
-	vkColorBlendCrInfo.pAttachments = &vkColorBlendState;
 	vkColorBlendCrInfo.attachmentCount = 1;
+	vkColorBlendCrInfo.pAttachments = &vkColorBlendState;
 
 	// Disable multisampling for now
 	vkMultisampleCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
@@ -187,7 +187,7 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		VkShaderModule fragShaderMod = createShaderModule(frag);
 
 		// Create pipelines
-		VkPipelineShaderStageCreateInfo vertPipe, fragPipe;
+		VkPipelineShaderStageCreateInfo vertPipe{}, fragPipe{};
 
 		// First vertex 
 		vertPipe.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -218,7 +218,7 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		vkShader.vertCrInfo.vertexBindingDescriptionCount = 0;
 		vkShader.vertCrInfo.pVertexBindingDescriptions = nullptr;
 		vkShader.vertCrInfo.vertexAttributeDescriptionCount = 0;
-		vkShader.vertCrInfo.pVertexBindingDescriptions = nullptr;
+		vkShader.vertCrInfo.pVertexAttributeDescriptions = nullptr;
 
 		// Input assembly
 		vkShader.inputAsmCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -235,6 +235,7 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		pipelineCrInfo.pRasterizationState = &vkRasterCrInfo;
 		pipelineCrInfo.pMultisampleState = &vkMultisampleCrInfo;
 		pipelineCrInfo.pDepthStencilState = nullptr;
+		pipelineCrInfo.pTessellationState = nullptr;
 		pipelineCrInfo.pColorBlendState = &vkColorBlendCrInfo;
 		pipelineCrInfo.pDynamicState = &dynamicState;
 		pipelineCrInfo.layout = vkPipelineLayout;
@@ -243,6 +244,8 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		// Other renderpasses can be used but we dont need em rn
 		pipelineCrInfo.basePipelineHandle = VK_NULL_HANDLE;
 		pipelineCrInfo.basePipelineIndex = -1;
+		pipelineCrInfo.pNext = nullptr;
+
 		
 		// Create the pipline
 		if(vkCreateGraphicsPipelines(vkDevice, VK_NULL_HANDLE, 1, &pipelineCrInfo, nullptr, &(vkShader.grPipeline)) != VK_SUCCESS){
@@ -660,6 +663,7 @@ void Nexus::VulkanAPI::vulkanCreateImageViews() {
 	for (size_t i = 0; i < vkSwapChainImgs.size(); i++) {
 		VkImageViewCreateInfo crInfo{};
 		crInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		crInfo.format = vkSwapChainImgFmt;
 		crInfo.image = vkSwapChainImgs[i];
 
 		// Keep default colors

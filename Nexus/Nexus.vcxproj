@@ -145,18 +145,27 @@
   <ItemGroup>
     <ClCompile Include="..\Core\Renderer\renderApi.cpp" />
     <ClCompile Include="..\Core\Renderer\renderer.cpp" />
+    <ClCompile Include="..\Core\Renderer\shader.cpp" />
     <ClCompile Include="..\Core\Renderer\Vulkan\vulkanApi.cpp" />
     <ClCompile Include="..\CrashHandler\CrashHandler.cpp" />
+    <ClCompile Include="..\Engine\gameObject.cpp" />
     <ClCompile Include="..\Engine\nexus.cpp" />
+    <ClCompile Include="..\Engine\scene.cpp" />
+    <ClCompile Include="..\Engine\transform.cpp" />
     <ClCompile Include="..\TestProgram\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Core\Renderer\renderApi.h" />
     <ClInclude Include="..\Core\Renderer\renderer.h" />
+    <ClInclude Include="..\Core\Renderer\shader.h" />
     <ClInclude Include="..\Core\Renderer\Vulkan\vulkanApi.h" />
     <ClInclude Include="..\CrashHandler\CrashHandler.h" />
+    <ClInclude Include="..\Engine\component.h" />
     <ClInclude Include="..\Engine\config.h" />
+    <ClInclude Include="..\Engine\gameObject.h" />
     <ClInclude Include="..\Engine\nexus.h" />
+    <ClInclude Include="..\Engine\scene.h" />
+    <ClInclude Include="..\Engine\transform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

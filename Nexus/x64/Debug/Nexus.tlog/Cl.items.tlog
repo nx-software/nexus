@@ -1,6 +1,10 @@
 E:\Electro\Nexus\Nexus\Core\Renderer\renderApi.cpp;E:\Electro\Nexus\Nexus\Nexus\x64\Debug\renderApi.obj
 E:\Electro\Nexus\Nexus\Core\Renderer\renderer.cpp;E:\Electro\Nexus\Nexus\Nexus\x64\Debug\renderer.obj
+E:\Electro\Nexus\Nexus\Core\Renderer\shader.cpp;E:\Electro\Nexus\Nexus\Nexus\x64\Debug\shader.obj
 E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.cpp;E:\Electro\Nexus\Nexus\Nexus\x64\Debug\vulkanApi.obj
 E:\Electro\Nexus\Nexus\CrashHandler\CrashHandler.cpp;E:\Electro\Nexus\Nexus\Nexus\x64\Debug\CrashHandler.obj
+E:\Electro\Nexus\Nexus\Engine\gameObject.cpp;E:\Electro\Nexus\Nexus\Nexus\x64\Debug\gameObject.obj
 E:\Electro\Nexus\Nexus\Engine\nexus.cpp;E:\Electro\Nexus\Nexus\Nexus\x64\Debug\nexus.obj
+E:\Electro\Nexus\Nexus\Engine\scene.cpp;E:\Electro\Nexus\Nexus\Nexus\x64\Debug\scene.obj
+E:\Electro\Nexus\Nexus\Engine\transform.cpp;E:\Electro\Nexus\Nexus\Nexus\x64\Debug\transform.obj
 E:\Electro\Nexus\Nexus\TestProgram\main.cpp;E:\Electro\Nexus\Nexus\Nexus\x64\Debug\main.obj
