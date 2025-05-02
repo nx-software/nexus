@@ -22,7 +22,7 @@ Nexus::Renderer::Renderer(std::string title, int height, int width) {
 	gApi = new VulkanAPI(window);
 }
 
-void Nexus::Renderer::Tick() {
+void Nexus::Renderer::Tick(Scene* scene) {
 	if (glfwWindowShouldClose(window)) {
 		// Currently just exit, in the future do something cool
 		terminationTasks();
@@ -30,6 +30,7 @@ void Nexus::Renderer::Tick() {
 	}
 
 	glfwPollEvents();
+	gApi->DrawFrame(scene);
 }
 
 

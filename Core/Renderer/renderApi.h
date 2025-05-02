@@ -33,6 +33,8 @@ namespace Nexus {
 		virtual void InitConnectionToWindow(GLFWwindow* window) = 0;
 		virtual void InitShaders(Scene* scene) = 0;
 
+		virtual void DrawFrame(Scene* scene) = 0;
+
 		GraphicsCard getGraphicsCard();
 
 		virtual void CleanScene(Scene* scene) = 0;

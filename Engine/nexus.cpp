@@ -24,7 +24,7 @@ void Nexus::Engine::InitScene(Scene* scene){
 }
 
 void Nexus::Engine::Update(Scene* scene) {
-	renderer->Tick();
+	renderer->Tick(scene);
 }
 
 

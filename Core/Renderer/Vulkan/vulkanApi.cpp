@@ -853,6 +853,15 @@ void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipe
 	}
 }
 
+void Nexus::VulkanAPI::DrawFrame(Scene* scene){
+	// From a high level overview, we wanna to:
+	// 1. wait for previous frame to draw
+	// 2. aquire an image from the swap chain
+	// 3. record a command buffer
+	// 4. submit that command buffer
+	// 5. present it
+}
+
 
 void Nexus::VulkanAPI::debugPrint(std::string caller, std::string text, int level) {
 #if GRAPHICS_LOG == 1

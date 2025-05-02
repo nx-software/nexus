@@ -195,6 +195,7 @@ namespace Nexus {
 
 		void InitConnectionToWindow(GLFWwindow* window) override;
 		void InitShaders(Scene* scene) override;	
+		void DrawFrame(Scene* scene) override;
 		void CleanScene(Scene* scene) override;
 		void Clean();
 		

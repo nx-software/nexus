@@ -40,7 +40,7 @@ namespace Nexus {
 		}
 
 		// Tick
-		void Tick();
+		void Tick(Scene* scene);
 
 		~Renderer();
 	};
