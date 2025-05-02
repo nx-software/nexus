@@ -181,6 +181,10 @@ namespace Nexus {
 
 		// Shaders
 		VkShaderModule createShaderModule(const std::vector<char>& code);
+
+
+		// Writes our commands to the command buffer
+		void vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline);
 	
 
 

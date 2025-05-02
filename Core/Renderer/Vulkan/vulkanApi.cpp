@@ -802,11 +802,56 @@ void Nexus::VulkanAPI::vulkanCreateCommandPool(){
 	if(vkAllocateCommandBuffers(vkDevice, &commandBufAlInfo, &vkCommandBuffer) != VK_SUCCESS){
 		Error("Vulkan: Failed to allocate command buffer!");
 	}
+
+	debugPrint("Nexus::VulkanAPI::vulkanCreateCommandPool", "Despite the function name, allocation of command buffer was successful.", 0);
 }
 
 /*
 * === END INIT FUNCS ===
 */
+
+void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline){
+	VkCommandBufferBeginInfo bufferBeginInf{};
+	bufferBeginInf.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	// Has some extra stuff but we dont need them rn
+	bufferBeginInf.flags = 0;
+	bufferBeginInf.pInheritanceInfo = nullptr;
+
+	if(vkBeginCommandBuffer(vkCommandBuffer, &bufferBeginInf) != VK_SUCCESS){
+		Error("Vulkan: Failed to begin recording the command buffer!");
+	}
+
+	VkRenderPassBeginInfo renderPassBeginInf{};
+	renderPassBeginInf.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	renderPassBeginInf.renderPass = vkRenderPass;
+	renderPassBeginInf.framebuffer = vkSwapChainFrameBuf[idx];
+	renderPassBeginInf.renderArea.offset = {0, 0};
+	renderPassBeginInf.renderArea.extent = vkSwapChainExt;
+	
+	// Define color for CLEAR
+	VkClearValue clearCol = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+	renderPassBeginInf.clearValueCount = 1;
+	renderPassBeginInf.pClearValues = &clearCol;
+
+	// Begin our render pass
+	//                                                         embedded into primary buffer
+	vkCmdBeginRenderPass(vkCommandBuffer, &renderPassBeginInf, VK_SUBPASS_CONTENTS_INLINE);
+
+	vkCmdBindPipeline(vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, grPipeline);
+
+	vkCmdSetViewport(vkCommandBuffer, 0, 1, &vkViewport);
+	vkCmdSetScissor(vkCommandBuffer, 0, 1, &vkScissor);
+
+	//               verts, no instance rendering, no offsets
+	vkCmdDraw(vkCommandBuffer, 3, 1, 0, 0);
+
+	// End
+	vkCmdEndRenderPass(vkCommandBuffer);
+
+	if(vkEndCommandBuffer(vkCommandBuffer) != VK_SUCCESS){
+		Error("Vulkan: Failed to end command buffer!");
+	}
+}
 
 
 void Nexus::VulkanAPI::debugPrint(std::string caller, std::string text, int level) {
