@@ -129,6 +129,10 @@ namespace Nexus {
 		// Drawing stuff
 		std::vector<VkFramebuffer> vkSwapChainFrameBuf;
 
+		// Command pool
+		VkCommandPool vkCommandPool;
+		VkCommandBuffer vkCommandBuffer;
+
 		// Internal Funcs
 		// 
 		// Check if validation layers are supported
@@ -150,6 +154,8 @@ namespace Nexus {
 		void vulkanCreateGraphicsPipeline();
 		// Create frame buffers
 		void vulkanCreateFramebuffers();
+		// Create command pool
+		void vulkanCreateCommandPool();
 
 		// All these functions have a VkPhysicalDevice as a prarm
 		// because we check multiple devices in order to choose the one

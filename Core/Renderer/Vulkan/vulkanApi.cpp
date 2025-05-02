@@ -32,6 +32,8 @@ Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	// a scene is initlized
 	// Create frame buffers
 	vulkanCreateFramebuffers();
+	// Create command pool
+	vulkanCreateCommandPool();
 }
 
 void Nexus::VulkanAPI::CleanScene(Scene* scene){
@@ -45,6 +47,8 @@ void Nexus::VulkanAPI::CleanScene(Scene* scene){
 
 
 void Nexus::VulkanAPI::Clean() {
+	// Destroy command pool
+	vkDestroyCommandPool(vkDevice, vkCommandPool, nullptr);
 	// Destroy framebuffer
 	for (auto framebuffer : vkSwapChainFrameBuf) {
         vkDestroyFramebuffer(vkDevice, framebuffer, nullptr);
@@ -768,6 +772,35 @@ void Nexus::VulkanAPI::vulkanCreateFramebuffers(){
 		if(vkCreateFramebuffer(vkDevice, &frameBufCrInfo, nullptr, &vkSwapChainFrameBuf[i]) != VK_SUCCESS){
 			Error(std::string{"Failed to create framebuffer number" + std::to_string(i)});
 		}
+	}
+}
+
+void Nexus::VulkanAPI::vulkanCreateCommandPool(){
+	// Command pool needs queue familes
+	QueueFamilyIndicies qFam = findQueueFams(vkPhysDevice);
+
+	VkCommandPoolCreateInfo commandPoolCrInfo{};
+	commandPoolCrInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+	// allow command buffer to be rerecorded individually
+	commandPoolCrInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+	commandPoolCrInfo.queueFamilyIndex = qFam.graphicsFam.value();
+
+	if(vkCreateCommandPool(vkDevice, &commandPoolCrInfo, nullptr, &vkCommandPool) != VK_SUCCESS){
+		Error("Vulkan: Failed to create command pool!");
+	}
+
+	debugPrint("Nexus::VulkanAPI::vulkanCreateCommandPool", "Created Command Pool", 0);
+
+	// Create command buffer while we're at it
+
+	VkCommandBufferAllocateInfo commandBufAlInfo{};
+	commandBufAlInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	commandBufAlInfo.commandPool = vkCommandPool;
+	commandBufAlInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; // can be submitted to a queue
+	commandBufAlInfo.commandBufferCount = 1;
+
+	if(vkAllocateCommandBuffers(vkDevice, &commandBufAlInfo, &vkCommandBuffer) != VK_SUCCESS){
+		Error("Vulkan: Failed to allocate command buffer!");
 	}
 }
 
