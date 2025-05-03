@@ -34,6 +34,8 @@ Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	vulkanCreateFramebuffers();
 	// Create command pool
 	vulkanCreateCommandPool();
+	// Create sync objects
+	vulkanCreateSyncObjects();
 }
 
 void Nexus::VulkanAPI::CleanScene(Scene* scene){
@@ -47,6 +49,11 @@ void Nexus::VulkanAPI::CleanScene(Scene* scene){
 
 
 void Nexus::VulkanAPI::Clean() {
+	// Destroy semaphores
+	vkDestroySemaphore(vkDevice, vkImageAvaSem, nullptr);
+	vkDestroySemaphore(vkDevice, vkRenderFinishedSem, nullptr);
+	// Destroy fence
+	vkDestroyFence(vkDevice, vkInFlightFen, nullptr);
 	// Destroy command pool
 	vkDestroyCommandPool(vkDevice, vkCommandPool, nullptr);
 	// Destroy framebuffer
@@ -734,12 +741,27 @@ void Nexus::VulkanAPI::vulkanCreateRenderPass(){
 	subpassDesc.colorAttachmentCount = 1;
 	subpassDesc.pColorAttachments = &colorAttachRef;
 
+	// We need to time subpasses correctly, as there are two
+	// and the first one is not timed right. we could fix it with
+	// VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT on vkImageAvaSem, 
+	// but since im gonna have to implement subpass depends
+	// anyway might as well try to learn em right now
+	VkSubpassDependency dep{};
+	dep.srcSubpass = VK_SUBPASS_EXTERNAL;
+	dep.dstSubpass = 0; // aw
+	dep.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dep.srcAccessMask = 0;
+	dep.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT; // wait on the color to happen
+	dep.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
 	VkRenderPassCreateInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
 	renderPassInfo.attachmentCount = 1;
 	renderPassInfo.pAttachments = &colorAttach;
 	renderPassInfo.subpassCount = 1;
 	renderPassInfo.pSubpasses = &subpassDesc;
+	renderPassInfo.dependencyCount = 1;
+	renderPassInfo.pDependencies = &dep;
 
 	if(vkCreateRenderPass(vkDevice, &renderPassInfo, nullptr, &vkRenderPass) != VK_SUCCESS){
 		Error("Vulkan: Failed to create render pass!");
@@ -806,6 +828,28 @@ void Nexus::VulkanAPI::vulkanCreateCommandPool(){
 	debugPrint("Nexus::VulkanAPI::vulkanCreateCommandPool", "Despite the function name, allocation of command buffer was successful.", 0);
 }
 
+void Nexus::VulkanAPI::vulkanCreateSyncObjects() {
+	VkSemaphoreCreateInfo smInf{};
+	smInf.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+	VkFenceCreateInfo fenceInf{};
+	fenceInf.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+	// We add this so its already signaled on init,
+	// so that on the first frame we dont wait for it
+	fenceInf.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+	
+	// Create each semaphore
+	if (vkCreateSemaphore(vkDevice, &smInf, nullptr, &vkImageAvaSem) != VK_SUCCESS) {
+		Error("Vulkan: Failed to create 'image avaliable' semaphore!");
+	}
+	if (vkCreateSemaphore(vkDevice, &smInf, nullptr, &vkRenderFinishedSem) != VK_SUCCESS) {
+		Error("Vulkan: Failed to create 'render finished' semaphore!");
+	}
+	if (vkCreateFence(vkDevice, &fenceInf, nullptr, &vkInFlightFen) != VK_SUCCESS) {
+		Error("Vulkan: Failed to create 'in flight' fence!");
+	}
+}
+
 /*
 * === END INIT FUNCS ===
 */
@@ -853,13 +897,61 @@ void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipe
 	}
 }
 
-void Nexus::VulkanAPI::DrawFrame(Scene* scene){
+void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	// From a high level overview, we wanna to:
 	// 1. wait for previous frame to draw
+	vkWaitForFences(vkDevice, 1, &vkInFlightFen, VK_TRUE, UINT64_MAX);
+	vkResetFences(vkDevice, 1, &vkInFlightFen);
 	// 2. aquire an image from the swap chain
+	uint32_t imgIdx;
+	vkAcquireNextImageKHR(vkDevice, vkSwapChain, UINT64_MAX, vkImageAvaSem, VK_NULL_HANDLE, &imgIdx);
 	// 3. record a command buffer
+	vkResetCommandBuffer(vkCommandBuffer, 0);
+	for (auto& gm : scene->getObjects()) {
+		// Get shader
+		VulkanShader* shader = (VulkanShader*)gm->gShader;
+		vulkanRecordCommandBuffer(imgIdx, shader->grPipeline);
+	}
 	// 4. submit that command buffer
+	VkSubmitInfo smInfo{};
+	smInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+	VkSemaphore waitSems[] = { vkImageAvaSem };
+	VkPipelineStageFlags  waitSta[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+	smInfo.waitSemaphoreCount = 1;
+	smInfo.pWaitSemaphores = waitSems;
+	smInfo.pWaitDstStageMask = waitSta;
+	// Lets submit the only command buffer we have (as of right now)
+	smInfo.commandBufferCount = 1;
+	smInfo.pCommandBuffers = &vkCommandBuffer;
+
+	VkSemaphore signalSem[] = { vkRenderFinishedSem };
+	smInfo.signalSemaphoreCount = 1;
+	smInfo.pSignalSemaphores = signalSem;
+
+	// Submit
+	if (vkQueueSubmit(vkGraphicsQueue, 1, &smInfo, vkInFlightFen) != VK_SUCCESS) {
+		Error("Vulkan: Failed to submit draw command buffer!");
+	}	
+
 	// 5. present it
+	VkPresentInfoKHR presInf{};
+	presInf.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+	presInf.waitSemaphoreCount = 1;
+	presInf.pWaitSemaphores = signalSem;
+	
+	VkSwapchainKHR swapChains[] = { vkSwapChain };
+	presInf.swapchainCount = 1;
+	presInf.pSwapchains = swapChains;
+	presInf.pImageIndices = &imgIdx;
+
+	// since we only usin one swap chain
+	// dont waste time checking if EVERY (1)
+	// swap chain pres was succesful
+	presInf.pResults = nullptr;
+
+	// finally. . .
+	vkQueuePresentKHR(vkPresentQueue, &presInf);
 }
 
 

@@ -133,6 +133,14 @@ namespace Nexus {
 		VkCommandPool vkCommandPool;
 		VkCommandBuffer vkCommandBuffer;
 
+		// Queuing and timing
+		// A semaphore is a way to add order between GPU queue actions
+		// its super cool
+		VkSemaphore vkImageAvaSem;
+		VkSemaphore vkRenderFinishedSem;
+		// Fences are sorta the same thing but for the CPU
+		VkFence vkInFlightFen;
+
 		// Internal Funcs
 		// 
 		// Check if validation layers are supported
@@ -156,6 +164,8 @@ namespace Nexus {
 		void vulkanCreateFramebuffers();
 		// Create command pool
 		void vulkanCreateCommandPool();
+		// Create syncing objects
+		void vulkanCreateSyncObjects();
 
 		// All these functions have a VkPhysicalDevice as a prarm
 		// because we check multiple devices in order to choose the one
