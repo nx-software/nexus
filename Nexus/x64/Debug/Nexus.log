@@ -17,5 +17,4 @@ E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(37,9): warning C4005: 'L
       E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(137,9):
       see previous definition of 'LOG_ERROR'
   
-E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.cpp(10,1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   Nexus.vcxproj -> E:\Electro\Nexus\Nexus\x64\Debug\Nexus.exe

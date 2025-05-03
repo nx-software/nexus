@@ -196,8 +196,7 @@ namespace Nexus {
 		// Writes our commands to the command buffer
 		void vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline);
 	
-
-
+		// Printing for debugging
 		void debugPrint(std::string caller, std::string text, int level);
 
 	public:
@@ -207,7 +206,7 @@ namespace Nexus {
 		void InitShaders(Scene* scene) override;	
 		void DrawFrame(Scene* scene) override;
 		void CleanScene(Scene* scene) override;
-		void Clean();
+		void Clean() override;
 		
 	};
 

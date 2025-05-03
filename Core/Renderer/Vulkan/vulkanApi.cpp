@@ -7,7 +7,7 @@
 Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	// Set defaults
 #ifndef __ANDROID__
-#ifdef _WIN32 || __linux__ || mac
+#if defined(_WIN32) || defined(__linux__) || defined(mac)
 	glfwGetFramebufferSize(window, &width, &height);
 #endif
 	// Nice tradeoff (avoid tearing, low latency) 
@@ -954,6 +954,9 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 
 	// finally. . .
 	vkQueuePresentKHR(vkPresentQueue, &presInf);
+
+	// wait for device to be done
+	vkDeviceWaitIdle(vkDevice);
 }
 
 
