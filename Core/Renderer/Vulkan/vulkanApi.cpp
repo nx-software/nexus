@@ -263,7 +263,7 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 			Error("Vulkan: Failed to create graphics pipline!");
 		}
 
-		gm->gShader = &vkShader;
+		gm->gShader = new VulkanShader(vkShader);
 
 		debugPrint("Nexus::VulkanAPI::InitShaders", std::string{"Loaded 1 object"}, 0);
 	}
@@ -527,10 +527,12 @@ void Nexus::VulkanAPI::vulkanCreateLogicDev() {
 		Error("Vulkan: Failed to create Logical device!");
 	}
 
-	
 
 	// Get graphics queue
 	vkGetDeviceQueue(vkDevice, ind.graphicsFam.value(), 0, &vkGraphicsQueue);
+
+	// Get presentation queue
+	vkGetDeviceQueue(vkDevice, ind.presentFam.value(), 0, &vkPresentQueue);
 
 }
 

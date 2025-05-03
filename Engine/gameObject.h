@@ -2,12 +2,13 @@
 
 #include "transform.h"
 #include "../Core/Renderer/shader.h"
+#include "../Core/Renderer/renderer.h"
 
 #include <string>
 #include <vector>
 
 namespace Nexus{
-    class GraphicsShader;
+    //class GraphicsShader;
     // All things in a scene extend from this
     class GameObject{
     private:
