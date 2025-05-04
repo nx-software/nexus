@@ -60,20 +60,15 @@ void Nexus::VulkanAPI::Clean() {
 	}
 	// Destroy command pool
 	vkDestroyCommandPool(vkDevice, vkCommandPool, nullptr);
-	// Destroy framebuffer
-	for (auto framebuffer : vkSwapChainFrameBuf) {
-        vkDestroyFramebuffer(vkDevice, framebuffer, nullptr);
-    }
+
 	// Destroy pipeline layout
 	vkDestroyPipelineLayout(vkDevice, vkPipelineLayout, nullptr);
 	// Destroy Render pass
 	vkDestroyRenderPass(vkDevice, vkRenderPass, nullptr);
-	// Destroy image views
-	for (auto imageView : vkSwapChainImgViews) {
-		vkDestroyImageView(vkDevice, imageView, nullptr);
-	}
+
 	// Destroy swap chain
-	vkDestroySwapchainKHR(vkDevice, vkSwapChain, nullptr);
+	vulkanCleanSwapChain();
+
 	// Destroy surfaces
 	vkDestroySurfaceKHR(vkInstance, vkSurface, nullptr);
 
@@ -911,14 +906,43 @@ void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipe
 	}
 }
 
+void Nexus::VulkanAPI::vulkanCleanSwapChain() {
+	for (size_t i = 0; i < vkSwapChainFrameBuf.size(); i++) {
+		vkDestroyFramebuffer(vkDevice, vkSwapChainFrameBuf[i], nullptr);
+	}
+	for (size_t i = 0; i < vkSwapChainImgViews.size(); i++) {
+		vkDestroyImageView(vkDevice, vkSwapChainImgViews[i], nullptr);
+	}
+
+	vkDestroySwapchainKHR(vkDevice, vkSwapChain, nullptr);
+}
+
+void Nexus::VulkanAPI::vulkanRecreateSwapChain() {
+	vkDeviceWaitIdle(vkDevice);
+
+	vulkanCleanSwapChain();
+
+	vulkanCreateSwapChain();
+	vulkanCreateImageViews();
+	vulkanCreateFramebuffers();
+}
+
 void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	// From a high level overview, we wanna to:
 	// 1. wait for previous frame to draw
 	vkWaitForFences(vkDevice, 1, &vkInFlightFen[vkCurFrame], VK_TRUE, UINT64_MAX);
-	vkResetFences(vkDevice, 1, &vkInFlightFen[vkCurFrame]);
 	// 2. aquire an image from the swap chain
 	uint32_t imgIdx;
-	vkAcquireNextImageKHR(vkDevice, vkSwapChain, UINT64_MAX, vkImageAvaSem[vkCurFrame], VK_NULL_HANDLE, &imgIdx);
+	// Grab result to see if we gotta change our frame
+	VkResult res = vkAcquireNextImageKHR(vkDevice, vkSwapChain, UINT64_MAX, vkImageAvaSem[vkCurFrame], VK_NULL_HANDLE, &imgIdx);
+	if (res == VK_ERROR_OUT_OF_DATE_KHR) {
+		vulkanRecreateSwapChain();
+		return;
+	}
+	else if ((!VK_SUCCESS) && (!VK_SUBOPTIMAL_KHR)) {
+		Error("Vulkan: Acquire swap chain image failed!");
+	}
+	vkResetFences(vkDevice, 1, &vkInFlightFen[vkCurFrame]);
 	// 3. record a command buffer
 	vkResetCommandBuffer(vkCommandBuffer[vkCurFrame], 0);
 	for (auto& gm : scene->getObjects()) {
@@ -965,7 +989,14 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	presInf.pResults = nullptr;
 
 	// finally. . .
-	vkQueuePresentKHR(vkPresentQueue, &presInf);
+	res = vkQueuePresentKHR(vkPresentQueue, &presInf);
+	if (res == VK_ERROR_OUT_OF_DATE_KHR) {
+		vulkanRecreateSwapChain();
+		return;
+	}
+	else if ((!VK_SUCCESS) && (!VK_SUBOPTIMAL_KHR)) {
+		Error("Vulkan: Present swap chain image failed!");
+	}
 
 	// wait for device to be done
 	vkDeviceWaitIdle(vkDevice);

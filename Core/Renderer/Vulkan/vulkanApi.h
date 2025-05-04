@@ -203,6 +203,11 @@ namespace Nexus {
 
 		// Writes our commands to the command buffer
 		void vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline);
+
+		// Recreate swap chain whenever anything bad happens
+		void vulkanRecreateSwapChain();
+		// we also need to clean up before recreating it
+		void vulkanCleanSwapChain();
 	
 		// Printing for debugging
 		void debugPrint(std::string caller, std::string text, int level);
