@@ -173,6 +173,9 @@
     <None Include="..\TestProgram\Shaders\shader.frag" />
     <None Include="..\TestProgram\Shaders\shader.vert" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\CMakeLists.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

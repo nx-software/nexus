@@ -11,6 +11,7 @@
 #include <limits>
 #include <algorithm>
 
+#if VULKAN == 1
 #ifdef __linux__
 #include <xcb/xcb.h>
 #include <vulkan/vulkan.h>
@@ -19,6 +20,7 @@
 #define GLFW_EXPOSE_NATIVE_X11
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
+#endif
 #endif
 
 #include "../renderApi.h"
@@ -39,6 +41,7 @@
 #define DEBUG 1
 
 namespace Nexus {
+#if VULKAN == 1
 	// All the Vulkan stuff has queues, so we gotta get them queues
 	struct QueueFamilyIndicies {
 		std::optional<uint32_t> graphicsFam;
@@ -223,4 +226,19 @@ namespace Nexus {
 		VkPipelineInputAssemblyStateCreateInfo inputAsmCrInfo{};
 		VkPipeline grPipeline;
 	};
+#else // VULKAN == 1
+	// Dummy class if Vulkan is not enabled
+	class VulkanAPI : public GraphicAPI {
+	public:
+		VulkanAPI(GLFWwindow* window) {
+
+		}
+
+		void InitConnectionToWindow(GLFWwindow* window) override;
+		void InitShaders(Scene* scene) override;
+		void DrawFrame(Scene* scene) override;
+		void CleanScene(Scene* scene) override;
+		void Clean() override;
+	};
+#endif
 }

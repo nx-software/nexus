@@ -7,7 +7,7 @@
 *	Public
 */
 
-Nexus::Renderer::Renderer(std::string title, int height, int width) {
+Nexus::Renderer::Renderer(std::string title, int height, int width, Renderers render){
 	this->height = height;
 	this->width = width;
 
@@ -19,10 +19,19 @@ Nexus::Renderer::Renderer(std::string title, int height, int width) {
 	window = glfwCreateWindow(height, width, title.c_str(), nullptr, nullptr);
 
 	// Create Vulkan
-	gApi = new VulkanAPI(window);
+	switch (render) {
+	case RENDER_VULKAN:
+		gApi = new VulkanAPI(window);
+		break;
+	case RENDER_GL:
+		gApi = new OpenGLAPI(window);
+		break;
+	}
+	
 }
 
 void Nexus::Renderer::Tick(Scene* scene) {
+	prev = scene;
 	if (glfwWindowShouldClose(window)) {
 		// Currently just exit, in the future do something cool
 		terminationTasks();
@@ -35,6 +44,7 @@ void Nexus::Renderer::Tick(Scene* scene) {
 
 
 Nexus::Renderer::~Renderer() {
+	std::cout << "Exiting Nexus Renderer!\n";
 	// i pick up phone
 	// nexus is kill
 	// no
@@ -46,6 +56,9 @@ Nexus::Renderer::~Renderer() {
 *	Internal
 */
 void Nexus::Renderer::terminationTasks() {
+	if (prev) {
+		gApi->CleanScene(prev);
+	}
 	gApi->Clean(); // Tell our current Graphics API to clean up after itself
 	glfwDestroyWindow(window);
 	glfwTerminate();

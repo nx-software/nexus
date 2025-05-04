@@ -4,6 +4,8 @@
 
 #include "vulkanApi.h"
 
+#if VULKAN == 1
+
 Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	// Set defaults
 #ifndef __ANDROID__
@@ -974,7 +976,7 @@ void Nexus::VulkanAPI::debugPrint(std::string caller, std::string text, int leve
 		break;
 	}
 #endif
-
+}
 /*
 	=== Vulkan Shader Holder ===
 */
@@ -983,4 +985,4 @@ void Nexus::VulkanAPI::debugPrint(std::string caller, std::string text, int leve
 
 // }
 
-}
+#endif // VULKAN == 1

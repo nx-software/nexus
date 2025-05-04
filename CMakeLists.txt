@@ -21,6 +21,7 @@ set(SOURCES
     Core/Renderer/renderer.cpp
     Core/Renderer/renderApi.cpp
     Core/Renderer/Vulkan/vulkanApi.cpp
+    Core/Renderer/OpenGL/openglApi.cpp
     Core/Renderer/shader.cpp
     Engine/nexus.cpp
     Engine/transform.cpp

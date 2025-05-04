@@ -306,3 +306,67 @@
 2025-05-02 21:44:25.315 INFO  [29736] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
 2025-05-02 21:44:25.316 INFO  [29736] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
 2025-05-02 21:44:25.317 INFO  [29736] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::InitShaders : Loaded 1 object
+2025-05-02 22:07:04.738 DEBUG [35420] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2025-05-02 22:07:04.900 INFO  [35420] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateInstance : Validation layers supported.
+2025-05-02 22:07:05.720 INFO  [35420] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanDevicePick : Chose device NVIDIA GeForce RTX 4050 Laptop GPU
+2025-05-02 22:07:05.773 INFO  [35420] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-02 22:07:05.773 INFO  [35420] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-02 22:07:05.973 INFO  [35420] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
+2025-05-02 22:07:05.973 INFO  [35420] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
+2025-05-02 22:07:05.975 INFO  [35420] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::InitShaders : Loaded 1 object
+2025-05-02 22:07:15.276 DEBUG [15620] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2025-05-02 22:07:15.423 INFO  [15620] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateInstance : Validation layers supported.
+2025-05-02 22:07:16.159 INFO  [15620] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanDevicePick : Chose device NVIDIA GeForce RTX 4050 Laptop GPU
+2025-05-02 22:07:16.214 INFO  [15620] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-02 22:07:16.215 INFO  [15620] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-02 22:07:16.394 INFO  [15620] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
+2025-05-02 22:07:16.394 INFO  [15620] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
+2025-05-02 22:07:16.395 INFO  [15620] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::InitShaders : Loaded 1 object
+2025-05-02 23:45:21.022 DEBUG [8] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2025-05-02 23:45:21.427 INFO  [8] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateInstance : Validation layers supported.
+2025-05-02 23:45:22.275 INFO  [8] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanDevicePick : Chose device NVIDIA GeForce RTX 4050 Laptop GPU
+2025-05-02 23:45:22.330 INFO  [8] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-02 23:45:22.330 INFO  [8] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-02 23:45:22.513 INFO  [8] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
+2025-05-02 23:45:22.513 INFO  [8] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
+2025-05-02 23:45:22.523 INFO  [8] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::InitShaders : Loaded 1 object
+2025-05-02 23:46:59.938 DEBUG [23728] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2025-05-02 23:47:00.093 INFO  [23728] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateInstance : Validation layers supported.
+2025-05-02 23:47:00.878 INFO  [23728] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanDevicePick : Chose device NVIDIA GeForce RTX 4050 Laptop GPU
+2025-05-02 23:47:00.939 INFO  [23728] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-02 23:47:00.939 INFO  [23728] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-02 23:47:01.113 INFO  [23728] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
+2025-05-02 23:47:01.114 INFO  [23728] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
+2025-05-02 23:47:01.115 INFO  [23728] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::InitShaders : Loaded 1 object
+2025-05-03 08:45:30.441 DEBUG [12544] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2025-05-03 08:45:30.756 INFO  [12544] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateInstance : Validation layers supported.
+2025-05-03 08:45:31.561 INFO  [12544] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanDevicePick : Chose device NVIDIA GeForce RTX 4050 Laptop GPU
+2025-05-03 08:45:31.621 INFO  [12544] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-03 08:45:31.621 INFO  [12544] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-03 08:45:31.828 INFO  [12544] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
+2025-05-03 08:45:31.828 INFO  [12544] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
+2025-05-03 08:45:31.837 INFO  [12544] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::InitShaders : Loaded 1 object
+2025-05-03 15:04:32.028 DEBUG [34232] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2025-05-03 15:04:32.417 INFO  [34232] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateInstance : Validation layers supported.
+2025-05-03 15:04:33.276 INFO  [34232] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanDevicePick : Chose device NVIDIA GeForce RTX 4050 Laptop GPU
+2025-05-03 15:04:33.330 INFO  [34232] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-03 15:04:33.330 INFO  [34232] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-03 15:04:33.512 INFO  [34232] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
+2025-05-03 15:04:33.512 INFO  [34232] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
+2025-05-03 15:04:33.521 INFO  [34232] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::InitShaders : Loaded 1 object
+2025-05-03 15:56:19.800 DEBUG [34288] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2025-05-03 15:56:20.053 INFO  [34288] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateInstance : Validation layers supported.
+2025-05-03 15:56:21.372 INFO  [34288] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanDevicePick : Chose device NVIDIA GeForce RTX 4050 Laptop GPU
+2025-05-03 15:56:21.470 INFO  [34288] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-03 15:56:21.471 INFO  [34288] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-03 15:56:21.742 INFO  [34288] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
+2025-05-03 15:56:21.742 INFO  [34288] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
+2025-05-03 15:56:21.744 INFO  [34288] [Nexus::VulkanAPI::debugPrint@967] Nexus::VulkanAPI::InitShaders : Loaded 1 object
+2025-05-03 19:22:11.137 DEBUG [5988] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2025-05-03 19:22:11.380 INFO  [5988] [Nexus::VulkanAPI::debugPrint@969] Nexus::VulkanAPI::vulkanCreateInstance : Validation layers supported.
+2025-05-03 19:22:12.689 INFO  [5988] [Nexus::VulkanAPI::debugPrint@969] Nexus::VulkanAPI::vulkanDevicePick : Chose device NVIDIA GeForce RTX 4050 Laptop GPU
+2025-05-03 19:22:12.782 INFO  [5988] [Nexus::VulkanAPI::debugPrint@969] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-03 19:22:12.782 INFO  [5988] [Nexus::VulkanAPI::debugPrint@969] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-03 19:22:13.062 INFO  [5988] [Nexus::VulkanAPI::debugPrint@969] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
+2025-05-03 19:22:13.063 INFO  [5988] [Nexus::VulkanAPI::debugPrint@969] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
+2025-05-03 19:22:13.064 INFO  [5988] [Nexus::VulkanAPI::debugPrint@969] Nexus::VulkanAPI::InitShaders : Loaded 1 object

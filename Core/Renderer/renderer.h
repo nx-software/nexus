@@ -3,6 +3,7 @@
 // Includes 
 #include "renderApi.h"
 #include "Vulkan/vulkanApi.h"
+#include "OpenGL/openglApi.h"
 // We use Vulkan so
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -17,6 +18,12 @@
 namespace Nexus {	
 	class GraphicAPI;
 
+	enum Renderers {
+		RENDER_VULKAN,
+		RENDER_GL,
+		RENDER_DX
+	};
+
 	class Renderer {
 	private:
 		GLFWwindow* window;
@@ -27,13 +34,14 @@ namespace Nexus {
 		GraphicAPI* gApi;
 		GraphicsCard chosenCard;
 
-		
+		Scene* prev;
+
 		// Stuff to do when kill
 		void terminationTasks();
 
 	public:
 		// Create Renderer
-		Renderer(std::string title, int height, int width);
+		Renderer(std::string title, int height, int width, Renderers render);
 
 		GraphicAPI* getApi(){
 			return gApi;
