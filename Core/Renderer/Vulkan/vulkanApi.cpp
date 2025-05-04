@@ -51,11 +51,13 @@ void Nexus::VulkanAPI::CleanScene(Scene* scene){
 
 
 void Nexus::VulkanAPI::Clean() {
-	// Destroy semaphores
-	vkDestroySemaphore(vkDevice, vkImageAvaSem, nullptr);
-	vkDestroySemaphore(vkDevice, vkRenderFinishedSem, nullptr);
-	// Destroy fence
-	vkDestroyFence(vkDevice, vkInFlightFen, nullptr);
+	for (size_t i = 0; i < MAX_FRAME_IN_FLIGHT; i++) {
+		// Destroy semaphores
+		vkDestroySemaphore(vkDevice, vkImageAvaSem[i], nullptr);
+		vkDestroySemaphore(vkDevice, vkRenderFinishedSem[i], nullptr);
+		// Destroy fence
+		vkDestroyFence(vkDevice, vkInFlightFen[i], nullptr);
+	}
 	// Destroy command pool
 	vkDestroyCommandPool(vkDevice, vkCommandPool, nullptr);
 	// Destroy framebuffer
@@ -818,14 +820,15 @@ void Nexus::VulkanAPI::vulkanCreateCommandPool(){
 	debugPrint("Nexus::VulkanAPI::vulkanCreateCommandPool", "Created Command Pool", 0);
 
 	// Create command buffer while we're at it
+	vkCommandBuffer.resize(MAX_FRAME_IN_FLIGHT);
 
 	VkCommandBufferAllocateInfo commandBufAlInfo{};
 	commandBufAlInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	commandBufAlInfo.commandPool = vkCommandPool;
 	commandBufAlInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; // can be submitted to a queue
-	commandBufAlInfo.commandBufferCount = 1;
+	commandBufAlInfo.commandBufferCount = (uint32_t) MAX_FRAME_IN_FLIGHT;
 
-	if(vkAllocateCommandBuffers(vkDevice, &commandBufAlInfo, &vkCommandBuffer) != VK_SUCCESS){
+	if(vkAllocateCommandBuffers(vkDevice, &commandBufAlInfo, vkCommandBuffer.data()) != VK_SUCCESS){
 		Error("Vulkan: Failed to allocate command buffer!");
 	}
 
@@ -833,6 +836,11 @@ void Nexus::VulkanAPI::vulkanCreateCommandPool(){
 }
 
 void Nexus::VulkanAPI::vulkanCreateSyncObjects() {
+	// prepare for flight frames
+	vkImageAvaSem.resize(MAX_FRAME_IN_FLIGHT);
+	vkRenderFinishedSem.resize(MAX_FRAME_IN_FLIGHT);
+	vkInFlightFen.resize(MAX_FRAME_IN_FLIGHT);
+
 	VkSemaphoreCreateInfo smInf{};
 	smInf.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
@@ -842,15 +850,17 @@ void Nexus::VulkanAPI::vulkanCreateSyncObjects() {
 	// so that on the first frame we dont wait for it
 	fenceInf.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 	
-	// Create each semaphore
-	if (vkCreateSemaphore(vkDevice, &smInf, nullptr, &vkImageAvaSem) != VK_SUCCESS) {
-		Error("Vulkan: Failed to create 'image avaliable' semaphore!");
-	}
-	if (vkCreateSemaphore(vkDevice, &smInf, nullptr, &vkRenderFinishedSem) != VK_SUCCESS) {
-		Error("Vulkan: Failed to create 'render finished' semaphore!");
-	}
-	if (vkCreateFence(vkDevice, &fenceInf, nullptr, &vkInFlightFen) != VK_SUCCESS) {
-		Error("Vulkan: Failed to create 'in flight' fence!");
+	for (size_t i = 0; i < MAX_FRAME_IN_FLIGHT; i++) {
+		// Create each semaphore
+		if (vkCreateSemaphore(vkDevice, &smInf, nullptr, &vkImageAvaSem[i]) != VK_SUCCESS) {
+			Error("Vulkan: Failed to create 'image avaliable' semaphore!");
+		}
+		if (vkCreateSemaphore(vkDevice, &smInf, nullptr, &vkRenderFinishedSem[i]) != VK_SUCCESS) {
+			Error("Vulkan: Failed to create 'render finished' semaphore!");
+		}
+		if (vkCreateFence(vkDevice, &fenceInf, nullptr, &vkInFlightFen[i]) != VK_SUCCESS) {
+			Error("Vulkan: Failed to create 'in flight' fence!");
+		}
 	}
 }
 
@@ -865,7 +875,7 @@ void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipe
 	bufferBeginInf.flags = 0;
 	bufferBeginInf.pInheritanceInfo = nullptr;
 
-	if(vkBeginCommandBuffer(vkCommandBuffer, &bufferBeginInf) != VK_SUCCESS){
+	if(vkBeginCommandBuffer(vkCommandBuffer[vkCurFrame], &bufferBeginInf) != VK_SUCCESS) {
 		Error("Vulkan: Failed to begin recording the command buffer!");
 	}
 
@@ -883,20 +893,20 @@ void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipe
 
 	// Begin our render pass
 	//                                                         embedded into primary buffer
-	vkCmdBeginRenderPass(vkCommandBuffer, &renderPassBeginInf, VK_SUBPASS_CONTENTS_INLINE);
+	vkCmdBeginRenderPass(vkCommandBuffer[vkCurFrame], &renderPassBeginInf, VK_SUBPASS_CONTENTS_INLINE);
 
-	vkCmdBindPipeline(vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, grPipeline);
+	vkCmdBindPipeline(vkCommandBuffer[vkCurFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, grPipeline);
 
-	vkCmdSetViewport(vkCommandBuffer, 0, 1, &vkViewport);
-	vkCmdSetScissor(vkCommandBuffer, 0, 1, &vkScissor);
+	vkCmdSetViewport(vkCommandBuffer[vkCurFrame], 0, 1, &vkViewport);
+	vkCmdSetScissor(vkCommandBuffer[vkCurFrame], 0, 1, &vkScissor);
 
 	//               verts, no instance rendering, no offsets
-	vkCmdDraw(vkCommandBuffer, 3, 1, 0, 0);
+	vkCmdDraw(vkCommandBuffer[vkCurFrame], 3, 1, 0, 0);
 
 	// End
-	vkCmdEndRenderPass(vkCommandBuffer);
+	vkCmdEndRenderPass(vkCommandBuffer[vkCurFrame]);
 
-	if(vkEndCommandBuffer(vkCommandBuffer) != VK_SUCCESS){
+	if(vkEndCommandBuffer(vkCommandBuffer[vkCurFrame]) != VK_SUCCESS) {
 		Error("Vulkan: Failed to end command buffer!");
 	}
 }
@@ -904,13 +914,13 @@ void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipe
 void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	// From a high level overview, we wanna to:
 	// 1. wait for previous frame to draw
-	vkWaitForFences(vkDevice, 1, &vkInFlightFen, VK_TRUE, UINT64_MAX);
-	vkResetFences(vkDevice, 1, &vkInFlightFen);
+	vkWaitForFences(vkDevice, 1, &vkInFlightFen[vkCurFrame], VK_TRUE, UINT64_MAX);
+	vkResetFences(vkDevice, 1, &vkInFlightFen[vkCurFrame]);
 	// 2. aquire an image from the swap chain
 	uint32_t imgIdx;
-	vkAcquireNextImageKHR(vkDevice, vkSwapChain, UINT64_MAX, vkImageAvaSem, VK_NULL_HANDLE, &imgIdx);
+	vkAcquireNextImageKHR(vkDevice, vkSwapChain, UINT64_MAX, vkImageAvaSem[vkCurFrame], VK_NULL_HANDLE, &imgIdx);
 	// 3. record a command buffer
-	vkResetCommandBuffer(vkCommandBuffer, 0);
+	vkResetCommandBuffer(vkCommandBuffer[vkCurFrame], 0);
 	for (auto& gm : scene->getObjects()) {
 		// Get shader
 		VulkanShader* shader = (VulkanShader*)gm->gShader;
@@ -920,21 +930,21 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	VkSubmitInfo smInfo{};
 	smInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-	VkSemaphore waitSems[] = { vkImageAvaSem };
+	VkSemaphore waitSems[] = { vkImageAvaSem[vkCurFrame] };
 	VkPipelineStageFlags  waitSta[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 	smInfo.waitSemaphoreCount = 1;
 	smInfo.pWaitSemaphores = waitSems;
 	smInfo.pWaitDstStageMask = waitSta;
 	// Lets submit the only command buffer we have (as of right now)
 	smInfo.commandBufferCount = 1;
-	smInfo.pCommandBuffers = &vkCommandBuffer;
+	smInfo.pCommandBuffers = &vkCommandBuffer[vkCurFrame];
 
-	VkSemaphore signalSem[] = { vkRenderFinishedSem };
+	VkSemaphore signalSem[] = { vkRenderFinishedSem[vkCurFrame]};
 	smInfo.signalSemaphoreCount = 1;
 	smInfo.pSignalSemaphores = signalSem;
 
 	// Submit
-	if (vkQueueSubmit(vkGraphicsQueue, 1, &smInfo, vkInFlightFen) != VK_SUCCESS) {
+	if (vkQueueSubmit(vkGraphicsQueue, 1, &smInfo, vkInFlightFen[vkCurFrame]) != VK_SUCCESS) {
 		Error("Vulkan: Failed to submit draw command buffer!");
 	}	
 
@@ -959,6 +969,9 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 
 	// wait for device to be done
 	vkDeviceWaitIdle(vkDevice);
+
+	// change frame
+	vkCurFrame = (vkCurFrame + 1) % MAX_FRAME_IN_FLIGHT;
 }
 
 

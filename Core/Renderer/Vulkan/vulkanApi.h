@@ -42,6 +42,9 @@
 
 namespace Nexus {
 #if VULKAN == 1
+	// Make this configurable later
+	const int MAX_FRAME_IN_FLIGHT = 2;
+
 	// All the Vulkan stuff has queues, so we gotta get them queues
 	struct QueueFamilyIndicies {
 		std::optional<uint32_t> graphicsFam;
@@ -134,15 +137,17 @@ namespace Nexus {
 
 		// Command pool
 		VkCommandPool vkCommandPool;
-		VkCommandBuffer vkCommandBuffer;
+		std::vector<VkCommandBuffer> vkCommandBuffer;
 
 		// Queuing and timing
 		// A semaphore is a way to add order between GPU queue actions
 		// its super cool
-		VkSemaphore vkImageAvaSem;
-		VkSemaphore vkRenderFinishedSem;
+		std::vector<VkSemaphore> vkImageAvaSem;
+		std::vector<VkSemaphore> vkRenderFinishedSem;
 		// Fences are sorta the same thing but for the CPU
-		VkFence vkInFlightFen;
+		std::vector<VkFence> vkInFlightFen;
+
+		uint32_t vkCurFrame = 0;
 
 		// Internal Funcs
 		// 
