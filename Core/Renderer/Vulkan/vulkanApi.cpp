@@ -7,6 +7,8 @@
 #if VULKAN == 1
 
 Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
+	// Set user pointer
+	glfwSetWindowUserPointer(window, this);
 	// Set defaults
 #ifndef __ANDROID__
 #if defined(_WIN32) || defined(__linux__) || defined(mac)
@@ -112,6 +114,10 @@ void Nexus::VulkanAPI::InitConnectionToWindow(GLFWwindow* window) {
 		Error("GLFW: Failed to create window surface!");
 	}
 #endif
+}
+
+GLFWframebuffersizefun Nexus::VulkanAPI::SetupWindowResize() {
+	return Nexus::frameBufResizeCallback;
 }
 
 void Nexus::VulkanAPI::InitShaders(Scene* scene){
@@ -925,6 +931,8 @@ void Nexus::VulkanAPI::vulkanRecreateSwapChain() {
 	vulkanCreateSwapChain();
 	vulkanCreateImageViews();
 	vulkanCreateFramebuffers();
+
+	frameBufResize = false;
 }
 
 void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
@@ -935,7 +943,7 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	uint32_t imgIdx;
 	// Grab result to see if we gotta change our frame
 	VkResult res = vkAcquireNextImageKHR(vkDevice, vkSwapChain, UINT64_MAX, vkImageAvaSem[vkCurFrame], VK_NULL_HANDLE, &imgIdx);
-	if (res == VK_ERROR_OUT_OF_DATE_KHR) {
+	if (res == VK_ERROR_OUT_OF_DATE_KHR || frameBufResize) {
 		vulkanRecreateSwapChain();
 		return;
 	}
@@ -990,7 +998,7 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 
 	// finally. . .
 	res = vkQueuePresentKHR(vkPresentQueue, &presInf);
-	if (res == VK_ERROR_OUT_OF_DATE_KHR) {
+	if (res == VK_ERROR_OUT_OF_DATE_KHR || frameBufResize) {
 		vulkanRecreateSwapChain();
 		return;
 	}
@@ -1028,5 +1036,13 @@ void Nexus::VulkanAPI::debugPrint(std::string caller, std::string text, int leve
 // Nexus::VulkanShader::VulkanShader(){
 
 // }
+
+
+// Static function for window resize callbacks
+static void Nexus::frameBufResizeCallback(GLFWwindow* win, int w, int h) {
+	auto vApi = reinterpret_cast<VulkanAPI*>(glfwGetWindowUserPointer(win));
+	vApi->setFBResize(true);
+}
+
 
 #endif // VULKAN == 1

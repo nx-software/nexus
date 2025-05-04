@@ -13,6 +13,7 @@ namespace Nexus {
 		OpenGLAPI(GLFWwindow* window);
 
 		void InitConnectionToWindow(GLFWwindow* window) override;
+		GLFWframebuffersizefun SetupWindowResize() override;
 		void InitShaders(Scene* scene) override;
 		void DrawFrame(Scene* scene) override;
 		void CleanScene(Scene* scene) override;

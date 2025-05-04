@@ -43,9 +43,7 @@ namespace Nexus {
 		// Create Renderer
 		Renderer(std::string title, int height, int width, Renderers render);
 
-		GraphicAPI* getApi(){
-			return gApi;
-		}
+		GraphicAPI* getApi(){ return this->gApi; }
 
 		// Tick
 		void Tick(Scene* scene);

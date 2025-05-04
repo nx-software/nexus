@@ -146,6 +146,10 @@ namespace Nexus {
 		std::vector<VkSemaphore> vkRenderFinishedSem;
 		// Fences are sorta the same thing but for the CPU
 		std::vector<VkFence> vkInFlightFen;
+		// occasionally, some drivers will NOT
+		// trigger a VK_ERROR_OUT_OF_DATE_KHR when the 
+		// window is resized. ew. so we gon handle it ourselves
+		bool frameBufResize = false;
 
 		uint32_t vkCurFrame = 0;
 
@@ -217,11 +221,17 @@ namespace Nexus {
 
 		void InitConnectionToWindow(GLFWwindow* window) override;
 		void InitShaders(Scene* scene) override;	
+		GLFWframebuffersizefun SetupWindowResize() override;
 		void DrawFrame(Scene* scene) override;
 		void CleanScene(Scene* scene) override;
 		void Clean() override;
+
+		// Getters and setters
+		void setFBResize(bool n) { this->frameBufResize = n; }
 		
 	};
+
+	static void frameBufResizeCallback(GLFWwindow* win, int w, int h);
 
 
 	/*

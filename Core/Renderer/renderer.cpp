@@ -27,6 +27,8 @@ Nexus::Renderer::Renderer(std::string title, int height, int width, Renderers re
 		gApi = new OpenGLAPI(window);
 		break;
 	}
+
+	glfwSetFramebufferSizeCallback(window, gApi->SetupWindowResize());
 	
 }
 
@@ -36,6 +38,13 @@ void Nexus::Renderer::Tick(Scene* scene) {
 		// Currently just exit, in the future do something cool
 		terminationTasks();
 		exit(1);
+	}
+	// Check for minimization
+	int w = 0, h = 0;
+	glfwGetFramebufferSize(window, &w, &h);
+	while (w == 0 && h == 0) {
+		glfwGetFramebufferSize(window, &w, &h);
+		glfwWaitEvents();
 	}
 
 	glfwPollEvents();
