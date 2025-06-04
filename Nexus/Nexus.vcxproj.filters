@@ -48,6 +48,9 @@
     <ClCompile Include="..\Core\Renderer\OpenGL\openglApi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Engine\mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Core\Renderer\renderer.h">
@@ -84,6 +87,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Core\Renderer\OpenGL\openglApi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

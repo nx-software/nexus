@@ -539,3 +539,142 @@
 2025-05-03 23:11:17.205 INFO  [23436] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
 2025-05-03 23:11:17.205 INFO  [23436] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
 2025-05-03 23:11:17.207 INFO  [23436] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::InitShaders : Loaded 1 object
+2025-05-04 00:19:20.812 DEBUG [41768] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2025-05-04 00:19:22.106 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanDevicePick : Chose device NVIDIA GeForce RTX 4050 Laptop GPU
+2025-05-04 00:19:22.200 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:19:22.200 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:19:22.402 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
+2025-05-04 00:19:22.402 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
+2025-05-04 00:19:22.405 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::InitShaders : Loaded 1 object
+2025-05-04 00:19:26.324 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:19:26.326 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:19:27.430 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:19:27.431 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:19:27.680 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:19:27.680 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:19:28.805 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:19:28.806 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:19:32.387 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:19:32.387 INFO  [41768] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:20:15.204 DEBUG [34188] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2025-05-04 00:20:15.463 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanCreateInstance : Validation layers supported.
+2025-05-04 00:20:16.485 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanDevicePick : Chose device NVIDIA GeForce RTX 4050 Laptop GPU
+2025-05-04 00:20:16.574 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:20:16.574 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:20:16.771 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
+2025-05-04 00:20:16.771 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
+2025-05-04 00:20:16.773 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::InitShaders : Loaded 1 object
+2025-05-04 00:20:23.112 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:20:23.112 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:20:24.054 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:20:24.055 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:20:31.578 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:20:31.578 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:20:34.285 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:20:34.285 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:20:42.236 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:20:42.236 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:20:45.011 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:20:45.012 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:20:46.462 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:20:46.462 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:20:47.549 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:20:47.549 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:20:49.292 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:20:49.293 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:20:50.756 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:20:50.756 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:20:57.515 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:20:57.515 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:21:01.574 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:21:01.575 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:21:02.752 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:21:02.752 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:21:05.331 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:21:05.331 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:21:12.300 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:21:12.300 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:21:13.021 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:21:13.021 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:21:13.876 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:21:13.876 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:21:14.456 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:21:14.456 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:21:14.909 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:21:14.910 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:21:15.956 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:21:15.956 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 00:21:16.652 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 00:21:16.652 INFO  [34188] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:24.332 DEBUG [12996] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2025-05-04 09:26:24.475 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanCreateInstance : Validation layers supported.
+2025-05-04 09:26:25.507 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanDevicePick : Chose device NVIDIA GeForce RTX 4050 Laptop GPU
+2025-05-04 09:26:25.569 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:25.569 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:25.691 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
+2025-05-04 09:26:25.693 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
+2025-05-04 09:26:25.713 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::InitShaders : Loaded 1 object
+2025-05-04 09:26:26.488 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:26.488 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:27.470 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:27.470 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:28.336 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:28.336 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:30.162 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:30.162 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:30.955 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:30.956 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:31.755 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:31.756 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:32.202 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:32.202 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:32.594 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:32.594 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:33.075 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:33.075 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:33.529 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:33.529 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:34.059 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:34.060 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:34.565 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:34.565 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:35.292 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:35.292 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:35.914 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:35.914 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:36.541 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:36.542 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:37.409 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:37.409 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:43.084 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:43.084 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-04 09:26:45.235 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-04 09:26:45.235 INFO  [12996] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-15 19:40:30.589 DEBUG [36936] [Nexus::Engine::Engine@16] Nexus Init - Version 0.0
+2025-05-15 19:40:30.872 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanCreateInstance : Validation layers supported.
+2025-05-15 19:40:32.297 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanDevicePick : Chose device NVIDIA GeForce RTX 4050 Laptop GPU
+2025-05-15 19:40:32.397 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-15 19:40:32.397 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-15 19:40:32.527 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanCreateCommandPool : Created Command Pool
+2025-05-15 19:40:32.529 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::vulkanCreateCommandPool : Despite the function name, allocation of command buffer was successful.
+2025-05-15 19:40:32.550 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::InitShaders : Loaded 1 object
+2025-05-15 19:40:35.205 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-15 19:40:35.205 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-15 19:40:36.448 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-15 19:40:36.448 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-15 19:40:37.055 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-15 19:40:37.055 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-15 19:40:37.585 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-15 19:40:37.585 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-15 19:40:38.118 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-15 19:40:38.118 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-15 19:40:39.011 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-15 19:40:39.011 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-15 19:40:39.418 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-15 19:40:39.419 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-15 19:40:44.550 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-15 19:40:44.550 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-15 19:40:45.718 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-15 19:40:45.718 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.
+2025-05-15 19:40:50.019 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapSurfFormat : Got prefered surface format and color space!
+2025-05-15 19:40:50.020 INFO  [36936] [Nexus::VulkanAPI::debugPrint@1021] Nexus::VulkanAPI::chooseSwapPresMode : Got prefered presentation mode.

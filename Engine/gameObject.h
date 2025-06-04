@@ -1,6 +1,7 @@
 #pragma once
 
 #include "transform.h"
+#include "mesh.h"
 #include "../Core/Renderer/shader.h"
 #include "../Core/Renderer/renderer.h"
 
@@ -26,6 +27,9 @@ namespace Nexus{
 
         // For the graphics APIs
         GraphicsShader* gShader;
+
+        // Our current mesh
+        Mesh* mesh = nullptr;
 
         // Setters
         void setId(int id){

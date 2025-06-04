@@ -70,6 +70,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>E:\Electro\Nexus\Nexus\thirdPartyInc;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -150,6 +153,7 @@
     <ClCompile Include="..\Core\Renderer\Vulkan\vulkanApi.cpp" />
     <ClCompile Include="..\CrashHandler\CrashHandler.cpp" />
     <ClCompile Include="..\Engine\gameObject.cpp" />
+    <ClCompile Include="..\Engine\mesh.cpp" />
     <ClCompile Include="..\Engine\nexus.cpp" />
     <ClCompile Include="..\Engine\scene.cpp" />
     <ClCompile Include="..\Engine\transform.cpp" />
@@ -165,6 +169,7 @@
     <ClInclude Include="..\Engine\component.h" />
     <ClInclude Include="..\Engine\config.h" />
     <ClInclude Include="..\Engine\gameObject.h" />
+    <ClInclude Include="..\Engine\mesh.h" />
     <ClInclude Include="..\Engine\nexus.h" />
     <ClInclude Include="..\Engine\scene.h" />
     <ClInclude Include="..\Engine\transform.h" />

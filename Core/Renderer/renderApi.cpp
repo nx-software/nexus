@@ -9,3 +9,7 @@ Nexus::GraphicAPI::GraphicAPI(){
 Nexus::GraphicsShader::GraphicsShader(){
     
 }
+
+Nexus::SpecAPIVertex::SpecAPIVertex() {
+
+}

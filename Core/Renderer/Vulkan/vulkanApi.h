@@ -10,6 +10,7 @@
 #include <cstdint>
 #include <limits>
 #include <algorithm>
+#include <array>
 
 #if VULKAN == 1
 #ifdef __linux__
@@ -87,7 +88,7 @@ namespace Nexus {
 		int width, height;
 
 		// Validation layers
-#ifndef DEBUG
+#if DEBUG == 0
 		const bool validLayer = false;
 #else
 		const bool validLayer = true;
@@ -230,6 +231,8 @@ namespace Nexus {
 		void setFBResize(bool n) { this->frameBufResize = n; }
 		
 	};
+
+	
 
 	static void frameBufResizeCallback(GLFWwindow* win, int w, int h);
 

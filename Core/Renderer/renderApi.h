@@ -44,10 +44,19 @@ namespace Nexus {
 
 
 	// Holder for the seperate graphics things that the 
-	// different graphics APIs
+	// different graphics APIs have
 	class GraphicsShader{
 	private:
 	public:
 		GraphicsShader();
+	};
+
+	// Holder for seperate graphics things for vertices
+	class SpecAPIVertex {
+	private:
+	public:
+		Vertex* root;
+
+		SpecAPIVertex();
 	};
 }

@@ -228,13 +228,14 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		vkShader.shaderStages[0] = vertPipe;
 		vkShader.shaderStages[1] = fragPipe;
 
-		// TODO: RIGHT NOW THIS JUST SAYS THE DATA IS IN THE SHADER
-		// NEED TO MAKE IT READ FROM MESHES LATER ON
+		auto bindDesc = Nexus::Vertex::getBindDesc();
+		auto attrDesc = Nexus::Vertex::getAttrDesc();
+	
 		vkShader.vertCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vkShader.vertCrInfo.vertexBindingDescriptionCount = 0;
-		vkShader.vertCrInfo.pVertexBindingDescriptions = nullptr;
-		vkShader.vertCrInfo.vertexAttributeDescriptionCount = 0;
-		vkShader.vertCrInfo.pVertexAttributeDescriptions = nullptr;
+		vkShader.vertCrInfo.vertexBindingDescriptionCount = 1;
+		vkShader.vertCrInfo.pVertexBindingDescriptions = &bindDesc;
+		vkShader.vertCrInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attrDesc.size());
+		vkShader.vertCrInfo.pVertexAttributeDescriptions = attrDesc.data();
 
 		// Input assembly
 		vkShader.inputAsmCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -712,7 +713,7 @@ VkShaderModule Nexus::VulkanAPI::createShaderModule(const std::vector<char>& cod
 
 	VkShaderModule shaderMod;
 	if(vkCreateShaderModule(vkDevice, &shaderModCrInfo, nullptr, &shaderMod) != VK_SUCCESS){
-		Error("Failed to create shader module!\n");
+		Error("Vulkan: Failed to create shader module!\n");
 	}
 
 	return shaderMod;
@@ -799,7 +800,7 @@ void Nexus::VulkanAPI::vulkanCreateFramebuffers(){
 
 		// create it!
 		if(vkCreateFramebuffer(vkDevice, &frameBufCrInfo, nullptr, &vkSwapChainFrameBuf[i]) != VK_SUCCESS){
-			Error(std::string{"Failed to create framebuffer number" + std::to_string(i)});
+			Error(std::string{"Vulkan: Failed to create framebuffer number" + std::to_string(i)});
 		}
 	}
 }
@@ -1043,6 +1044,7 @@ static void Nexus::frameBufResizeCallback(GLFWwindow* win, int w, int h) {
 	auto vApi = reinterpret_cast<VulkanAPI*>(glfwGetWindowUserPointer(win));
 	vApi->setFBResize(true);
 }
+
 
 
 #endif // VULKAN == 1
