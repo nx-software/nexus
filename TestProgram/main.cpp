@@ -22,7 +22,7 @@ int main() {
 	Nexus::GameObject gameObject("Test Object");
 
 	std::vector<Nexus::Vertex> verts = {
-		{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+		{{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
 		{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
 		{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
 	};

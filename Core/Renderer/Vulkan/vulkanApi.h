@@ -40,6 +40,8 @@
 
 #define DEBUG 1
 
+#define VERTEX_BUFFER_SIZE (size_t)40000
+
 namespace Nexus {
 #if VULKAN == 1
 	// Make this configurable later
@@ -144,9 +146,6 @@ namespace Nexus {
 		VkBuffer vkVertexBuffer;
 		VkDeviceMemory vkVertexBufferMem;
 
-		// Memory requirments
-		VkMemoryRequirements vkMemReq;
-
 
 		// Queuing and timing
 		// A semaphore is a way to add order between GPU queue actions
@@ -215,6 +214,9 @@ namespace Nexus {
 		// Shaders
 		VkShaderModule createShaderModule(const std::vector<char>& code);
 
+
+		// Create buffer
+		void vulkanCreateBuffer(VkDeviceSize devSize, VkBufferUsageFlags usage, VkMemoryPropertyFlags props, VkBuffer& buffer, VkDeviceMemory& bufMem);
 
 		// Writes our commands to the command buffer
 		void vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline, size_t vert_size);

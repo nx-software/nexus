@@ -74,12 +74,13 @@ void Nexus::VulkanAPI::Clean() {
 	vulkanCleanSwapChain();
 
 	vkDestroyBuffer(vkDevice, vkVertexBuffer, nullptr);
+	vkFreeMemory(vkDevice, vkVertexBufferMem, nullptr);
+
 
 	// Destroy surfaces
 	vkDestroySurfaceKHR(vkInstance, vkSurface, nullptr);
 
 	vkDestroyDevice(vkDevice, nullptr);
-	vkFreeMemory(vkDevice, vkVertexBufferMem, nullptr);
 
 	vkDestroyInstance(vkInstance, nullptr);
 	
@@ -843,32 +844,11 @@ void Nexus::VulkanAPI::vulkanCreateCommandPool(){
 }
 
 void Nexus::VulkanAPI::vulkanCreateVertexBuffer() {
-	VkBufferCreateInfo bufCrInfo{};
-	bufCrInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-	// Make one MASSIVE buffer and don't worry about reallocation
-	bufCrInfo.size = 40000;
-	bufCrInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT; // how we gon use it? we're gonna use it as a vertex buffer (crazy)
-	bufCrInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE; // only used from the graphics queue
+	// Allocate a bunch of memory so we don't gotta worry about it
+	VkDeviceSize bufSize = VERTEX_BUFFER_SIZE;
+	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vkVertexBuffer, vkVertexBufferMem);
+
 	
-	this->vkBufCrInfo = bufCrInfo;
-
-	if (vkCreateBuffer(vkDevice, &bufCrInfo, nullptr, &vkVertexBuffer) != VK_SUCCESS) {
-		Error("Vulkan: Failed to create vertex buffer!");
-	}
-
-	// Allocate memory
-	vkGetBufferMemoryRequirements(vkDevice, vkVertexBuffer, &vkMemReq);
-	VkMemoryAllocateInfo memAllocInfo{};
-	memAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	memAllocInfo.allocationSize = vkMemReq.size;
-	memAllocInfo.memoryTypeIndex = findMemType(vkMemReq.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-
-	if (vkAllocateMemory(vkDevice, &memAllocInfo, nullptr, &vkVertexBufferMem) != VK_SUCCESS) {
-		Error("Vulkan: Failed to allocate memory!");
-	}
-
-	// Bind memory
-	vkBindBufferMemory(vkDevice, vkVertexBuffer, vkVertexBufferMem, 0);
 }
 
 void Nexus::VulkanAPI::vulkanCreateSyncObjects() {
@@ -903,6 +883,34 @@ void Nexus::VulkanAPI::vulkanCreateSyncObjects() {
 /*
 * === END INIT FUNCS ===
 */
+
+void Nexus::VulkanAPI::vulkanCreateBuffer(VkDeviceSize devSize, VkBufferUsageFlags usage, VkMemoryPropertyFlags props, VkBuffer& buffer, VkDeviceMemory& bufMem) {
+	VkBufferCreateInfo bufCrInfo{};
+	bufCrInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+	bufCrInfo.size = devSize;
+	bufCrInfo.usage = usage;
+	bufCrInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE; // only used from the graphics queue
+
+	if (vkCreateBuffer(vkDevice, &bufCrInfo, nullptr, &buffer) != VK_SUCCESS) {
+		Error("Vulkan: Failed to create buffer!");
+	}
+
+	// Memory requirments
+	VkMemoryRequirements vkMemReq;
+	// Allocate memory
+	vkGetBufferMemoryRequirements(vkDevice, buffer, &vkMemReq);
+	VkMemoryAllocateInfo memAllocInfo{};
+	memAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	memAllocInfo.allocationSize = vkMemReq.size;
+	memAllocInfo.memoryTypeIndex = findMemType(vkMemReq.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+	if (vkAllocateMemory(vkDevice, &memAllocInfo, nullptr, &bufMem) != VK_SUCCESS) {
+		Error("Vulkan: Failed to allocate buffer memory!");
+	}
+
+	// Bind memory
+	vkBindBufferMemory(vkDevice, buffer, bufMem, 0);
+}
 
 void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline, size_t vert_size){
 	VkCommandBufferBeginInfo bufferBeginInf{};
@@ -1008,16 +1016,16 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	// 3. record a command buffer
 	vkResetCommandBuffer(vkCommandBuffer[vkCurFrame], 0);
 	for (auto& gm : scene->getObjects()) {
-		// Get shader
-		VulkanShader* shader = (VulkanShader*)gm->gShader;
-		vulkanRecordCommandBuffer(imgIdx, shader->grPipeline, gm->mesh->getVertices().size());
-
 		// Lets copy our data
 		// Map the memory into CPU accessible memory
 		void* data;
-		vkMapMemory(vkDevice, vkVertexBufferMem, 0, vkBufCrInfo.size, 0, &data);
-		memcpy(data, gm->mesh->getVertices().data(), (size_t)vkBufCrInfo.size);
+		vkMapMemory(vkDevice, vkVertexBufferMem, 0, VERTEX_BUFFER_SIZE, 0, &data);
+		memcpy(data, gm->mesh->getVertices().data(), VERTEX_BUFFER_SIZE);
 		vkUnmapMemory(vkDevice, vkVertexBufferMem);
+
+		// Get shader
+		VulkanShader* shader = (VulkanShader*)gm->gShader;
+		vulkanRecordCommandBuffer(imgIdx, shader->grPipeline, gm->mesh->getVertices().size());
 	}
 	// 4. submit that command buffer
 	VkSubmitInfo smInfo{};
@@ -1032,7 +1040,7 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	smInfo.commandBufferCount = 1;
 	smInfo.pCommandBuffers = &vkCommandBuffer[vkCurFrame];
 
-	VkSemaphore signalSem[] = { vkRenderFinishedSem[vkCurFrame]};
+	VkSemaphore signalSem[] = { vkRenderFinishedSem[vkCurFrame] };
 	smInfo.signalSemaphoreCount = 1;
 	smInfo.pSignalSemaphores = signalSem;
 
@@ -1072,6 +1080,8 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 
 	// change frame
 	vkCurFrame = (vkCurFrame + 1) % MAX_FRAME_IN_FLIGHT;
+
+	
 }
 
 

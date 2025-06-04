@@ -48,7 +48,7 @@ namespace Nexus {
 			// Same thing but for color
 			attrDescs[1].binding = 0;
 			attrDescs[1].location = 1; // Refrences the "location = 1" from our vertex shader
-			attrDescs[1].format = VK_FORMAT_R32G32_SFLOAT; // look above
+			attrDescs[1].format = VK_FORMAT_R32G32B32_SFLOAT; // look above
 			attrDescs[1].offset = offsetof(Nexus::Vertex, color);
 
 			return attrDescs;
