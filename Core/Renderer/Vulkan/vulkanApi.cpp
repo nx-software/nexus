@@ -79,6 +79,7 @@ void Nexus::VulkanAPI::Clean() {
 	vkDestroySurfaceKHR(vkInstance, vkSurface, nullptr);
 
 	vkDestroyDevice(vkDevice, nullptr);
+	vkFreeMemory(vkDevice, vkVertexBufferMem, nullptr);
 
 	vkDestroyInstance(vkInstance, nullptr);
 	
@@ -848,10 +849,26 @@ void Nexus::VulkanAPI::vulkanCreateVertexBuffer() {
 	bufCrInfo.size = 40000;
 	bufCrInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT; // how we gon use it? we're gonna use it as a vertex buffer (crazy)
 	bufCrInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE; // only used from the graphics queue
+	
+	this->vkBufCrInfo = bufCrInfo;
 
 	if (vkCreateBuffer(vkDevice, &bufCrInfo, nullptr, &vkVertexBuffer) != VK_SUCCESS) {
 		Error("Vulkan: Failed to create vertex buffer!");
 	}
+
+	// Allocate memory
+	vkGetBufferMemoryRequirements(vkDevice, vkVertexBuffer, &vkMemReq);
+	VkMemoryAllocateInfo memAllocInfo{};
+	memAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	memAllocInfo.allocationSize = vkMemReq.size;
+	memAllocInfo.memoryTypeIndex = findMemType(vkMemReq.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+	if (vkAllocateMemory(vkDevice, &memAllocInfo, nullptr, &vkVertexBufferMem) != VK_SUCCESS) {
+		Error("Vulkan: Failed to allocate memory!");
+	}
+
+	// Bind memory
+	vkBindBufferMemory(vkDevice, vkVertexBuffer, vkVertexBufferMem, 0);
 }
 
 void Nexus::VulkanAPI::vulkanCreateSyncObjects() {
@@ -887,7 +904,7 @@ void Nexus::VulkanAPI::vulkanCreateSyncObjects() {
 * === END INIT FUNCS ===
 */
 
-void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline){
+void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline, size_t vert_size){
 	VkCommandBufferBeginInfo bufferBeginInf{};
 	bufferBeginInf.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	// Has some extra stuff but we dont need them rn
@@ -919,8 +936,12 @@ void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipe
 	vkCmdSetViewport(vkCommandBuffer[vkCurFrame], 0, 1, &vkViewport);
 	vkCmdSetScissor(vkCommandBuffer[vkCurFrame], 0, 1, &vkScissor);
 
+	VkBuffer vertBufs[] = { vkVertexBuffer };
+	VkDeviceSize offsets[] = { 0 };
+	vkCmdBindVertexBuffers(vkCommandBuffer[vkCurFrame], 0, 1, vertBufs, offsets);
+
 	//               verts, no instance rendering, no offsets
-	vkCmdDraw(vkCommandBuffer[vkCurFrame], 3, 1, 0, 0);
+	vkCmdDraw(vkCommandBuffer[vkCurFrame], static_cast<uint32_t>(vert_size), 1, 0, 0);
 
 	// End
 	vkCmdEndRenderPass(vkCommandBuffer[vkCurFrame]);
@@ -953,6 +974,21 @@ void Nexus::VulkanAPI::vulkanRecreateSwapChain() {
 	frameBufResize = false;
 }
 
+uint32_t Nexus::VulkanAPI::findMemType(uint32_t filter, VkMemoryPropertyFlags props) {
+	VkPhysicalDeviceMemoryProperties memProps;
+	vkGetPhysicalDeviceMemoryProperties(vkPhysDevice, &memProps);
+
+	// VkPhysicalDeviceMemoryProperties has two arrays, memTypes and memHeaps/
+	// memHeaps are things like dedicated VRAM and RAM swap
+	// rn lowk we only need the type of memory, not what heap it originates from
+
+	for (uint32_t i = 0; i < memProps.memoryTypeCount; i++){
+		if (filter & (1 << i) && (memProps.memoryTypes[i].propertyFlags & props)) { // simpily look and see if the corresponding bit is enabled and if we can write to it
+			return i;
+		}
+	}
+}
+
 void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	// From a high level overview, we wanna to:
 	// 1. wait for previous frame to draw
@@ -974,7 +1010,14 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	for (auto& gm : scene->getObjects()) {
 		// Get shader
 		VulkanShader* shader = (VulkanShader*)gm->gShader;
-		vulkanRecordCommandBuffer(imgIdx, shader->grPipeline);
+		vulkanRecordCommandBuffer(imgIdx, shader->grPipeline, gm->mesh->getVertices().size());
+
+		// Lets copy our data
+		// Map the memory into CPU accessible memory
+		void* data;
+		vkMapMemory(vkDevice, vkVertexBufferMem, 0, vkBufCrInfo.size, 0, &data);
+		memcpy(data, gm->mesh->getVertices().data(), (size_t)vkBufCrInfo.size);
+		vkUnmapMemory(vkDevice, vkVertexBufferMem);
 	}
 	// 4. submit that command buffer
 	VkSubmitInfo smInfo{};

@@ -1,6 +1,21 @@
-﻿  renderApi.cpp
+﻿  openglApi.cpp
 E:\Electro\Nexus\Nexus\Core\Renderer\renderApi.h(22,17): warning C4091: 'typedef ': ignored on left of 'Nexus::GraphicsCard' when no variable is declared
-  (compiling source file '../Core/Renderer/renderApi.cpp')
+  (compiling source file '../Core/Renderer/OpenGL/openglApi.cpp')
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(37,9): warning C4005: 'LOG_INFO': macro redefinition
+  (compiling source file '../Core/Renderer/OpenGL/openglApi.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(135,9):
+      see previous definition of 'LOG_INFO'
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(38,9): warning C4005: 'LOG_WARNING': macro redefinition
+  (compiling source file '../Core/Renderer/OpenGL/openglApi.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(136,9):
+      see previous definition of 'LOG_WARNING'
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(39,9): warning C4005: 'LOG_ERROR': macro redefinition
+  (compiling source file '../Core/Renderer/OpenGL/openglApi.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(137,9):
+      see previous definition of 'LOG_ERROR'
   
   renderer.cpp
 E:\Electro\Nexus\Nexus\Core\Renderer\renderApi.h(22,17): warning C4091: 'typedef ': ignored on left of 'Nexus::GraphicsCard' when no variable is declared
@@ -18,6 +33,63 @@ E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(38,9): warning C4005: 'L
   
 E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(39,9): warning C4005: 'LOG_ERROR': macro redefinition
   (compiling source file '../Core/Renderer/renderer.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(137,9):
+      see previous definition of 'LOG_ERROR'
+  
+  vulkanApi.cpp
+E:\Electro\Nexus\Nexus\Core\Renderer\renderApi.h(22,17): warning C4091: 'typedef ': ignored on left of 'Nexus::GraphicsCard' when no variable is declared
+  (compiling source file '../Core/Renderer/Vulkan/vulkanApi.cpp')
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(37,9): warning C4005: 'LOG_INFO': macro redefinition
+  (compiling source file '../Core/Renderer/Vulkan/vulkanApi.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(135,9):
+      see previous definition of 'LOG_INFO'
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(38,9): warning C4005: 'LOG_WARNING': macro redefinition
+  (compiling source file '../Core/Renderer/Vulkan/vulkanApi.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(136,9):
+      see previous definition of 'LOG_WARNING'
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(39,9): warning C4005: 'LOG_ERROR': macro redefinition
+  (compiling source file '../Core/Renderer/Vulkan/vulkanApi.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(137,9):
+      see previous definition of 'LOG_ERROR'
+  
+  gameObject.cpp
+E:\Electro\Nexus\Nexus\Core\Renderer\renderApi.h(22,17): warning C4091: 'typedef ': ignored on left of 'Nexus::GraphicsCard' when no variable is declared
+  (compiling source file '../Engine/gameObject.cpp')
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(37,9): warning C4005: 'LOG_INFO': macro redefinition
+  (compiling source file '../Engine/gameObject.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(135,9):
+      see previous definition of 'LOG_INFO'
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(38,9): warning C4005: 'LOG_WARNING': macro redefinition
+  (compiling source file '../Engine/gameObject.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(136,9):
+      see previous definition of 'LOG_WARNING'
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(39,9): warning C4005: 'LOG_ERROR': macro redefinition
+  (compiling source file '../Engine/gameObject.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(137,9):
+      see previous definition of 'LOG_ERROR'
+  
+  nexus.cpp
+E:\Electro\Nexus\Nexus\Core\Renderer\renderApi.h(22,17): warning C4091: 'typedef ': ignored on left of 'Nexus::GraphicsCard' when no variable is declared
+  (compiling source file '../Engine/nexus.cpp')
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(37,9): warning C4005: 'LOG_INFO': macro redefinition
+  (compiling source file '../Engine/nexus.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(135,9):
+      see previous definition of 'LOG_INFO'
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(38,9): warning C4005: 'LOG_WARNING': macro redefinition
+  (compiling source file '../Engine/nexus.cpp')
+      E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(136,9):
+      see previous definition of 'LOG_WARNING'
+  
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(39,9): warning C4005: 'LOG_ERROR': macro redefinition
+  (compiling source file '../Engine/nexus.cpp')
       E:\Electro\Nexus\Nexus\thirdPartyInc\plog\Log.h(137,9):
       see previous definition of 'LOG_ERROR'
   
@@ -41,5 +113,5 @@ E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(39,9): warning C4005: 'L
       see previous definition of 'LOG_ERROR'
   
   Generating Code...
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.cpp(990,1): warning C4715: 'Nexus::VulkanAPI::findMemType': not all control paths return a value
   Nexus.vcxproj -> E:\Electro\Nexus\Nexus\x64\Debug\Nexus.exe

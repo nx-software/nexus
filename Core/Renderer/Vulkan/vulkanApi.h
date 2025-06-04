@@ -140,7 +140,13 @@ namespace Nexus {
 		std::vector<VkCommandBuffer> vkCommandBuffer;
 
 		// Our vertex buffer
+		VkBufferCreateInfo vkBufCrInfo{};
 		VkBuffer vkVertexBuffer;
+		VkDeviceMemory vkVertexBufferMem;
+
+		// Memory requirments
+		VkMemoryRequirements vkMemReq;
+
 
 		// Queuing and timing
 		// A semaphore is a way to add order between GPU queue actions
@@ -211,13 +217,17 @@ namespace Nexus {
 
 
 		// Writes our commands to the command buffer
-		void vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline);
+		void vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline, size_t vert_size);
 
 		// Recreate swap chain whenever anything bad happens
 		void vulkanRecreateSwapChain();
 		// we also need to clean up before recreating it
 		void vulkanCleanSwapChain();
-	
+
+		// Get memory type
+		uint32_t findMemType(uint32_t filter, VkMemoryPropertyFlags props);
+
+
 		// Printing for debugging
 		void debugPrint(std::string caller, std::string text, int level);
 
@@ -236,7 +246,6 @@ namespace Nexus {
 		
 	};
 
-	
 
 	static void frameBufResizeCallback(GLFWwindow* win, int w, int h);
 
