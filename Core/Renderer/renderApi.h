@@ -50,13 +50,4 @@ namespace Nexus {
 	public:
 		GraphicsShader();
 	};
-
-	// Holder for seperate graphics things for vertices
-	class SpecAPIVertex {
-	private:
-	public:
-		Vertex* root;
-
-		SpecAPIVertex();
-	};
 }

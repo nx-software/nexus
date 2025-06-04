@@ -3,10 +3,14 @@
  */
 #pragma once
 
+#include <array>
+
+#include <glm/glm.hpp>
+
 #include "config.h"
 #include "../Core/Renderer/renderApi.h"
 
-#include <glm/glm.hpp>
+
 
 namespace Nexus {
 	// Structure holding one vertex

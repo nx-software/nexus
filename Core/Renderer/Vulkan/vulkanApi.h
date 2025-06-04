@@ -10,7 +10,6 @@
 #include <cstdint>
 #include <limits>
 #include <algorithm>
-#include <array>
 
 #if VULKAN == 1
 #ifdef __linux__
@@ -140,6 +139,9 @@ namespace Nexus {
 		VkCommandPool vkCommandPool;
 		std::vector<VkCommandBuffer> vkCommandBuffer;
 
+		// Our vertex buffer
+		VkBuffer vkVertexBuffer;
+
 		// Queuing and timing
 		// A semaphore is a way to add order between GPU queue actions
 		// its super cool
@@ -177,6 +179,8 @@ namespace Nexus {
 		void vulkanCreateFramebuffers();
 		// Create command pool
 		void vulkanCreateCommandPool();
+		// Create vertex buffer
+		void vulkanCreateVertexBuffer();
 		// Create syncing objects
 		void vulkanCreateSyncObjects();
 

@@ -38,6 +38,8 @@ Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	vulkanCreateFramebuffers();
 	// Create command pool
 	vulkanCreateCommandPool();
+	// Create vertex buffer
+	vulkanCreateVertexBuffer();
 	// Create sync objects
 	vulkanCreateSyncObjects();
 }
@@ -70,6 +72,8 @@ void Nexus::VulkanAPI::Clean() {
 
 	// Destroy swap chain
 	vulkanCleanSwapChain();
+
+	vkDestroyBuffer(vkDevice, vkVertexBuffer, nullptr);
 
 	// Destroy surfaces
 	vkDestroySurfaceKHR(vkInstance, vkSurface, nullptr);
@@ -835,6 +839,19 @@ void Nexus::VulkanAPI::vulkanCreateCommandPool(){
 	}
 
 	debugPrint("Nexus::VulkanAPI::vulkanCreateCommandPool", "Despite the function name, allocation of command buffer was successful.", 0);
+}
+
+void Nexus::VulkanAPI::vulkanCreateVertexBuffer() {
+	VkBufferCreateInfo bufCrInfo{};
+	bufCrInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+	// Make one MASSIVE buffer and don't worry about reallocation
+	bufCrInfo.size = 40000;
+	bufCrInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT; // how we gon use it? we're gonna use it as a vertex buffer (crazy)
+	bufCrInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE; // only used from the graphics queue
+
+	if (vkCreateBuffer(vkDevice, &bufCrInfo, nullptr, &vkVertexBuffer) != VK_SUCCESS) {
+		Error("Vulkan: Failed to create vertex buffer!");
+	}
 }
 
 void Nexus::VulkanAPI::vulkanCreateSyncObjects() {
