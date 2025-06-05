@@ -60,12 +60,30 @@ namespace Nexus {
 	class Mesh {
 	private:
 		std::vector<Vertex> vertices;
+		std::vector<uint16_t> indices;
 	public:
-		Mesh(std::vector<Vertex> verts);
+		// Has our mesh been modified?
+		bool modified = false;
+
+		Mesh(std::vector<Vertex> verts, std::vector<uint16_t> inds);
 
 		// Getters/Setters
 		std::vector<Vertex> getVertices() {
 			return vertices;
+		}
+
+		void setVertices(std::vector<Vertex> verts) {
+			this->vertices = verts;
+			modified = true;
+		}
+
+		std::vector<uint16_t> getIndicies() {
+			return indices;
+		}
+
+		void setIndicies(std::vector<uint16_t> inds) {
+			this->indices = inds;
+			modified = true;
 		}
 	};
 }

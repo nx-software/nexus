@@ -141,6 +141,9 @@ namespace Nexus {
 		VkCommandPool vkCommandPool;
 		std::vector<VkCommandBuffer> vkCommandBuffer;
 
+		// Staging buffer
+		VkBuffer vkStagingBuf;
+		VkDeviceMemory vkStageBufMem;
 		// Our vertex buffer
 		VkBufferCreateInfo vkBufCrInfo{};
 		VkBuffer vkVertexBuffer;
@@ -217,6 +220,11 @@ namespace Nexus {
 
 		// Create buffer
 		void vulkanCreateBuffer(VkDeviceSize devSize, VkBufferUsageFlags usage, VkMemoryPropertyFlags props, VkBuffer& buffer, VkDeviceMemory& bufMem);
+		// Copy buffer
+		void vulkanCopyBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size);
+
+		// Update vertex buffer
+		void vulkanUpdateVertexBuffer(Nexus::Mesh* mesh);
 
 		// Writes our commands to the command buffer
 		void vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline, size_t vert_size);

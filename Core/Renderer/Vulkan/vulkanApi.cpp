@@ -73,6 +73,9 @@ void Nexus::VulkanAPI::Clean() {
 	// Destroy swap chain
 	vulkanCleanSwapChain();
 
+	vkDestroyBuffer(vkDevice, vkStagingBuf, nullptr);
+	vkFreeMemory(vkDevice, vkVertexBufferMem, nullptr);
+
 	vkDestroyBuffer(vkDevice, vkVertexBuffer, nullptr);
 	vkFreeMemory(vkDevice, vkVertexBufferMem, nullptr);
 
@@ -276,6 +279,7 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		}
 
 		gm->gShader = new VulkanShader(vkShader);
+
 
 		debugPrint("Nexus::VulkanAPI::InitShaders", std::string{"Loaded 1 object"}, 0);
 	}
@@ -846,9 +850,13 @@ void Nexus::VulkanAPI::vulkanCreateCommandPool(){
 void Nexus::VulkanAPI::vulkanCreateVertexBuffer() {
 	// Allocate a bunch of memory so we don't gotta worry about it
 	VkDeviceSize bufSize = VERTEX_BUFFER_SIZE;
-	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vkVertexBuffer, vkVertexBufferMem);
-
 	
+	// Lets make a staging buffer
+	// We can use this to copy our vertex data
+	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vkStagingBuf, vkStageBufMem);
+	
+	// Create Vertex buffer
+	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vkVertexBuffer, vkVertexBufferMem);	
 }
 
 void Nexus::VulkanAPI::vulkanCreateSyncObjects() {
@@ -910,6 +918,55 @@ void Nexus::VulkanAPI::vulkanCreateBuffer(VkDeviceSize devSize, VkBufferUsageFla
 
 	// Bind memory
 	vkBindBufferMemory(vkDevice, buffer, bufMem, 0);
+}
+
+void Nexus::VulkanAPI::vulkanCopyBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size) {
+	VkCommandBufferAllocateInfo cmdBufAllocInfo{};
+	cmdBufAllocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	cmdBufAllocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	cmdBufAllocInfo.commandPool = vkCommandPool;
+	cmdBufAllocInfo.commandBufferCount = 1;
+
+	VkCommandBuffer cmdBuf;
+	if (vkAllocateCommandBuffers(vkDevice, &cmdBufAllocInfo, &cmdBuf) != VK_SUCCESS) {
+		Error("Vulkan: Failed to create command buffer for copying!");
+	}
+
+	VkCommandBufferBeginInfo beginInf;
+	beginInf.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	beginInf.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+	beginInf.pNext = nullptr;
+
+	vkBeginCommandBuffer(cmdBuf, &beginInf);
+
+	VkBufferCopy copyReg;
+	copyReg.srcOffset = 0;
+	copyReg.dstOffset = 0;
+	copyReg.size = size;
+	vkCmdCopyBuffer(cmdBuf, src, dst, 1, &copyReg);
+	
+	vkEndCommandBuffer(cmdBuf);
+
+	VkSubmitInfo subInfo{};
+	subInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	subInfo.commandBufferCount = 1;
+	subInfo.pCommandBuffers = &cmdBuf;
+
+	vkQueueSubmit(vkGraphicsQueue, 1, &subInfo, VK_NULL_HANDLE);
+	vkQueueWaitIdle(vkGraphicsQueue);
+	vkFreeCommandBuffers(vkDevice, vkCommandPool, 1, &cmdBuf);
+}
+
+void Nexus::VulkanAPI::vulkanUpdateVertexBuffer(Nexus::Mesh* mesh) {
+	// Lets copy our data
+	// Map the memory into CPU accessible memory
+	void* data;
+	vkMapMemory(vkDevice, vkStageBufMem, 0, VERTEX_BUFFER_SIZE, 0, &data);
+	memcpy(data, mesh->getVertices().data(), VERTEX_BUFFER_SIZE);
+	vkUnmapMemory(vkDevice, vkStageBufMem);
+
+	// Copy the buffer
+	vulkanCopyBuffer(vkStagingBuf, vkVertexBuffer, VERTEX_BUFFER_SIZE);
 }
 
 void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline, size_t vert_size){
@@ -1016,13 +1073,10 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	// 3. record a command buffer
 	vkResetCommandBuffer(vkCommandBuffer[vkCurFrame], 0);
 	for (auto& gm : scene->getObjects()) {
-		// Lets copy our data
-		// Map the memory into CPU accessible memory
-		void* data;
-		vkMapMemory(vkDevice, vkVertexBufferMem, 0, VERTEX_BUFFER_SIZE, 0, &data);
-		memcpy(data, gm->mesh->getVertices().data(), VERTEX_BUFFER_SIZE);
-		vkUnmapMemory(vkDevice, vkVertexBufferMem);
-
+		// Do we need to update
+		if (gm->mesh->modified) {
+			vulkanUpdateVertexBuffer(gm->mesh);
+		}
 		// Get shader
 		VulkanShader* shader = (VulkanShader*)gm->gShader;
 		vulkanRecordCommandBuffer(imgIdx, shader->grPipeline, gm->mesh->getVertices().size());

@@ -27,7 +27,11 @@ int main() {
 		{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
 	};
 
-	gameObject.mesh = new Nexus::Mesh(verts);
+	std::vector<uint16_t> inds = {
+		0, 1, 2, 2, 3, 0
+	};
+
+	gameObject.mesh = new Nexus::Mesh(verts, inds);
 	gameObject.loadVertShader("../shaders/vert.spv");
 	gameObject.loadFragShader("../shaders/frag.spv");
 
