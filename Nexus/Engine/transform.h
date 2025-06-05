@@ -2,10 +2,14 @@
 */
 #pragma once
 
+#ifdef WIN32
 #ifdef ENGINE_EXPORTS
 #define ENGINE_API __declspec(dllexport)
 #else
 #define ENGINE_API __declspec(dllexport)
+#endif
+#else
+#define ENGINE_API
 #endif
 
 namespace Transform{

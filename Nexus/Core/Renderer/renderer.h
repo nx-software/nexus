@@ -1,9 +1,13 @@
 #pragma once
 
+#ifdef WIN32
 #ifdef RENDERER_EXPORTS
 #define RENDERER_API __declspec(dllexport)
 #else
 #define RENDERER_API __declspec(dllexport)
+#endif
+#else
+#define RENDERER_API
 #endif
 
 // Includes 
