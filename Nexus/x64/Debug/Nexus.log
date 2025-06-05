@@ -19,6 +19,6 @@ E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.h(39,9): warning C4005: 'L
   
 E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.cpp(286,48): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
 E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.cpp(287,42): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
-E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.cpp(1040,35): warning C4838: conversion from 'int' to 'VkDeviceSize' requires a narrowing conversion
-E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.cpp(1091,1): warning C4715: 'Nexus::VulkanAPI::findMemType': not all control paths return a value
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.cpp(1041,36): warning C4838: conversion from 'int' to 'VkDeviceSize' requires a narrowing conversion
+E:\Electro\Nexus\Nexus\Core\Renderer\Vulkan\vulkanApi.cpp(1093,1): warning C4715: 'Nexus::VulkanAPI::findMemType': not all control paths return a value
   Nexus.vcxproj -> E:\Electro\Nexus\Nexus\x64\Debug\Nexus.exe

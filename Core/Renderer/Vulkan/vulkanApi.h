@@ -256,7 +256,7 @@ namespace Nexus {
 		void vulkanUpdateMeshBuffers(Nexus::GameObject* obj);
 
 		// Writes our commands to the command buffer
-		void vulkanRecordCommandBuffer(uint32_t idx, VulkanShader* shader, size_t ind_size);
+		void vulkanRecordCommandBuffer(uint32_t idx, std::vector<GameObject*> objs);
 
 		// Recreate swap chain whenever anything bad happens
 		void vulkanRecreateSwapChain();

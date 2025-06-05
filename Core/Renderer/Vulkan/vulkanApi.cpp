@@ -1003,8 +1003,7 @@ void Nexus::VulkanAPI::vulkanUpdateMeshBuffers(Nexus::GameObject* obj) {
 	vulkanCopyBuffer(vkIndexStagingBuf, vkIndexBuffer, sizeof(uint16_t) * obj->mesh->getIndicies().size(), shader->indexBufferOffset, shader->indexBufferOffset);
 }
 
-void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VulkanShader* shader, size_t ind_size){
-	VkPipeline grPipeline = shader->grPipeline;
+void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, std::vector<GameObject*> objs){
 	VkCommandBufferBeginInfo bufferBeginInf{};
 	bufferBeginInf.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	// Has some extra stuff but we dont need them rn
@@ -1030,19 +1029,22 @@ void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VulkanShader* sha
 	// Begin our render pass
 	//                                                         embedded into primary buffer
 	vkCmdBeginRenderPass(vkCommandBuffer[vkCurFrame], &renderPassBeginInf, VK_SUBPASS_CONTENTS_INLINE);
+	for (auto& gm : objs) {
+		VulkanShader* shader = (VulkanShader*)gm->gShader;
+		VkPipeline grPipeline = shader->grPipeline;
+		vkCmdBindPipeline(vkCommandBuffer[vkCurFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, grPipeline);
 
-	vkCmdBindPipeline(vkCommandBuffer[vkCurFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, grPipeline);
+		vkCmdSetViewport(vkCommandBuffer[vkCurFrame], 0, 1, &vkViewport);
+		vkCmdSetScissor(vkCommandBuffer[vkCurFrame], 0, 1, &vkScissor);
 
-	vkCmdSetViewport(vkCommandBuffer[vkCurFrame], 0, 1, &vkViewport);
-	vkCmdSetScissor(vkCommandBuffer[vkCurFrame], 0, 1, &vkScissor);
+		VkBuffer vertBufs[] = { vkVertexBuffer };
+		VkDeviceSize offsets[] = { shader->vertexBufferOffset };
+		vkCmdBindVertexBuffers(vkCommandBuffer[vkCurFrame], 0, 1, vertBufs, offsets);
+		vkCmdBindIndexBuffer(vkCommandBuffer[vkCurFrame], vkIndexBuffer, shader->indexBufferOffset, VK_INDEX_TYPE_UINT16);
 
-	VkBuffer vertBufs[] = { vkVertexBuffer };
-	VkDeviceSize offsets[] = { shader->vertexBufferOffset };
-	vkCmdBindVertexBuffers(vkCommandBuffer[vkCurFrame], 0, 1, vertBufs, offsets);
-	vkCmdBindIndexBuffer(vkCommandBuffer[vkCurFrame], vkIndexBuffer, shader->indexBufferOffset, VK_INDEX_TYPE_UINT16);
-
-	//               verts, no instance rendering
-	vkCmdDrawIndexed(vkCommandBuffer[vkCurFrame], static_cast<uint32_t>(ind_size), 1, shader->indexBufferOffset, shader->vertexBufferOffset, 0);
+		//               verts, no instance rendering
+		vkCmdDrawIndexed(vkCommandBuffer[vkCurFrame], static_cast<uint32_t>(gm->mesh->getIndicies().size()), 1, 0, 0, 0);
+	}
 
 	// End
 	vkCmdEndRenderPass(vkCommandBuffer[vkCurFrame]);
@@ -1112,11 +1114,10 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 		// Do we need to update
 		if (gm->mesh->modified) {
 			vulkanUpdateMeshBuffers(gm);
-		}
-		// Get shader
-		VulkanShader* shader = (VulkanShader*)gm->gShader;
-		vulkanRecordCommandBuffer(imgIdx, shader, gm->mesh->getIndicies().size());	
+		}	
 	}
+	// Get shader
+	vulkanRecordCommandBuffer(imgIdx, scene->getObjects());
 	// 4. submit that command buffer
 	VkSubmitInfo smInfo{};
 	smInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
