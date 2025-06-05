@@ -41,6 +41,7 @@
 #define DEBUG 1
 
 #define VERTEX_BUFFER_SIZE (size_t)40000
+#define INDEX_BUFFER_SIZE VERTEX_BUFFER_SIZE/2
 
 namespace Nexus {
 #if VULKAN == 1
@@ -141,14 +142,20 @@ namespace Nexus {
 		VkCommandPool vkCommandPool;
 		std::vector<VkCommandBuffer> vkCommandBuffer;
 
-		// Staging buffer
-		VkBuffer vkStagingBuf;
-		VkDeviceMemory vkStageBufMem;
+		// Staging buffer for vertices
+		VkBuffer vkVertexStagingBuf;
+		VkDeviceMemory vkVertexStageBufMem;
 		// Our vertex buffer
 		VkBufferCreateInfo vkBufCrInfo{};
 		VkBuffer vkVertexBuffer;
 		VkDeviceMemory vkVertexBufferMem;
 
+		// Staging buffer for indices
+		VkBuffer vkIndexStagingBuf;
+		VkDeviceMemory vkIndexStageBufMem;
+		// Our index buffer
+		VkBuffer vkIndexBuffer;
+		VkDeviceMemory vkIndexBufferMem;
 
 		// Queuing and timing
 		// A semaphore is a way to add order between GPU queue actions
@@ -189,6 +196,8 @@ namespace Nexus {
 		void vulkanCreateCommandPool();
 		// Create vertex buffer
 		void vulkanCreateVertexBuffer();
+		// Create index buffer
+		void vulkanCreateIndexBuffer();
 		// Create syncing objects
 		void vulkanCreateSyncObjects();
 
@@ -224,7 +233,7 @@ namespace Nexus {
 		void vulkanCopyBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size);
 
 		// Update vertex buffer
-		void vulkanUpdateVertexBuffer(Nexus::Mesh* mesh);
+		void vulkanUpdateMeshBuffers(Nexus::Mesh* mesh);
 
 		// Writes our commands to the command buffer
 		void vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline, size_t vert_size);

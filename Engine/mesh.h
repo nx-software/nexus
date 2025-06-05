@@ -56,10 +56,24 @@ namespace Nexus {
 #endif
 	};
 
-	// Class to hold vertices (thats basically it)
+	// Class to hold vertices and indices (thats basically it)
 	class Mesh {
 	private:
+		// Pretty self explanatory, just the ends of our triangle
 		std::vector<Vertex> vertices;
+		/*
+		 * Ooh goody optimization
+		 * Often, triangles will share multiple verticies, as shown here in this simple example:
+		 *      v0 --------------- v1
+		 *     v5 | *              |
+		 *        |     *          |
+		 *        |         *      |
+		 *        |             *  |
+		 *      v4 ---------------- v2
+		 *                         v3
+		 *  So why bother using that many verts when v0 and v5 are the same and v3 and v2 are?
+		 *  Yay for index buffers
+		 */
 		std::vector<uint16_t> indices;
 	public:
 		// Has our mesh been modified?

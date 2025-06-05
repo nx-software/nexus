@@ -12,4 +12,5 @@ Test program showing off the capabilities of the engine
 
 
 ## TO DO LIST:
-- [ ] `Core/Rendering/Vulkan/vulkanAPI.cpp` : Check that Graphics Cards are compatible with program
+- [ ] - [ ] `VulkanAPI` : Optimize buffers 
+- [ ] - [ ] `Core/Rendering/Vulkan/vulkanAPI.cpp` : Check that Graphics Cards are compatible with program

@@ -40,6 +40,8 @@ Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	vulkanCreateCommandPool();
 	// Create vertex buffer
 	vulkanCreateVertexBuffer();
+	// Create index
+	vulkanCreateIndexBuffer();
 	// Create sync objects
 	vulkanCreateSyncObjects();
 }
@@ -73,7 +75,13 @@ void Nexus::VulkanAPI::Clean() {
 	// Destroy swap chain
 	vulkanCleanSwapChain();
 
-	vkDestroyBuffer(vkDevice, vkStagingBuf, nullptr);
+	vkDestroyBuffer(vkDevice, vkIndexStagingBuf, nullptr);
+	vkFreeMemory(vkDevice, vkIndexStageBufMem, nullptr);
+
+	vkDestroyBuffer(vkDevice, vkIndexBuffer, nullptr);
+	vkFreeMemory(vkDevice, vkIndexBufferMem, nullptr);
+
+	vkDestroyBuffer(vkDevice, vkVertexStagingBuf, nullptr);
 	vkFreeMemory(vkDevice, vkVertexBufferMem, nullptr);
 
 	vkDestroyBuffer(vkDevice, vkVertexBuffer, nullptr);
@@ -853,10 +861,20 @@ void Nexus::VulkanAPI::vulkanCreateVertexBuffer() {
 	
 	// Lets make a staging buffer
 	// We can use this to copy our vertex data
-	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vkStagingBuf, vkStageBufMem);
+	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vkVertexStagingBuf, vkVertexStageBufMem);
 	
 	// Create Vertex buffer
-	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vkVertexBuffer, vkVertexBufferMem);	
+	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkVertexBuffer, vkVertexBufferMem);
+}
+
+void Nexus::VulkanAPI::vulkanCreateIndexBuffer() {
+	VkDeviceSize bufSize = INDEX_BUFFER_SIZE;
+	
+	// We can use this to copy our vertex data
+	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vkIndexStagingBuf, vkIndexStageBufMem);
+
+	// Create Vertex buffer
+	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkIndexBuffer, vkIndexBufferMem);
 }
 
 void Nexus::VulkanAPI::vulkanCreateSyncObjects() {
@@ -957,19 +975,28 @@ void Nexus::VulkanAPI::vulkanCopyBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize
 	vkFreeCommandBuffers(vkDevice, vkCommandPool, 1, &cmdBuf);
 }
 
-void Nexus::VulkanAPI::vulkanUpdateVertexBuffer(Nexus::Mesh* mesh) {
-	// Lets copy our data
+void Nexus::VulkanAPI::vulkanUpdateMeshBuffers(Nexus::Mesh* mesh) {
+	// Lets copy our vertex data
 	// Map the memory into CPU accessible memory
 	void* data;
-	vkMapMemory(vkDevice, vkStageBufMem, 0, VERTEX_BUFFER_SIZE, 0, &data);
+	vkMapMemory(vkDevice, vkVertexStageBufMem, 0, VERTEX_BUFFER_SIZE, 0, &data);
 	memcpy(data, mesh->getVertices().data(), VERTEX_BUFFER_SIZE);
-	vkUnmapMemory(vkDevice, vkStageBufMem);
+	vkUnmapMemory(vkDevice, vkVertexStageBufMem);
 
 	// Copy the buffer
-	vulkanCopyBuffer(vkStagingBuf, vkVertexBuffer, VERTEX_BUFFER_SIZE);
+	vulkanCopyBuffer(vkVertexStagingBuf, vkVertexBuffer, VERTEX_BUFFER_SIZE);
+
+	// Ok Index buffer next
+	void* idata;
+	vkMapMemory(vkDevice, vkIndexStageBufMem, 0, INDEX_BUFFER_SIZE, 0, &idata);
+	memcpy(idata, mesh->getIndicies().data(), INDEX_BUFFER_SIZE);
+	vkUnmapMemory(vkDevice, vkIndexStageBufMem);
+
+	// Copy the buffer
+	vulkanCopyBuffer(vkIndexStagingBuf, vkIndexBuffer, INDEX_BUFFER_SIZE);
 }
 
-void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline, size_t vert_size){
+void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline, size_t ind_size){
 	VkCommandBufferBeginInfo bufferBeginInf{};
 	bufferBeginInf.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	// Has some extra stuff but we dont need them rn
@@ -1004,9 +1031,10 @@ void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipe
 	VkBuffer vertBufs[] = { vkVertexBuffer };
 	VkDeviceSize offsets[] = { 0 };
 	vkCmdBindVertexBuffers(vkCommandBuffer[vkCurFrame], 0, 1, vertBufs, offsets);
+	vkCmdBindIndexBuffer(vkCommandBuffer[vkCurFrame], vkIndexBuffer, 0, VK_INDEX_TYPE_UINT16);
 
 	//               verts, no instance rendering, no offsets
-	vkCmdDraw(vkCommandBuffer[vkCurFrame], static_cast<uint32_t>(vert_size), 1, 0, 0);
+	vkCmdDrawIndexed(vkCommandBuffer[vkCurFrame], static_cast<uint32_t>(ind_size), 1, 0, 0, 0);
 
 	// End
 	vkCmdEndRenderPass(vkCommandBuffer[vkCurFrame]);
@@ -1075,11 +1103,11 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	for (auto& gm : scene->getObjects()) {
 		// Do we need to update
 		if (gm->mesh->modified) {
-			vulkanUpdateVertexBuffer(gm->mesh);
+			vulkanUpdateMeshBuffers(gm->mesh);
 		}
 		// Get shader
 		VulkanShader* shader = (VulkanShader*)gm->gShader;
-		vulkanRecordCommandBuffer(imgIdx, shader->grPipeline, gm->mesh->getVertices().size());
+		vulkanRecordCommandBuffer(imgIdx, shader->grPipeline, gm->mesh->getIndicies().size());
 	}
 	// 4. submit that command buffer
 	VkSubmitInfo smInfo{};

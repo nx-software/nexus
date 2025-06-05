@@ -175,6 +175,7 @@
     <ClInclude Include="..\Engine\transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\README.md" />
     <None Include="..\TestProgram\Shaders\shader.frag" />
     <None Include="..\TestProgram\Shaders\shader.vert" />
   </ItemGroup>
