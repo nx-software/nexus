@@ -49,6 +49,10 @@ namespace Nexus{
             return this->fragShader;
         }
 
+        std::string getName() {
+            return name;
+        }
+
 
     };
 }

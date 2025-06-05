@@ -38,6 +38,25 @@ int main() {
 
 	testScene.addObject(&gameObject);
 
+	// Next object
+	std::vector<Nexus::Vertex> verts_new = {
+		{{-1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}},
+		{{0.0f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+		{{-1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}}
+	};
+
+	std::vector<uint16_t> inds_new = {
+		0, 1, 2
+	};
+
+	Nexus::GameObject test2("Test Object 2");
+
+	test2.mesh = new Nexus::Mesh(verts_new, inds_new);
+	test2.loadVertShader("../shaders/vert.spv");
+	test2.loadFragShader("../shaders/frag.spv");
+
+	testScene.addObject(&test2);
+
 	engine->InitScene(&testScene);
 
 	while (1) {

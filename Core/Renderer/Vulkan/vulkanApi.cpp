@@ -280,6 +280,11 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		pipelineCrInfo.basePipelineIndex = -1;
 		pipelineCrInfo.pNext = nullptr;
 
+		vkShader.vertexBufferOffset = currentVertexOffset;
+		vkShader.indexBufferOffset = currentIndexOffset;
+
+		currentVertexOffset += sizeof(Nexus::Vertex) * gm->mesh->getVertices().size();
+		currentIndexOffset += sizeof(uint16_t) * gm->mesh->getIndicies().size();
 		
 		// Create the pipline
 		if(vkCreateGraphicsPipelines(vkDevice, VK_NULL_HANDLE, 1, &pipelineCrInfo, nullptr, &(vkShader.grPipeline)) != VK_SUCCESS){
@@ -289,7 +294,7 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		gm->gShader = new VulkanShader(vkShader);
 
 
-		debugPrint("Nexus::VulkanAPI::InitShaders", std::string{"Loaded 1 object"}, 0);
+		debugPrint("Nexus::VulkanAPI::InitShaders", std::string{"Loaded 1 object (" + gm->getName() + ")"}, 0);
 	}
 
 
@@ -874,7 +879,7 @@ void Nexus::VulkanAPI::vulkanCreateIndexBuffer() {
 	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vkIndexStagingBuf, vkIndexStageBufMem);
 
 	// Create Vertex buffer
-	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkIndexBuffer, vkIndexBufferMem);
+	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkIndexBuffer, vkIndexBufferMem);
 }
 
 void Nexus::VulkanAPI::vulkanCreateSyncObjects() {
@@ -938,7 +943,7 @@ void Nexus::VulkanAPI::vulkanCreateBuffer(VkDeviceSize devSize, VkBufferUsageFla
 	vkBindBufferMemory(vkDevice, buffer, bufMem, 0);
 }
 
-void Nexus::VulkanAPI::vulkanCopyBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size) {
+void Nexus::VulkanAPI::vulkanCopyBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size, VkDeviceSize srcOffset, VkDeviceSize dstOffset) {
 	VkCommandBufferAllocateInfo cmdBufAllocInfo{};
 	cmdBufAllocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	cmdBufAllocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -958,8 +963,8 @@ void Nexus::VulkanAPI::vulkanCopyBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize
 	vkBeginCommandBuffer(cmdBuf, &beginInf);
 
 	VkBufferCopy copyReg;
-	copyReg.srcOffset = 0;
-	copyReg.dstOffset = 0;
+	copyReg.srcOffset = srcOffset;
+	copyReg.dstOffset = dstOffset;
 	copyReg.size = size;
 	vkCmdCopyBuffer(cmdBuf, src, dst, 1, &copyReg);
 	
@@ -975,28 +980,31 @@ void Nexus::VulkanAPI::vulkanCopyBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize
 	vkFreeCommandBuffers(vkDevice, vkCommandPool, 1, &cmdBuf);
 }
 
-void Nexus::VulkanAPI::vulkanUpdateMeshBuffers(Nexus::Mesh* mesh) {
+void Nexus::VulkanAPI::vulkanUpdateMeshBuffers(Nexus::GameObject* obj) {
 	// Lets copy our vertex data
+	// We gotta remember our offset !
+	VulkanShader* shader = (VulkanShader*)obj->gShader;	
 	// Map the memory into CPU accessible memory
 	void* data;
-	vkMapMemory(vkDevice, vkVertexStageBufMem, 0, VERTEX_BUFFER_SIZE, 0, &data);
-	memcpy(data, mesh->getVertices().data(), VERTEX_BUFFER_SIZE);
+	vkMapMemory(vkDevice, vkVertexStageBufMem, shader->vertexBufferOffset, sizeof(Nexus::Vertex) * obj->mesh->getVertices().size(), 0, &data);
+	memcpy(data, obj->mesh->getVertices().data(), sizeof(Nexus::Vertex) * obj->mesh->getVertices().size());
 	vkUnmapMemory(vkDevice, vkVertexStageBufMem);
 
 	// Copy the buffer
-	vulkanCopyBuffer(vkVertexStagingBuf, vkVertexBuffer, VERTEX_BUFFER_SIZE);
+	vulkanCopyBuffer(vkVertexStagingBuf, vkVertexBuffer, sizeof(Nexus::Vertex) * obj->mesh->getVertices().size(), shader->vertexBufferOffset, shader->vertexBufferOffset);
 
 	// Ok Index buffer next
 	void* idata;
-	vkMapMemory(vkDevice, vkIndexStageBufMem, 0, INDEX_BUFFER_SIZE, 0, &idata);
-	memcpy(idata, mesh->getIndicies().data(), INDEX_BUFFER_SIZE);
+	vkMapMemory(vkDevice, vkIndexStageBufMem, shader->indexBufferOffset, sizeof(uint16_t) * obj->mesh->getIndicies().size(), 0, &idata);
+	memcpy(idata, obj->mesh->getIndicies().data(), sizeof(uint16_t) * obj->mesh->getIndicies().size());
 	vkUnmapMemory(vkDevice, vkIndexStageBufMem);
 
 	// Copy the buffer
-	vulkanCopyBuffer(vkIndexStagingBuf, vkIndexBuffer, INDEX_BUFFER_SIZE);
+	vulkanCopyBuffer(vkIndexStagingBuf, vkIndexBuffer, sizeof(uint16_t) * obj->mesh->getIndicies().size(), shader->indexBufferOffset, shader->indexBufferOffset);
 }
 
-void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline, size_t ind_size){
+void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VulkanShader* shader, size_t ind_size){
+	VkPipeline grPipeline = shader->grPipeline;
 	VkCommandBufferBeginInfo bufferBeginInf{};
 	bufferBeginInf.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	// Has some extra stuff but we dont need them rn
@@ -1029,12 +1037,12 @@ void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipe
 	vkCmdSetScissor(vkCommandBuffer[vkCurFrame], 0, 1, &vkScissor);
 
 	VkBuffer vertBufs[] = { vkVertexBuffer };
-	VkDeviceSize offsets[] = { 0 };
+	VkDeviceSize offsets[] = { shader->vertexBufferOffset };
 	vkCmdBindVertexBuffers(vkCommandBuffer[vkCurFrame], 0, 1, vertBufs, offsets);
-	vkCmdBindIndexBuffer(vkCommandBuffer[vkCurFrame], vkIndexBuffer, 0, VK_INDEX_TYPE_UINT16);
+	vkCmdBindIndexBuffer(vkCommandBuffer[vkCurFrame], vkIndexBuffer, shader->indexBufferOffset, VK_INDEX_TYPE_UINT16);
 
-	//               verts, no instance rendering, no offsets
-	vkCmdDrawIndexed(vkCommandBuffer[vkCurFrame], static_cast<uint32_t>(ind_size), 1, 0, 0, 0);
+	//               verts, no instance rendering
+	vkCmdDrawIndexed(vkCommandBuffer[vkCurFrame], static_cast<uint32_t>(ind_size), 1, shader->indexBufferOffset, shader->vertexBufferOffset, 0);
 
 	// End
 	vkCmdEndRenderPass(vkCommandBuffer[vkCurFrame]);
@@ -1100,14 +1108,14 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	vkResetFences(vkDevice, 1, &vkInFlightFen[vkCurFrame]);
 	// 3. record a command buffer
 	vkResetCommandBuffer(vkCommandBuffer[vkCurFrame], 0);
-	for (auto& gm : scene->getObjects()) {
+	for (auto& gm : scene->getObjects()) {		
 		// Do we need to update
 		if (gm->mesh->modified) {
-			vulkanUpdateMeshBuffers(gm->mesh);
+			vulkanUpdateMeshBuffers(gm);
 		}
 		// Get shader
 		VulkanShader* shader = (VulkanShader*)gm->gShader;
-		vulkanRecordCommandBuffer(imgIdx, shader->grPipeline, gm->mesh->getIndicies().size());
+		vulkanRecordCommandBuffer(imgIdx, shader, gm->mesh->getIndicies().size());	
 	}
 	// 4. submit that command buffer
 	VkSubmitInfo smInfo{};

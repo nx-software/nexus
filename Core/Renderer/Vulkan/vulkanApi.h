@@ -40,8 +40,8 @@
 
 #define DEBUG 1
 
-#define VERTEX_BUFFER_SIZE (size_t)40000
-#define INDEX_BUFFER_SIZE VERTEX_BUFFER_SIZE/2
+#define VERTEX_BUFFER_SIZE (size_t)400000
+#define INDEX_BUFFER_SIZE VERTEX_BUFFER_SIZE
 
 namespace Nexus {
 #if VULKAN == 1
@@ -82,6 +82,22 @@ namespace Nexus {
 	// Validation layer
 	const std::vector<const char*> validLayers = {
 		"VK_LAYER_KHRONOS_validation"
+	};
+
+	/*
+	*/
+	class VulkanShader : public GraphicsShader {
+	public:
+		VkShaderModule vert;
+		VkShaderModule frag;
+		VkPipelineShaderStageCreateInfo vertPipelineInfo, fragPipelineInfo;
+		VkPipelineShaderStageCreateInfo shaderStages[2];
+		VkPipelineVertexInputStateCreateInfo vertCrInfo{};
+		VkPipelineInputAssemblyStateCreateInfo inputAsmCrInfo{};
+		VkPipeline grPipeline;
+
+		// Offset for vertex buffer and index buffer
+		int vertexBufferOffset = 0, indexBufferOffset = 0;
 	};
 
 	class VulkanAPI : public GraphicAPI {
@@ -171,6 +187,10 @@ namespace Nexus {
 
 		uint32_t vkCurFrame = 0;
 
+		// During scene init, we gotta figure out where our stuff is
+		int currentVertexOffset = 0;
+		int currentIndexOffset = 0;
+
 		// Internal Funcs
 		// 
 		// Check if validation layers are supported
@@ -230,13 +250,13 @@ namespace Nexus {
 		// Create buffer
 		void vulkanCreateBuffer(VkDeviceSize devSize, VkBufferUsageFlags usage, VkMemoryPropertyFlags props, VkBuffer& buffer, VkDeviceMemory& bufMem);
 		// Copy buffer
-		void vulkanCopyBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size);
+		void vulkanCopyBuffer(VkBuffer src, VkBuffer dst, VkDeviceSize size, VkDeviceSize srcOffset, VkDeviceSize dstOffset);
 
 		// Update vertex buffer
-		void vulkanUpdateMeshBuffers(Nexus::Mesh* mesh);
+		void vulkanUpdateMeshBuffers(Nexus::GameObject* obj);
 
 		// Writes our commands to the command buffer
-		void vulkanRecordCommandBuffer(uint32_t idx, VkPipeline grPipeline, size_t vert_size);
+		void vulkanRecordCommandBuffer(uint32_t idx, VulkanShader* shader, size_t ind_size);
 
 		// Recreate swap chain whenever anything bad happens
 		void vulkanRecreateSwapChain();
@@ -268,19 +288,6 @@ namespace Nexus {
 
 	static void frameBufResizeCallback(GLFWwindow* win, int w, int h);
 
-
-	/*
-	*/
-	class VulkanShader : public GraphicsShader{
-	public:
-		VkShaderModule vert;
-		VkShaderModule frag;
-		VkPipelineShaderStageCreateInfo vertPipelineInfo, fragPipelineInfo;
-		VkPipelineShaderStageCreateInfo shaderStages[2];
-		VkPipelineVertexInputStateCreateInfo vertCrInfo{};
-		VkPipelineInputAssemblyStateCreateInfo inputAsmCrInfo{};
-		VkPipeline grPipeline;
-	};
 #else // VULKAN == 1
 	// Dummy class if Vulkan is not enabled
 	class VulkanAPI : public GraphicAPI {
