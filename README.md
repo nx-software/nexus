@@ -11,6 +11,13 @@ Contains the actual Engine part (eg. Physics, manages/creates graphics, scriptin
 ### TestProgram
 Test program showing off the capabilities of the engine
 
+## Third party libraries
+- Vulkan SDK
+- GLFW
+- glm (included in `thirdpartyinc`)
+- plog (included in `thirdpartyinc`)
+- stb_image (included in `thirdpartyinc`)
+
 ## Output details
 ### Windows
 On Windows, each component (Rendering, Input, Audio, Engine) is compiled into a DLL. <br>
