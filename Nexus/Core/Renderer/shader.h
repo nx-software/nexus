@@ -5,7 +5,6 @@
 
 #include "../../CrashHandler/CrashHandler.h"
 #include "renderer.h"
-//#include "renderApi.h"
 
 #include <string>
 #include <fstream>

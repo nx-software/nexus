@@ -11,6 +11,8 @@ namespace Nexus{
     protected:
         std::string name;
     public:
-        Component(std::string name) : name(name);
+        Component(std::string name) : name(name) {
+
+        }
     };
 }

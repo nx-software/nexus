@@ -8,6 +8,9 @@
 #define VK_USE_PLATFORM_WIN32_KHR
 #endif
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
@@ -18,7 +21,17 @@
 #endif
 
 namespace Nexus {
+	struct CameraData {
+		glm::mat4 model;
+		glm::mat4 view;
+		glm::mat4 proj;
+	};
 
+	class Camera {
+	public:
+		CameraData camData;
+	};
+	
 	typedef struct GraphicsCard{
 		std::string name;
 	};
@@ -26,16 +39,20 @@ namespace Nexus {
 	class GraphicAPI {
 	private:
 	protected:
-		GraphicsCard chosenGraphicsCard;	
+		GraphicsCard chosenGraphicsCard;
+		Camera* cam;
 	public:
 		GraphicAPI();
+
+		void SetCamera(Camera* cam) {
+			this->cam = cam;
+		}
 
 		virtual void InitConnectionToWindow(GLFWwindow* window) = 0;
 		virtual GLFWframebuffersizefun SetupWindowResize() = 0;
 		virtual void InitShaders(Scene* scene) = 0;
 
 		virtual void DrawFrame(Scene* scene) = 0;
-
 		GraphicsCard getGraphicsCard();
 
 		virtual void CleanScene(Scene* scene) = 0;

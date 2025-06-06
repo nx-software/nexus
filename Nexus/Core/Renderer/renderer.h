@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef WIN32
+#ifdef _WIN32
 #ifdef RENDERER_EXPORTS
 #define RENDERER_API __declspec(dllexport)
 #else
@@ -34,7 +34,7 @@ namespace Nexus {
 		RENDER_DX
 	};
 
-	class RENDERER_API Renderer {
+	class Renderer {
 	private:
 		GLFWwindow* window;
 		int height, width;
@@ -51,12 +51,12 @@ namespace Nexus {
 
 	public:
 		// Create Renderer
-		Renderer(std::string title, int height, int width, Renderers render);
+		RENDERER_API Renderer(std::string title, int height, int width, Renderers render);
 
-		GraphicAPI* getApi(){ return this->gApi; }
+		RENDERER_API GraphicAPI* getApi(){ return this->gApi; }
 
 		// Tick
-		void Tick(Scene* scene);
+		RENDERER_API void Tick(Scene* scene);
 
 		~Renderer();
 	};

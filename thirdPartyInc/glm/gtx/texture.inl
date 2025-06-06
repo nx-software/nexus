@@ -11,7 +11,7 @@ namespace glm
 	template <typename T>
 	inline T levels(T Extent)
 	{
-		return levels(vec<1, T, defaultp>(Extent));
+		return vec<1, T, defaultp>(Extent).x;
 	}
 }//namespace glm
 

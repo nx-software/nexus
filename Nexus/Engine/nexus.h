@@ -17,7 +17,7 @@
 #include <plog/Appenders/ConsoleAppender.h>
 #include <plog/Appenders/RollingFileAppender.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #ifdef ENGINE_EXPORTS
 #define ENGINE_API __declspec(dllexport)
 #else
@@ -54,6 +54,8 @@ namespace Nexus {
 		Engine(GameProperties);
 
 		void InitScene(Scene* scene);
+
+		void SetCamera(Camera* cam);
 
 		void Update(Scene* scene);
 

@@ -23,6 +23,10 @@ void Nexus::Engine::InitScene(Scene* scene){
 	renderer->getApi()->InitShaders(scene);
 }
 
+void Nexus::Engine::SetCamera(Camera* cam) {
+	renderer->getApi()->SetCamera(cam);
+}
+
 void Nexus::Engine::Update(Scene* scene) {
 	renderer->Tick(scene);
 }

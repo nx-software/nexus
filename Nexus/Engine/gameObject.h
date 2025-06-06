@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../Core/Renderer/shader.h"
+#include "../Core/Renderer/renderer.h"
 #include "transform.h"
 #include "mesh.h"
-#include "../Core/Renderer/renderer.h"
 
 #include <string>
 #include <vector>
@@ -71,7 +71,5 @@ namespace Nexus{
         std::string getName() {
             return name;
         }
-
-
     };
 }

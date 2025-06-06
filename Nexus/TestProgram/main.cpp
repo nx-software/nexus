@@ -6,7 +6,15 @@
 */
 #include "../Engine/nexus.h"
 #include "../Engine/gameObject.h"
+#include "../Engine/camera.h"
 #include "../Engine/scene.h"
+
+// For basic rotation of our object
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <chrono>
 
 int main() {
 	// Create properties so Nexus knows whats up
@@ -61,9 +69,22 @@ int main() {
 
 	testScene.addObject(&test2);
 
+	// Let's get our camera
+	Nexus::Camera camera;
+	engine->SetCamera(&camera);
+
 	engine->InitScene(&testScene);
 
 	while (1) {
+		static auto sT = std::chrono::high_resolution_clock::now();
+		auto cT = std::chrono::high_resolution_clock::now();
+		float t = std::chrono::duration<float, std::chrono::seconds::period>(cT - sT).count();
+
+		camera.camData = Nexus::CameraData{};
+
+		camera.camData.model = glm::rotate(glm::mat4(1.0f), t * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		camera.camData.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
 		engine->Update(&testScene);
 	}
 }

@@ -3,14 +3,16 @@
  */
 #pragma once
 
+#include "config.h"
+#if VULKAN_ENABLED == 1
+#include <vulkan\vulkan.h>
+#endif
+
 #include <array>
 
 #include <glm/glm.hpp>
 
-#include "config.h"
-#include "../Core/Renderer/renderApi.h"
-
-#ifdef WIN32
+#ifdef _WIN32
 #ifdef ENGINE_EXPORTS
 #define ENGINE_API __declspec(dllexport)
 #else
@@ -26,9 +28,7 @@ namespace Nexus {
 		glm::vec2 pos;
 		glm::vec3 color;
 		
-#if VULKAN == 1
-#include <vulkan\vulkan.h>
-
+#if VULKAN_ENABLED == 1
 		static VkVertexInputBindingDescription getBindDesc() {
 			VkVertexInputBindingDescription  bindDesc{};
 			bindDesc.binding = 0; // index of bindings

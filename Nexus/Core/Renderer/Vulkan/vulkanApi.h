@@ -11,7 +11,7 @@
 #include <limits>
 #include <algorithm>
 
-#if VULKAN == 1
+#if VULKAN_ENABLED == 1
 #ifdef __linux__
 #include <xcb/xcb.h>
 #include <vulkan/vulkan.h>
@@ -44,7 +44,7 @@
 #define INDEX_BUFFER_SIZE VERTEX_BUFFER_SIZE
 
 namespace Nexus {
-#if VULKAN == 1
+#if VULKAN_ENABLED == 1
 	// Make this configurable later
 	const int MAX_FRAME_IN_FLIGHT = 2;
 
@@ -147,9 +147,21 @@ namespace Nexus {
 		VkPipelineColorBlendAttachmentState vkColorBlendState{};
 		VkPipelineColorBlendStateCreateInfo vkColorBlendCrInfo{};
 		
+		// Descriptor set
+		VkDescriptorSetLayout vkDescSetLayout;
+
 		VkRenderPass vkRenderPass;
 		VkPipelineLayout vkPipelineLayout;
 		VkPipelineLayoutCreateInfo vkPipeLineLayoutCrInfo{};
+
+		std::vector<VkBuffer> vkUniBuf;
+		std::vector<VkDeviceMemory> vkUniBufMem;
+		std::vector<void*> vkUniBufMap;
+
+		// Descriptor Pool
+		VkDescriptorPool vkDescPool;
+		// Desc Set
+		std::vector<VkDescriptorSet> vkDescSets;
 
 		// Drawing stuff
 		std::vector<VkFramebuffer> vkSwapChainFrameBuf;
@@ -208,6 +220,8 @@ namespace Nexus {
 		void vulkanCreateImageViews();
 		// Create render pass
 		void vulkanCreateRenderPass();
+		// Create descriptor set layout
+		void vulkanCreateDescriptorSetLayout();
 		// Create graphics pipeline
 		void vulkanCreateGraphicsPipeline();
 		// Create frame buffers
@@ -218,6 +232,12 @@ namespace Nexus {
 		void vulkanCreateVertexBuffer();
 		// Create index buffer
 		void vulkanCreateIndexBuffer();
+		// Create uniform buffer
+		void vulkanCreateUniformBuffers();
+		// Create descriptor pool
+		void vulkanCreateDescriptorPool();
+		// Create descriptor sets
+		void vulkanCreateDescriptorSets();
 		// Create syncing objects
 		void vulkanCreateSyncObjects();
 
@@ -288,7 +308,7 @@ namespace Nexus {
 
 	static void frameBufResizeCallback(GLFWwindow* win, int w, int h);
 
-#else // VULKAN == 1
+#else // VULKAN_ENABLED == 1
 	// Dummy class if Vulkan is not enabled
 	class VulkanAPI : public GraphicAPI {
 	public:

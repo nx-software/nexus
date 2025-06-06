@@ -581,13 +581,13 @@ namespace glm
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER GLM_CONSTEXPR vec<3, T, Q> operator/(vec<3, T, Q> const& v, T scalar)
 	{
-		return vec<3, T, Q>(v) /= scalar;
+		return vec<3, T, Q>(v) *= 1/scalar;
 	}
 
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER GLM_CONSTEXPR vec<3, T, Q> operator/(vec<3, T, Q> const& v, vec<1, T, Q> const& scalar)
 	{
-		return vec<3, T, Q>(v) /= scalar.x;
+		return vec<3, T, Q>(v) *= 1/scalar.x;
 	}
 
 	template<typename T, qualifier Q>

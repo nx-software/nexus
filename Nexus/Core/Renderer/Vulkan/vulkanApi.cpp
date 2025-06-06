@@ -4,7 +4,7 @@
 
 #include "vulkanApi.h"
 
-#if VULKAN == 1
+#if VULKAN_ENABLED == 1
 
 Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	// Set user pointer
@@ -32,6 +32,8 @@ Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	vulkanCreateImageViews();
 	// Create render pass
 	vulkanCreateRenderPass();
+	// Create descriptor set
+	vulkanCreateDescriptorSetLayout();
 	// We wait to create the pipeline until
 	// a scene is initlized
 	// Create frame buffers
@@ -42,6 +44,12 @@ Nexus::VulkanAPI::VulkanAPI(GLFWwindow* window) {
 	vulkanCreateVertexBuffer();
 	// Create index
 	vulkanCreateIndexBuffer();
+	// Create uniform buffers
+	vulkanCreateUniformBuffers();
+	// Create descriptor pool
+	vulkanCreateDescriptorPool();
+	// Create descriptor sets
+	vulkanCreateDescriptorSets();
 	// Create sync objects
 	vulkanCreateSyncObjects();
 }
@@ -64,6 +72,15 @@ void Nexus::VulkanAPI::Clean() {
 		// Destroy fence
 		vkDestroyFence(vkDevice, vkInFlightFen[i], nullptr);
 	}
+
+	for (size_t i = 0; i < MAX_FRAME_IN_FLIGHT; i++) {
+		vkDestroyBuffer(vkDevice, vkUniBuf[i], nullptr);
+		vkFreeMemory(vkDevice, vkUniBufMem[i], nullptr);
+	}
+
+	vkDestroyDescriptorPool(vkDevice, vkDescPool, nullptr);
+	vkDestroyDescriptorSetLayout(vkDevice, vkDescSetLayout, nullptr);
+
 	// Destroy command pool
 	vkDestroyCommandPool(vkDevice, vkCommandPool, nullptr);
 
@@ -181,7 +198,7 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 	vkRasterCrInfo.lineWidth = 1.0f;
 	// Culling mode
 	vkRasterCrInfo.cullMode = VK_CULL_MODE_BACK_BIT;
-	vkRasterCrInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
+	vkRasterCrInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 
 	// Color blending stuff
 	// Defines how we blend the fragment shader from our current
@@ -204,6 +221,8 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 
 	// Lets create it
 	vkPipeLineLayoutCrInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+	vkPipeLineLayoutCrInfo.setLayoutCount = 1;
+	vkPipeLineLayoutCrInfo.pSetLayouts = &vkDescSetLayout;
 	// Some other optional stuff, but we're ok for now
 
 	if(vkCreatePipelineLayout(vkDevice, &vkPipeLineLayoutCrInfo, nullptr, &vkPipelineLayout) != VK_SUCCESS){
@@ -800,6 +819,24 @@ void Nexus::VulkanAPI::vulkanCreateRenderPass(){
 
 }
 
+void Nexus::VulkanAPI::vulkanCreateDescriptorSetLayout() {
+	VkDescriptorSetLayoutBinding camDataLayoutBinding{};
+	camDataLayoutBinding.binding = 0;
+	camDataLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	camDataLayoutBinding.descriptorCount = 1;
+	camDataLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	camDataLayoutBinding.pImmutableSamplers = nullptr;
+
+	VkDescriptorSetLayoutCreateInfo layoutInf{};
+	layoutInf.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+	layoutInf.bindingCount = 1;
+	layoutInf.pBindings = &camDataLayoutBinding;
+
+	if (vkCreateDescriptorSetLayout(vkDevice, &layoutInf, nullptr, &vkDescSetLayout) != VK_SUCCESS) {
+		Error("Vulkan: Failed to create descriptor set layout!");
+	}
+}
+
 void Nexus::VulkanAPI::vulkanCreateGraphicsPipeline(){
 	
 }
@@ -880,6 +917,71 @@ void Nexus::VulkanAPI::vulkanCreateIndexBuffer() {
 
 	// Create Vertex buffer
 	vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkIndexBuffer, vkIndexBufferMem);
+}
+
+void Nexus::VulkanAPI::vulkanCreateUniformBuffers() {
+	VkDeviceSize bufSize = sizeof(Nexus::CameraData);
+
+	vkUniBuf.resize(MAX_FRAME_IN_FLIGHT);
+	vkUniBufMap.resize(MAX_FRAME_IN_FLIGHT);
+	vkUniBufMem.resize(MAX_FRAME_IN_FLIGHT);
+
+	for (int i = 0; i < MAX_FRAME_IN_FLIGHT; i++) {
+		vulkanCreateBuffer(bufSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vkUniBuf[i], vkUniBufMem[i]);
+		vkMapMemory(vkDevice, vkUniBufMem[i], 0, bufSize, 0, &vkUniBufMap[i]);
+	}
+
+}
+
+void Nexus::VulkanAPI::vulkanCreateDescriptorPool() {
+	VkDescriptorPoolSize poolSz{};
+	poolSz.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	poolSz.descriptorCount = static_cast<uint32_t>(MAX_FRAME_IN_FLIGHT);
+	
+	VkDescriptorPoolCreateInfo poolCrInf{};
+	poolCrInf.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	poolCrInf.poolSizeCount = 1;
+	poolCrInf.pPoolSizes = &poolSz;
+	poolCrInf.maxSets = static_cast<uint32_t>(MAX_FRAME_IN_FLIGHT);
+
+	if (vkCreateDescriptorPool(vkDevice, &poolCrInf, nullptr, &vkDescPool) != VK_SUCCESS) {
+		Error("Vulkan: Failed to create descriptor pool!");
+	}
+}
+
+void Nexus::VulkanAPI::vulkanCreateDescriptorSets() {
+	std::vector<VkDescriptorSetLayout> layouts(MAX_FRAME_IN_FLIGHT, vkDescSetLayout);
+	VkDescriptorSetAllocateInfo allocInf{};
+	allocInf.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+	allocInf.descriptorPool = vkDescPool;
+	allocInf.descriptorSetCount = static_cast<uint32_t>(MAX_FRAME_IN_FLIGHT);
+	allocInf.pSetLayouts = layouts.data();
+
+	vkDescSets.resize(MAX_FRAME_IN_FLIGHT);
+	if (vkAllocateDescriptorSets(vkDevice, &allocInf, vkDescSets.data()) != VK_SUCCESS) {
+		Error("Vulkan: Failed to allocate descriptor sets!");
+	}
+
+	// Fill out every descriptor
+	for (size_t i = 0; i < MAX_FRAME_IN_FLIGHT; i++) {
+		VkDescriptorBufferInfo bufInf{};
+		bufInf.buffer = vkUniBuf[i];
+		bufInf.offset = 0;
+		bufInf.range = sizeof(Nexus::CameraData);
+		
+		VkWriteDescriptorSet descWr{};
+		descWr.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descWr.dstSet = vkDescSets[i];
+		descWr.dstBinding = 0;
+		descWr.dstArrayElement = 0;
+		descWr.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descWr.descriptorCount = 1;
+		descWr.pBufferInfo = &bufInf;
+		descWr.pImageInfo = nullptr;
+		descWr.pTexelBufferView = nullptr;
+		
+		vkUpdateDescriptorSets(vkDevice, 1, &descWr, 0, nullptr);
+	}
 }
 
 void Nexus::VulkanAPI::vulkanCreateSyncObjects() {
@@ -1042,6 +1144,9 @@ void Nexus::VulkanAPI::vulkanRecordCommandBuffer(uint32_t idx, std::vector<GameO
 		vkCmdBindVertexBuffers(vkCommandBuffer[vkCurFrame], 0, 1, vertBufs, offsets);
 		vkCmdBindIndexBuffer(vkCommandBuffer[vkCurFrame], vkIndexBuffer, shader->indexBufferOffset, VK_INDEX_TYPE_UINT16);
 
+		// Bind desc sets
+		vkCmdBindDescriptorSets(vkCommandBuffer[vkCurFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, vkPipelineLayout, 0, 1, &vkDescSets[vkCurFrame], 0, nullptr);
+
 		//               verts, no instance rendering
 		vkCmdDrawIndexed(vkCommandBuffer[vkCurFrame], static_cast<uint32_t>(gm->mesh->getIndicies().size()), 1, 0, 0, 0);
 	}
@@ -1096,6 +1201,10 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	// From a high level overview, we wanna to:
 	// 1. wait for previous frame to draw
 	vkWaitForFences(vkDevice, 1, &vkInFlightFen[vkCurFrame], VK_TRUE, UINT64_MAX);
+	// 1.5 update our camera
+	cam->camData.proj = glm::perspective(glm::radians(45.0f), vkSwapChainExt.width / (float)vkSwapChainExt.height, 0.1f, 10.0f);
+	cam->camData.proj[1][1] *= -1;
+	memcpy(vkUniBufMap[vkCurFrame], &(cam->camData), sizeof(Nexus::CameraData));
 	// 2. aquire an image from the swap chain
 	uint32_t imgIdx;
 	// Grab result to see if we gotta change our frame
@@ -1177,6 +1286,7 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 
 
 void Nexus::VulkanAPI::debugPrint(std::string caller, std::string text, int level) {
+	printf("%s - %s\n",caller.c_str(), text.c_str());
 #if GRAPHICS_LOG == 1
 	switch (level) {
 	case LOG_INFO:
@@ -1208,4 +1318,4 @@ static void Nexus::frameBufResizeCallback(GLFWwindow* win, int w, int h) {
 
 
 
-#endif // VULKAN == 1
+#endif // VULKAN_ENABLED == 1
