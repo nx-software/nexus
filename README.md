@@ -1,5 +1,6 @@
 # Nexus
-(Hopefully) Cross platform game engine. <br>
+Nexus, the open source, cross platform, research game engine. <br>
+Designed to give developers a starting framework for games while still providing full transparency and customization. 
 Currently supports Vulkan, may be expanded to support DX12. <br>
 OpenGL skeleton file is in there, will be added in the future.
 ## File structure
@@ -23,7 +24,8 @@ Currently, the output should look like this:
 ```
 
 ### Linux
-Ever since I converted this stuff into 3 DLLs I haven't tested it out on Linux.
+Ever since I converted this stuff into 3 DLLs I haven't tested it out on Linux. <br> 
+I imagine the CMake file should compile everything into a single ELF though.
 
 ## TO DO LIST:
 - [ ] - [ ] `VulkanAPI` : Optimize buffers 
