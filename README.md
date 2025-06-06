@@ -1,8 +1,17 @@
 # Nexus
-Nexus, the open source, cross platform, research game engine. <br>
-Designed to give developers a starting framework for games while still providing full transparency and customization. 
-Currently supports Vulkan, may be expanded to support DX12. <br>
-OpenGL skeleton file is in there, will be added in the future.
+## What is Nexus?
+Nexus is an open source, 3D (hopefully) cross platform research game engine. <br>
+Designed to give developers a starting framework for any project requiring 3D graphics <br>
+and/or input, audio control, ect, while still providing full transparency and customization. <br>
+## Features
+### Rendering APIs
+- Vulkan
+- OpenGL (skeleton file is present, true support planned)
+- DirectX12/11 (still up for debate as to which version, and if to use it at all)
+### Sound
+- OpenAL support planned
+### Input
+- Input interface planned
 ## File structure
 ### Core
 Contains the core of the engine (eg. Rendering, Input, Audio)
