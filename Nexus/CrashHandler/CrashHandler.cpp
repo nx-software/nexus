@@ -3,7 +3,7 @@
 #include "CrashHandler.h"
 
 
-Nexus::Error::Error(std::string text) {
+CRASH_HANDLER_API Nexus::Error::Error(std::string text) {
 	std::string title = "Nexus: Fatal Error!";
 
 	std::cout << title << " " << text << "\n";

@@ -123,8 +123,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>E:\Electro\Vulkan_SDK\Lib;E:\Electro\Visual Studio\Libraries\glfw-3.3.9.bin.WIN64\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:\Electro\Nexus\Nexus\Nexus\x64\Debug;E:\Electro\Vulkan_SDK\Lib;E:\Electro\Visual Studio\Libraries\glfw-3.3.9.bin.WIN64\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;CrashHandler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,7 +155,6 @@
     <ClInclude Include="Vulkan\vulkanApi.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\CrashHandler\CrashHandler.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="OpenGL\openglApi.cpp" />
     <ClCompile Include="renderApi.cpp" />

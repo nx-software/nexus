@@ -53,8 +53,5 @@
     <ClCompile Include="OpenGL\openglApi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\CrashHandler\CrashHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

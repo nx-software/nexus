@@ -19,7 +19,7 @@
 int main() {
 	// Create properties so Nexus knows whats up
 	Nexus::GameProperties gm;
-	gm.gameName = "Nexus Test";
+	gm.gameName = "Nexus Engine Demo";
 	gm.windowHeight = 800;
 	gm.windowWidth = 600;
 

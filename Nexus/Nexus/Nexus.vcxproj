@@ -116,6 +116,9 @@
       <AdditionalLibraryDirectories>E:\Electro\Nexus\Nexus\Nexus\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Renderer.lib;Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>cd $(OutDir) &amp;&amp; $(OutDir)compile.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

@@ -14,10 +14,20 @@
 #include <X11/Xutil.h>
 #endif
 
+#ifdef _WIN32
+#ifdef CRASHHANDLER_EXPORTS
+#define CRASH_HANDLER_API __declspec(dllexport)
+#else
+#define CRASH_HANDLER_API __declspec(dllexport)
+#endif
+#else
+#define CRASH_HANDLER_API
+#endif
+
 namespace Nexus {
 	class Error {
 	private:
 	public:
-		Error(std::string text);
+		CRASH_HANDLER_API Error(std::string text);
 	};
 }
