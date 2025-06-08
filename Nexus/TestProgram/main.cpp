@@ -8,6 +8,7 @@
 #include "../Engine/gameObject.h"
 #include "../Engine/camera.h"
 #include "../Engine/scene.h"
+#include "../Engine/module.h"
 
 // For basic rotation of our object
 #define GLM_FORCE_RADIANS
@@ -24,6 +25,9 @@ int main() {
 	gm.windowWidth = 600;
 
 	Nexus::Engine* engine = new Nexus::Engine(gm);
+
+	// Load audio module
+	Nexus::Module audio("Audio.dll");
 
 	Nexus::Scene testScene("Test Scene");
 
@@ -84,6 +88,7 @@ int main() {
 
 		camera.camData.model = glm::rotate(glm::mat4(1.0f), t * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		camera.camData.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		camera.pAngle = 10 * std::abs(std::cos(t)) + 35;
 
 		engine->Update(&testScene);
 	}

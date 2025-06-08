@@ -45,6 +45,7 @@ namespace Nexus {
 	class Camera {
 	public:
 		CameraData camData;
+		double pAngle;
 	};
 	
 	typedef struct GraphicsCard{

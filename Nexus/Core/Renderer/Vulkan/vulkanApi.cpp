@@ -1202,7 +1202,7 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 	// 1. wait for previous frame to draw
 	vkWaitForFences(vkDevice, 1, &vkInFlightFen[vkCurFrame], VK_TRUE, UINT64_MAX);
 	// 1.5 update our camera
-	cam->camData.proj = glm::perspective(glm::radians(45.0f), vkSwapChainExt.width / (float)vkSwapChainExt.height, 0.1f, 10.0f);
+	cam->camData.proj = glm::perspective(glm::radians((float)cam->pAngle), vkSwapChainExt.width / (float)vkSwapChainExt.height, 0.1f, 10.0f);
 	cam->camData.proj[1][1] *= -1;
 	memcpy(vkUniBufMap[vkCurFrame], &(cam->camData), sizeof(Nexus::CameraData));
 	// 2. aquire an image from the swap chain

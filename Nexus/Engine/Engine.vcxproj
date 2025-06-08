@@ -124,7 +124,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>Renderer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>CrashHandler.lib;Renderer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -152,6 +152,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="gameObject.cpp" />
     <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="module.cpp" />
     <ClCompile Include="nexus.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="transform.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="gameObject.h" />
     <ClInclude Include="mesh.h" />
+    <ClInclude Include="module.h" />
     <ClInclude Include="nexus.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="scene.h" />
