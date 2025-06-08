@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9b0240f3-d5a2-4145-8da3-f4a102afc2ee}</ProjectGuid>
+    <ProjectGuid>{ec32aded-f792-4dc3-873f-39fd7fb73b37}</ProjectGuid>
     <RootNamespace>Audio</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
