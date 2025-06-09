@@ -12,6 +12,35 @@ and/or input, audio control, ect, while still providing full transparency and cu
 - OpenAL support planned
 ### Input
 - Input interface planned
+
+## Modules
+Anything that isn't Rendering is an optional module that can be chosen to be loaded in at runtime. 
+Eg, audio:
+```c++
+// Load audio module
+Nexus::Module audio("Audio.dll");
+audio.initClass("Audio");
+audio.runFunction("Audio", "initAudio");
+```
+### Creating a module 
+#### Windows
+Create a new VS DLL project. Disable precompiled headers if you want, and make your DLLs and classes as normal. <br>
+Before we can have Nexus's module loader use it, we need to do two things. <br>
+First, lets setup a way for Nexus to create an instance of the class:
+```c++
+extern "C" __declspec(dllexport) YourNamespace::YourClass* createClass(){
+  return new YourNamespace::YourClass();
+}
+```
+This function **MUST** be called `createClass`. <br>
+Next, to actually be able to call a function, we must make a C style function for each class function:
+```c++
+// Assume ReturnType YourNamespace::YourClass::FooBar() is a function
+extern "C" __declspec(dllexport) ReturnType FooBar(YourNamespace::YourClass* instance){
+  return instance->FooBar();
+}
+```
+Do this for each function you want to call from Nexus.
 ## File structure
 ### Core
 Contains the core of the engine (eg. Rendering, Input, Audio)
