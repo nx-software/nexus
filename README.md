@@ -3,6 +3,8 @@
 Nexus is an open source, 3D (hopefully) cross platform research game engine. <br>
 Designed to give developers a starting framework for any project requiring 3D graphics <br>
 and/or input, audio control, ect, while still providing full transparency and customization. <br>
+Nexus was also designed to be modular, as anything besides Rendering such as Audio, Input, ect is an optional <br>
+feature that one can simpily choose to not load.
 ## Features
 ### Rendering APIs
 - Vulkan
