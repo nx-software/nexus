@@ -6,10 +6,52 @@ Nexus::Module::Module(std::string file) {
 	this->library = LoadLibraryA(file.c_str());
 
 	if (this->library != NULL) {
-		std::cout << file << " loaded successfully.";
+		std::cout << file << " loaded successfully.\n";
 	}
 	else {
 		Error(std::string{ "Nexus: Failed to load module " + file });
 	}
+#endif
+}
+
+void Nexus::Module::initClass(std::string name) {
+#ifdef _WIN32
+	// Ight 
+	if ((CreateLibraryClass)GetProcAddress(library, "createClass")) {
+		ModClass tmp;
+		tmp.name = name;
+		CreateLibraryClass crLib = (CreateLibraryClass)GetProcAddress(library, "createClass");
+		tmp.c = crLib();
+		this->classes.push_back(tmp);
+	}
+	else {
+		Error(std::string{ "Nexus: Failed to load class " + name });
+	}
+#endif
+}
+
+void Nexus::Module::runFunction(std::string className, std::string functionName, ...) {
+#ifdef _WIN32
+	for (auto& c : classes) {
+		if (c.name == className) {
+			// Ight lets get our func
+			typedef void (*FunctionToRun)(LibraryClass*);
+			if ((FunctionToRun)GetProcAddress(library, functionName.c_str())) {
+				FunctionToRun func = (FunctionToRun)GetProcAddress(library, functionName.c_str());
+				func(c.c);
+				return;
+			}
+			else {
+				Error(std::string{ "Nexus: Failed to load " + className + "::" + functionName });
+			}
+		}
+	}
+	Error(std::string{ "Nexus: Class " + className + " doesn't exist. Did you forget to load it?" });
+#endif
+}
+
+Nexus::Module::~Module() {
+#ifdef _WIN32
+	FreeLibrary(library);
 #endif
 }

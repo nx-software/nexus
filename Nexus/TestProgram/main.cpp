@@ -28,6 +28,8 @@ int main() {
 
 	// Load audio module
 	Nexus::Module audio("Audio.dll");
+	audio.initClass("Audio");
+	audio.runFunction("Audio", "initAudio");
 
 	Nexus::Scene testScene("Test Scene");
 
