@@ -75,5 +75,6 @@ Ever since I converted this stuff into 3 DLLs I haven't tested it out on Linux. 
 I imagine the CMake file should compile everything into a single ELF though.
 
 ## TO DO LIST:
+- [ ] - [ ] `Module` : Make modules cross platform. Right now only Windows supports them since it's just DLLs
 - [ ] - [ ] `VulkanAPI` : Optimize buffers 
 - [ ] - [ ] `Core/Rendering/Vulkan/vulkanAPI.cpp` : Check that Graphics Cards are compatible with program
