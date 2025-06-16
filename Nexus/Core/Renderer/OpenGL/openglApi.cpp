@@ -24,7 +24,12 @@ GLFWframebuffersizefun Nexus::OpenGLAPI::SetupWindowResize() {
 	return nullptr;
 }
 void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
-
+	for (auto& gm : scene->getObjects()) {
+		// Compile vertex shader
+		unsigned int vShader = glCreateShader(GL_VERTEX_SHADER);
+		const char* vertexCode = generateStringFromArrayShaderCode(gm->getVertShader()->readShader()).c_str();
+		glShaderSource(vShader, 1, &vertexCode, NULL);
+	}
 }
 void Nexus::OpenGLAPI::DrawFrame(Scene* scene) {
 	// Setup clear color
@@ -38,4 +43,12 @@ void Nexus::OpenGLAPI::CleanScene(Scene* scene) {
 }
 void Nexus::OpenGLAPI::Clean() {
 
+}
+
+std::string Nexus::OpenGLAPI::generateStringFromArrayShaderCode(std::vector<char> characters) {
+	std::string code;
+	for (char c : characters) {
+		code += c;
+	}
+	return code;
 }

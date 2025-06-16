@@ -22,10 +22,21 @@
 #include "../renderer.h"
 
 namespace Nexus {
+    class OpenGLShader : public GraphicsShader {
+        unsigned int shaderProgram;
+        unsigned int VBO, VAO, EBO;
+    };
+
 	class OpenGLAPI : public GraphicAPI {
 	private:
         int width, height;
         GLFWwindow* window;
+
+        // Internal funcs
+        std::string generateStringFromArrayShaderCode(std::vector<char> lines);
+
+        // Check shader comp 
+        void checkShaderComp(unsigned int shader);
 	public:
 		OpenGLAPI(GLFWwindow* window);
 
