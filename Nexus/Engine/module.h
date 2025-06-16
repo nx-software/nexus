@@ -36,6 +36,7 @@
 
 namespace Nexus {
     typedef class LibraryClass* (*CreateLibraryClass)();
+    typedef void (*FunctionToRun)(LibraryClass*, ...);
 
     class ENGINE_API ModClass {
     public:
@@ -55,7 +56,8 @@ namespace Nexus {
 
         void initClass(std::string name);
 
-        void runFunction(std::string className, std::string functionName, ...);
+        void runFunction(std::string className, std::string functionName, int argCount = 0, ...);
+
 
         ~Module();
     };

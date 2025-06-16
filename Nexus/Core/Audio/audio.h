@@ -19,6 +19,9 @@
 #pragma once
 
 #include <cstdio>
+#include <string>
+#include <cstdarg>
+
 
 #ifdef _WIN32
 #ifdef AUDIO_EXPORTS
@@ -37,5 +40,7 @@ namespace Nexus{
         Audio();
 
         void initAudio();
+
+        void playAudio(std::string file);
     };
 }

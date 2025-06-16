@@ -30,15 +30,16 @@ void Nexus::Module::initClass(std::string name) {
 #endif
 }
 
-void Nexus::Module::runFunction(std::string className, std::string functionName, ...) {
+void Nexus::Module::runFunction(std::string className, std::string functionName, int argCount, ...) {
 #ifdef _WIN32
 	for (auto& c : classes) {
 		if (c.name == className) {
 			// Ight lets get our func
-			typedef void (*FunctionToRun)(LibraryClass*);
-			if ((FunctionToRun)GetProcAddress(library, functionName.c_str())) {
-				FunctionToRun func = (FunctionToRun)GetProcAddress(library, functionName.c_str());
-				func(c.c);
+			FunctionToRun func = (FunctionToRun)GetProcAddress(library, functionName.c_str());
+			if (func) {
+				va_list args;
+				va_start(args, argCount);
+				func(c.c, args);
 				return;
 			}
 			else {
