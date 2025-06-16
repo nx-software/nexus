@@ -6,6 +6,9 @@
 
 build
 
+# ignore wakatime
+.wakatime-project
+
 *.icph
 
 # User-specific files

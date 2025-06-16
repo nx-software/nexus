@@ -13,8 +13,16 @@ Nexus::Renderer::Renderer(std::string title, int height, int width, Renderers re
 
 	// Initlize GLFW
 	glfwInit();
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
+	switch (render) {
+	case RENDER_VULKAN:
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		break;
+	case RENDER_GL:
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		break;
+	}
 	// Create window
 	window = glfwCreateWindow(height, width, title.c_str(), nullptr, nullptr);
 

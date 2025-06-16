@@ -156,6 +156,7 @@
     <ClInclude Include="Vulkan\vulkanApi.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\thirdPartyInc\glad.c" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="OpenGL\openglApi.cpp" />
     <ClCompile Include="renderApi.cpp" />

@@ -24,6 +24,8 @@
 namespace Nexus {
 	class OpenGLAPI : public GraphicAPI {
 	private:
+        int width, height;
+        GLFWwindow* window;
 	public:
 		OpenGLAPI(GLFWwindow* window);
 

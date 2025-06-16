@@ -17,6 +17,9 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
+
+#include <glad/glad.h>
+
 #include "../../CrashHandler/CrashHandler.h"
 #include "../../Engine/scene.h"
 #ifdef _WIN32
