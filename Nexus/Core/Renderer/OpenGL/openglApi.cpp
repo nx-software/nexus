@@ -65,14 +65,47 @@ void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
 		glGenVertexArrays(1, &glShader.VAO);
 		glGenBuffers(1, &glShader.VBO);
 		glGenBuffers(1, &glShader.EBO);
+		// bind the Vertex Array Object
+		glBindVertexArray(glShader.VAO);
 
+		// Bind the Vertex buffer
+		glBindBuffer(GL_ARRAY_BUFFER, glShader.VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(gm->mesh->getVertices()), gm->mesh->getVertices().data(), GL_STATIC_DRAW);
 
+		// Bind the Index buffer
+		glBindBuffer(GL_ARRAY_BUFFER, glShader.EBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(gm->mesh->getIndicies()), gm->mesh->getIndicies().data(), GL_STATIC_DRAW);
+
+		// Attributes!
+		// Position
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(glm::vec2), (void*)0);
+		glEnableVertexAttribArray(0);
+		// Color
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(glm::vec2), (void*)0);
+		glEnableVertexAttribArray(1);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		// Bind our vertex array
+		glBindVertexArray(0);
+
+		gm->gShader = new OpenGLShader(glShader);
 	}
 }
 void Nexus::OpenGLAPI::DrawFrame(Scene* scene) {
 	// Setup clear color
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	// Render each object
+	for (auto& gm : scene->getObjects()) {
+		OpenGLShader* s = (OpenGLShader*)gm->gShader;
+		// Use shader program
+		glUseProgram(s->shaderProgram);
+		glBindVertexArray(s->VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	}
+
 	glfwSwapBuffers(window);
 
 }

@@ -25,6 +25,11 @@ namespace Nexus {
     class OpenGLShader : public GraphicsShader {
     public:
         unsigned int shaderProgram;
+        /*
+        *  VAO -> Tells OpenGL how our vertices are laid out
+        *  VBO -> for our vertices
+        *  EBO -> for our indices
+        */
         unsigned int VBO, VAO, EBO;
     };
 
