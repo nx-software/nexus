@@ -35,8 +35,8 @@ int main() {
 	Nexus::Scene testScene("Test Scene");
 
 	// Since we use the same shader for both of these objects, just make one
-	Nexus::Shader vert("../shaders/vert.spv");
-	Nexus::Shader frag("../shaders/frag.spv");
+	Nexus::Shader vert("../shaders/shader.vert", "../shaders/vert.spv");
+	Nexus::Shader frag("../shaders/shader.frag","../shaders/frag.spv");
 
 	Nexus::GameObject gameObject("Test Object");
 

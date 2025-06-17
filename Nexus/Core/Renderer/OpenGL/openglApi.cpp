@@ -27,8 +27,46 @@ void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
 	for (auto& gm : scene->getObjects()) {
 		// Compile vertex shader
 		unsigned int vShader = glCreateShader(GL_VERTEX_SHADER);
-		const char* vertexCode = generateStringFromArrayShaderCode(gm->getVertShader()->readShader()).c_str();
+		std::string vCodeInter = generateStringFromArrayShaderCode(gm->getVertShader()->readSource());
+		const char* vertexCode = vCodeInter.c_str();
 		glShaderSource(vShader, 1, &vertexCode, NULL);
+		glCompileShader(vShader);
+		// Did it compile correctly...
+		checkShaderComp(vShader);
+		// Compile fragment shader
+		unsigned int fShader = glCreateShader(GL_FRAGMENT_SHADER);
+		std::string fCodeInter = generateStringFromArrayShaderCode(gm->getFragShader()->readSource());
+		const char* fragmentCode = fCodeInter.c_str();
+		glShaderSource(fShader, 1, &fragmentCode, NULL);
+		glCompileShader(fShader);
+		// Did it compile correctly...
+		checkShaderComp(fShader);
+
+		// Shader program !
+		unsigned int sProgram = glCreateProgram();
+		glAttachShader(sProgram, vShader);
+		glAttachShader(sProgram, fShader);
+		glLinkProgram(sProgram);
+		// Did it error out...
+		int suc;
+		char log[512];
+		glGetProgramiv(sProgram, GL_LINK_STATUS, &suc);
+		if (!suc) {
+			glGetProgramInfoLog(sProgram, sizeof(log), NULL, log);
+			Error(std::string{ "OpenGL: Error linking shader program, log: " + std::string{log} });
+		}
+		glDeleteShader(vShader);
+		glDeleteShader(fShader);
+		// Add it to our newly created OpenGL shader !
+		OpenGLShader glShader;
+		glShader.shaderProgram = sProgram;
+
+		// Lets get our data in !
+		glGenVertexArrays(1, &glShader.VAO);
+		glGenBuffers(1, &glShader.VBO);
+		glGenBuffers(1, &glShader.EBO);
+
+
 	}
 }
 void Nexus::OpenGLAPI::DrawFrame(Scene* scene) {
@@ -51,4 +89,14 @@ std::string Nexus::OpenGLAPI::generateStringFromArrayShaderCode(std::vector<char
 		code += c;
 	}
 	return code;
+}
+
+void Nexus::OpenGLAPI::checkShaderComp(unsigned int shader) {
+	int suc;
+	char log[512];
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &suc);
+	if (!suc) {
+		glGetShaderInfoLog(shader, sizeof(log), NULL, log);
+		Error(std::string{ "OpenGL: Error compiling shader, log: " + std::string{log} });
+	}
 }

@@ -8,7 +8,7 @@ feature that one can simpily choose to not load.
 ## Features
 ### Rendering APIs
 - Vulkan
-- OpenGL (skeleton file is present, true support planned)
+- OpenGL (work in progress to get it to the same point where Vulkan is)
 - DirectX12/11 (still up for debate as to which version, and if to use it at all)
 ### Sound
 - OpenAL support planned

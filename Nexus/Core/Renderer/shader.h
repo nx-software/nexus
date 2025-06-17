@@ -28,13 +28,14 @@
 namespace Nexus{
     class RENDERER_API Shader{
     private:
-        std::string fileName;
+        std::string source, shader;
     public:
         
-        Shader(std::string fileName);
+        Shader(std::string source, std::string shader);
 
         Shader();
 
         std::vector<char> readShader();
+        std::vector<char> readSource();
     };
 }

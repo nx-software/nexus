@@ -23,6 +23,7 @@
 
 namespace Nexus {
     class OpenGLShader : public GraphicsShader {
+    public:
         unsigned int shaderProgram;
         unsigned int VBO, VAO, EBO;
     };

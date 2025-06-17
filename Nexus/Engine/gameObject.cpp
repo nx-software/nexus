@@ -11,9 +11,11 @@ Nexus::GameObject::GameObject(std::string name){
 }
 
 void Nexus::GameObject::loadVertShader(std::string file){
-    this->vertShader = new Shader(file);
+    // Implementation removed because it is unnessacry for now.
+    //this->vertShader = new Shader(file);
 }
 
 void Nexus::GameObject::loadFragShader(std::string file){
-    this->fragShader = new Shader(file);
+    // Implementation removed because it is unnessacry for now.
+    //this->fragShader = new Shader(file);
 }
