@@ -18,11 +18,30 @@
 #include <chrono>
 
 int main() {
+	int api = Nexus::RENDER_VULKAN;
+#ifdef WIN32
+	int msgBox = MessageBox(
+		NULL,
+		(LPCWSTR)L"Press OK for Vulkan (unfinished), Cancel for OpenGL (more unfinished)",
+		(LPCWSTR)L"Renderer Select",
+		MB_ICONWARNING | MB_OKCANCEL | MB_DEFBUTTON1
+	);
+
+	switch (msgBox) {
+	case IDCANCEL:
+		api = Nexus::RENDER_GL;
+		break;
+	case IDOK:
+		api = Nexus::RENDER_VULKAN;
+		break;
+	}
+#endif
 	// Create properties so Nexus knows whats up
 	Nexus::GameProperties gm;
 	gm.gameName = "Nexus Engine Demo";
 	gm.windowHeight = 800;
 	gm.windowWidth = 600;
+	gm.renderer = api;
 
 	Nexus::Engine* engine = new Nexus::Engine(gm);
 

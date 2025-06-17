@@ -16,7 +16,7 @@ Nexus::Engine::Engine(GameProperties gameProperties) {
 	PLOG_DEBUG << "Nexus Init - Version " << MAJOR_VER_NUM << "." << MINOR_VER_NUM;
 #endif
 	// Init Renderer
-	renderer = new Renderer(gameProperties.gameName, gameProperties.windowHeight, gameProperties.windowWidth, RENDER_GL);
+	renderer = new Renderer(gameProperties.gameName, gameProperties.windowHeight, gameProperties.windowWidth, Renderers(gameProperties.renderer));
 }
 
 void Nexus::Engine::InitScene(Scene* scene){

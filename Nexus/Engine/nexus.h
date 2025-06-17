@@ -54,6 +54,7 @@ namespace Nexus {
 		
 		int windowHeight;
 		int windowWidth;
+		int renderer;
 	};
 
 	/*
