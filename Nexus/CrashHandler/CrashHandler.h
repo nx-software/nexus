@@ -19,6 +19,7 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -39,9 +40,26 @@
 #define CRASH_HANDLER_API
 #endif
 
+// Enable various titlebar messages
+#define ENABLE_RANDOM_TITLEBAR 1
+
 namespace Nexus {
 	class Error {
 	private:
+#if ENABLE_RANDOM_TITLEBAR == 1
+        std::vector<std::string> messages = {
+            "Look who's incompetent...",
+            "The kid who dreamed of being a programmer...",
+            "You messed up bad!",
+            "Your graphics card is sobbing.",
+            "Did you think that would work?",
+            "Pfft. Course it crashed. An AP CSA student could predict that.",
+            "Aw.. do you need me to do it for you?",
+            "It's nice that you tired!",
+            "Give up.",
+            "Fatal Error!"
+        };
+#endif
 	public:
 		CRASH_HANDLER_API Error(std::string text);
 	};

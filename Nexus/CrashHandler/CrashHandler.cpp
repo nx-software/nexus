@@ -4,7 +4,14 @@
 
 
 CRASH_HANDLER_API Nexus::Error::Error(std::string text) {
-	std::string title = "Nexus: Fatal Error!";
+	std::string title = "Nexus: ";
+#if ENABLE_RANDOM_TITLEBAR == 1
+	srand(time(0));
+	int msg = rand() % messages.size();
+	title += messages[msg];
+#else
+	title += "Fatal Error!"
+#endif
 
 	std::cout << title << " " << text << "\n";
 	
