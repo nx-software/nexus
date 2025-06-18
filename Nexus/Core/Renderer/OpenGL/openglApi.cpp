@@ -2,6 +2,8 @@
 
 Nexus::OpenGLAPI::OpenGLAPI(GLFWwindow* window) {
 	glfwMakeContextCurrent(window);
+	// Set user pointer
+	glfwSetWindowUserPointer(window, this);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		Error("OpenGL: Failed to init GLAD!");
@@ -20,9 +22,11 @@ Nexus::OpenGLAPI::OpenGLAPI(GLFWwindow* window) {
 void Nexus::OpenGLAPI::InitConnectionToWindow(GLFWwindow* window) {
 
 }
+
 GLFWframebuffersizefun Nexus::OpenGLAPI::SetupWindowResize() {
-	return nullptr;
+	return Nexus::setupOpenGLFrameBufferCallback;
 }
+
 void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
 	for (auto& gm : scene->getObjects()) {
 		// Compile vertex shader
@@ -62,26 +66,34 @@ void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
 		glShader.shaderProgram = sProgram;
 
 		// Lets get our data in !
-		glGenVertexArrays(1, &glShader.VAO);
-		glGenBuffers(1, &glShader.VBO);
-		glGenBuffers(1, &glShader.EBO);
+		glGenVertexArrays(1, &(glShader.VAO));
+		glGenBuffers(1, &(glShader.VBO));
+		glGenBuffers(1, &(glShader.EBO));
 		// bind the Vertex Array Object
 		glBindVertexArray(glShader.VAO);
 
 		// Bind the Vertex buffer
 		glBindBuffer(GL_ARRAY_BUFFER, glShader.VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(gm->mesh->getVertices().data()), gm->mesh->getVertices().data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, gm->mesh->getVertsRealSize(), gm->mesh->getFloatVerts(), GL_STATIC_DRAW);
 
 		// Bind the Index buffer
-		glBindBuffer(GL_ARRAY_BUFFER, glShader.EBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(gm->mesh->getIndicies().data()), gm->mesh->getIndicies().data(), GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glShader.EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, gm->mesh->getIndsRealSize(), gm->mesh->getFloatInd(), GL_STATIC_DRAW);
+
+		printf("====Vertex Info====\nSize of Vertex array: %d | Size of Index Array: %d\nData: %f %d\n", gm->mesh->getVertsRealSize(), gm->mesh->getIndsRealSize(), gm->mesh->getFloatVerts()[4], gm->mesh->getFloatInd()[1]);
+		
+		float* vals = gm->mesh->getFloatVerts();
+		printf("%d\n", sizeof(vals));
+		for (int i = 0; i < sizeof(vals) / sizeof(float); i++) {
+			printf("%f ", vals[i]);
+		}
 
 		// Attributes!
 		// Position
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2) + sizeof(glm::vec3), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3), (void*)0);
 		glEnableVertexAttribArray(0);
 		// Color
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec2) + sizeof(glm::vec3), (void*)(sizeof(glm::vec2)));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3), (void*)(sizeof(glm::vec3)));
 		glEnableVertexAttribArray(1);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -92,6 +104,7 @@ void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
 		gm->gShader = new OpenGLShader(glShader);
 	}
 }
+
 void Nexus::OpenGLAPI::DrawFrame(Scene* scene) {
 	// Setup clear color
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -104,16 +117,16 @@ void Nexus::OpenGLAPI::DrawFrame(Scene* scene) {
 		glUseProgram(s->shaderProgram);
 		glBindVertexArray(s->VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s->EBO);
-		glDrawElements(GL_TRIANGLES, gm->mesh->getIndicies().size(), GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+		glDrawElements(GL_TRIANGLES, gm->mesh->getIndsRealSize(), GL_UNSIGNED_INT, 0);
 	}
 
 	glfwSwapBuffers(window);
-
 }
+
 void Nexus::OpenGLAPI::CleanScene(Scene* scene) {
 
 }
+
 void Nexus::OpenGLAPI::Clean() {
 
 }
@@ -134,4 +147,14 @@ void Nexus::OpenGLAPI::checkShaderComp(unsigned int shader) {
 		glGetShaderInfoLog(shader, sizeof(log), NULL, log);
 		Error(std::string{ "OpenGL: Error compiling shader, log: " + std::string{log} });
 	}
+}
+
+void Nexus::OpenGLAPI::resizeWindow() {
+	glfwGetWindowSize(window, &width, &height);
+	glViewport(0, 0, width, height);
+}
+
+static void Nexus::setupOpenGLFrameBufferCallback(GLFWwindow* win, int w, int h) {
+	auto glApi = reinterpret_cast<OpenGLAPI*>(glfwGetWindowUserPointer(win));
+	glApi->resizeWindow();
 }

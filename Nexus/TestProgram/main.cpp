@@ -60,14 +60,14 @@ int main() {
 	Nexus::GameObject gameObject("Test Object");
 
 	std::vector<Nexus::Vertex> verts = {
-		{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-		{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-		{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-		{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+		{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+		{{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
+		{{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
+		{{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}}
 	};
 
 	std::vector<uint16_t> inds = {
-		0, 1, 2, 2, 3, 0
+		0, 1, 3, 1, 2, 3
 	};
 
 	gameObject.mesh = new Nexus::Mesh(verts, inds);
@@ -78,9 +78,9 @@ int main() {
 
 	// Next object
 	std::vector<Nexus::Vertex> verts_new = {
-		{{-1.0f, -1.0f}, {0.0f, 1.0f, 0.3f}},
-		{{0.0f, -0.0f}, {0.0f, 1.0f, 0.5f}},
-		{{-1.0f, 1.0f}, {0.0f, 1.0f, 1.0f}}
+		{{-1.0f, -1.0f, 0.0f}, {0.0f, 1.0f, 0.3f}},
+		{{0.0f, -0.0f, 0.0f}, {0.0f, 1.0f, 0.5f}},
+		{{-1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}}
 	};
 
 	std::vector<uint16_t> inds_new = {

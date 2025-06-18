@@ -40,7 +40,7 @@
 namespace Nexus {
 	// Structure holding one vertex
 	struct ENGINE_API Vertex {
-		glm::vec2 pos;
+		glm::vec3 pos;
 		glm::vec3 color;
 		
 #if VULKAN_ENABLED == 1
@@ -123,6 +123,18 @@ namespace Nexus {
 		void setIndicies(std::vector<uint16_t> inds) {
 			this->indices = inds;
 			modified = true;
+		}
+
+		float* getFloatVerts();
+
+		unsigned int* getFloatInd();
+
+		int getVertsRealSize() {
+			return sizeof(float) * (6 * vertices.size());
+		}
+
+		int getIndsRealSize() {
+			return sizeof(float) * indices.size();
 		}
 	};
 }

@@ -26,10 +26,10 @@ namespace Nexus {
     public:
         unsigned int shaderProgram;
         /*
-        *  VAO -> Tells OpenGL how our vertices are laid out
-        *  VBO -> for our vertices
-        *  EBO -> for our indices
-        */
+         *  VAO -> Tells OpenGL how our vertices are laid out
+         *  VBO -> for our vertices
+         *  EBO -> for our indices
+         */
         unsigned int VBO, VAO, EBO;
     };
 
@@ -52,5 +52,10 @@ namespace Nexus {
 		void DrawFrame(Scene* scene) override;
 		void CleanScene(Scene* scene) override;
 		void Clean() override;
+
+        // Resize window
+        void resizeWindow();
 	};
+
+    static void setupOpenGLFrameBufferCallback(GLFWwindow* win, int w, int h);
 }
