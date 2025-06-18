@@ -124,7 +124,7 @@ void Nexus::OpenGLAPI::DrawFrame(Scene* scene) {
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(cam->camData.model));
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(cam->camData.view));
 		// Projection matrix... lets set it up
-		cam->camData.proj = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
+		cam->camData.proj = glm::perspective(glm::radians((float)cam->pAngle), (float)width / (float)height, 0.1f, 100.0f);
 		glUniformMatrix4fv(projLocation, 1, GL_FALSE, glm::value_ptr(cam->camData.proj));
 		// Draw
 		glBindVertexArray(s->VAO);

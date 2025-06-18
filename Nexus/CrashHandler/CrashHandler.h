@@ -57,7 +57,10 @@ namespace Nexus {
             "Aw.. do you need me to do it for you?",
             "It's nice that you tired!",
             "Give up.",
-            "Fatal Error!"
+            "Fatal Error!",
+            "As your computer, your code makes me feel violated.",
+            "Did you know it hurts every time I crash?",
+            "Y'know... maybe HAL was right..."
         };
 #endif
 	public:

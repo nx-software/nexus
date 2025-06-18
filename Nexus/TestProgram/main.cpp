@@ -22,8 +22,8 @@ int main() {
 #ifdef WIN32
 	int msgBox = MessageBox(
 		NULL,
-		(LPCWSTR)L"Press OK for Vulkan (unfinished), Cancel for OpenGL (more unfinished)",
-		(LPCWSTR)L"Renderer Select",
+		(LPCWSTR)L"Press OK for Vulkan, Cancel for OpenGL",
+		(LPCWSTR)L"Nexus: Render API Select",
 		MB_ICONINFORMATION | MB_OKCANCEL | MB_DEFBUTTON1
 	);
 
@@ -93,7 +93,7 @@ int main() {
 	test2.setVertShader(&vert);
 	test2.setFragShader(&frag);
 
-	//testScene.addObject(&test2);
+	testScene.addObject(&test2);
 
 	// Let's get our camera
 	Nexus::Camera camera;
