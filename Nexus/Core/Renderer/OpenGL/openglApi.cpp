@@ -83,8 +83,8 @@ void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
 		printf("====Vertex Info====\nSize of Vertex array: %d | Size of Index Array: %d\nData: %f %d\n", gm->mesh->getVertsRealSize(), gm->mesh->getIndsRealSize(), gm->mesh->getFloatVerts()[4], gm->mesh->getFloatInd()[1]);
 		
 		float* vals = gm->mesh->getFloatVerts();
-		printf("%d\n", sizeof(vals));
-		for (int i = 0; i < sizeof(vals) / sizeof(float); i++) {
+		printf("%d\n", gm->mesh->getVertsRealSize());
+		for (int i = 0; i < gm->mesh->getVertsRealSize() / sizeof(float); i++) {
 			printf("%f ", vals[i]);
 		}
 
@@ -115,6 +115,18 @@ void Nexus::OpenGLAPI::DrawFrame(Scene* scene) {
 		OpenGLShader* s = (OpenGLShader*)gm->gShader;
 		// Use shader program
 		glUseProgram(s->shaderProgram);
+		// Setup camera
+		int modelLocation = glGetUniformLocation(s->shaderProgram, "model");
+		int viewLocation = glGetUniformLocation(s->shaderProgram, "view");
+		int projLocation = glGetUniformLocation(s->shaderProgram, "proj");
+		// Set values within shader
+		glm::mat4 identity = glm::mat4(1.0f);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(cam->camData.model));
+		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(cam->camData.view));
+		// Projection matrix... lets set it up
+		cam->camData.proj = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
+		glUniformMatrix4fv(projLocation, 1, GL_FALSE, glm::value_ptr(cam->camData.proj));
+		// Draw
 		glBindVertexArray(s->VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s->EBO);
 		glDrawElements(GL_TRIANGLES, gm->mesh->getIndsRealSize(), GL_UNSIGNED_INT, 0);
