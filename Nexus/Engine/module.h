@@ -58,7 +58,6 @@ namespace Nexus {
 
         void runFunction(std::string className, std::string functionName, int argCount = 0, ...);
 
-
         ~Module();
     };
 }

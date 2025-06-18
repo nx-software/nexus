@@ -38,11 +38,15 @@ namespace Nexus {
 
 	class OpenGLAPI : public GraphicAPI {
 	private:
+        // Width and height of window
         int width, height;
+        // Acutal GLFW window
         GLFWwindow* window;
 
         // Internal funcs
-        std::string generateStringFromArrayShaderCode(std::vector<char> lines);
+        // Take the vector of characters from the shader and convert into something 
+        // OpenGL likes
+        std::string generateStringFromArrayShaderCode(std::vector<char> chars);
 
         // Check shader comp 
         void checkShaderComp(unsigned int shader);

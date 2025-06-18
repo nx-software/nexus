@@ -162,6 +162,7 @@ void Nexus::OpenGLAPI::checkShaderComp(unsigned int shader) {
 }
 
 void Nexus::OpenGLAPI::resizeWindow() {
+	// Update window size
 	glfwGetWindowSize(window, &width, &height);
 	glViewport(0, 0, width, height);
 }
