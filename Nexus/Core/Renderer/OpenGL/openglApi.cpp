@@ -70,18 +70,18 @@ void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
 
 		// Bind the Vertex buffer
 		glBindBuffer(GL_ARRAY_BUFFER, glShader.VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(gm->mesh->getVertices()), gm->mesh->getVertices().data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(gm->mesh->getVertices().data()), gm->mesh->getVertices().data(), GL_STATIC_DRAW);
 
 		// Bind the Index buffer
 		glBindBuffer(GL_ARRAY_BUFFER, glShader.EBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(gm->mesh->getIndicies()), gm->mesh->getIndicies().data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(gm->mesh->getIndicies().data()), gm->mesh->getIndicies().data(), GL_STATIC_DRAW);
 
 		// Attributes!
 		// Position
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(glm::vec2), (void*)0);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2) + sizeof(glm::vec3), (void*)0);
 		glEnableVertexAttribArray(0);
 		// Color
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(glm::vec2), (void*)0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec2) + sizeof(glm::vec3), (void*)(sizeof(glm::vec2)));
 		glEnableVertexAttribArray(1);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -103,7 +103,9 @@ void Nexus::OpenGLAPI::DrawFrame(Scene* scene) {
 		// Use shader program
 		glUseProgram(s->shaderProgram);
 		glBindVertexArray(s->VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s->EBO);
+		glDrawElements(GL_TRIANGLES, gm->mesh->getIndicies().size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 	}
 
 	glfwSwapBuffers(window);

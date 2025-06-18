@@ -24,7 +24,7 @@ int main() {
 		NULL,
 		(LPCWSTR)L"Press OK for Vulkan (unfinished), Cancel for OpenGL (more unfinished)",
 		(LPCWSTR)L"Renderer Select",
-		MB_ICONWARNING | MB_OKCANCEL | MB_DEFBUTTON1
+		MB_ICONINFORMATION | MB_OKCANCEL | MB_DEFBUTTON1
 	);
 
 	switch (msgBox) {
@@ -54,8 +54,8 @@ int main() {
 	Nexus::Scene testScene("Test Scene");
 
 	// Since we use the same shader for both of these objects, just make one
-	Nexus::Shader vert("../shaders/shader.vert", "../shaders/vert.spv");
-	Nexus::Shader frag("../shaders/shader.frag","../shaders/frag.spv");
+	Nexus::Shader vert("../shaders/vertex.gl", "../shaders/vert.spv");
+	Nexus::Shader frag("../shaders/frag.gl","../shaders/frag.spv");
 
 	Nexus::GameObject gameObject("Test Object");
 
@@ -93,7 +93,7 @@ int main() {
 	test2.setVertShader(&vert);
 	test2.setFragShader(&frag);
 
-	testScene.addObject(&test2);
+	//testScene.addObject(&test2);
 
 	// Let's get our camera
 	Nexus::Camera camera;
