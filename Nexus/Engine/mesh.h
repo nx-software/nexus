@@ -107,6 +107,10 @@ namespace Nexus {
 		Mesh(std::vector<Vertex> verts, std::vector<uint16_t> inds);
 
 		// Getters/Setters
+		float* packVerts();
+
+		unsigned int* packInds();
+
 		std::vector<Vertex> getVertices() {
 			return vertices;
 		}
@@ -124,10 +128,6 @@ namespace Nexus {
 			this->indices = inds;
 			modified = true;
 		}
-
-		float* getFloatVerts();
-
-		unsigned int* getFloatInd();
 
 		int getVertsRealSize() {
 			return sizeof(float) * (6 * vertices.size());

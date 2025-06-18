@@ -49,7 +49,7 @@ int main() {
 	Nexus::Module audio("Audio.dll");
 	audio.initClass("Audio");
 	audio.runFunction("Audio", "initAudio");
-	audio.runFunction("Audio", "playAudio", 1, "test.mp3");
+	//audio.runFunction("Audio", "playAudio", 1, "test.mp3");
 
 	Nexus::Scene testScene("Test Scene");
 

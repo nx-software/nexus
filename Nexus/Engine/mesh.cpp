@@ -6,7 +6,7 @@ Nexus::Mesh::Mesh(std::vector<Vertex> verts, std::vector<uint16_t> inds) {
 	this->modified = true;
 }
 
-float* Nexus::Mesh::getFloatVerts() {
+float* Nexus::Mesh::packVerts() {
 	float* fVerts = (float*)malloc(this->getVertsRealSize());
 	if (fVerts) {
 		for (int i = 0; i < vertices.size(); i++) {
@@ -22,7 +22,7 @@ float* Nexus::Mesh::getFloatVerts() {
 	return fVerts;
 }
 
-unsigned int* Nexus::Mesh::getFloatInd() {
+unsigned int* Nexus::Mesh::packInds() {
 	unsigned int* iVerts = (unsigned int*)malloc(sizeof(unsigned int) * indices.size());
 	for (int i = 0; i < indices.size(); i++) {
 		iVerts[i] = (unsigned int)indices[i];

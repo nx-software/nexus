@@ -74,15 +74,15 @@ void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
 
 		// Bind the Vertex buffer
 		glBindBuffer(GL_ARRAY_BUFFER, glShader.VBO);
-		glBufferData(GL_ARRAY_BUFFER, gm->mesh->getVertsRealSize(), gm->mesh->getFloatVerts(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, gm->mesh->getVertsRealSize(), gm->mesh->packVerts(), GL_STATIC_DRAW);
 
 		// Bind the Index buffer
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glShader.EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, gm->mesh->getIndsRealSize(), gm->mesh->getFloatInd(), GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, gm->mesh->getIndsRealSize(), gm->mesh->packInds(), GL_STATIC_DRAW);
 
-		printf("====Vertex Info====\nSize of Vertex array: %d | Size of Index Array: %d\nData: %f %d\n", gm->mesh->getVertsRealSize(), gm->mesh->getIndsRealSize(), gm->mesh->getFloatVerts()[4], gm->mesh->getFloatInd()[1]);
+		printf("====Vertex Info====\nSize of Vertex array: %d | Size of Index Array: %d\nData: %f %d\n", gm->mesh->getVertsRealSize(), gm->mesh->getIndsRealSize(), gm->mesh->packVerts()[4], gm->mesh->packInds()[1]);
 		
-		float* vals = gm->mesh->getFloatVerts();
+		float* vals = gm->mesh->packVerts();
 		printf("%d\n", gm->mesh->getVertsRealSize());
 		for (int i = 0; i < gm->mesh->getVertsRealSize() / sizeof(float); i++) {
 			printf("%f ", vals[i]);
