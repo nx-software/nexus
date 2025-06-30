@@ -49,7 +49,7 @@ int main() {
 	Nexus::Module audio("Audio.dll");
 	audio.initClass("Audio");
 	audio.runFunction("Audio", "initAudio");
-	//audio.runFunction("Audio", "playAudio", 1, "test.mp3");
+	audio.runFunction("Audio", "playAudio", 1, "test.mp3");
 
 	Nexus::Scene testScene("Test Scene");
 
@@ -58,6 +58,7 @@ int main() {
 	Nexus::Shader frag("../shaders/frag.gl","../shaders/frag.spv");
 
 	Nexus::GameObject gameObject("Test Object");
+
 
 	std::vector<Nexus::Vertex> verts = {
 		{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},

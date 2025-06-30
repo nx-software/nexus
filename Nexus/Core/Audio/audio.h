@@ -41,6 +41,6 @@ namespace Nexus{
 
         void initAudio();
 
-        void playAudio(std::string file);
+        void playAudio(const char* file);
     };
 }
