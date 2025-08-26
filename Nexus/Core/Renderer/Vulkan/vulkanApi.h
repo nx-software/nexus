@@ -26,8 +26,6 @@
 #include <limits>
 #include <algorithm>
 
-#define VULKAN_ENABLED 1
-
 #include "../renderApi.h"
 #include "../../../Engine/config.h"
 //#include "../shader.h"
