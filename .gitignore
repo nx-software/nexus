@@ -6,6 +6,7 @@
 
 build
 
+
 # ignore wakatime
 .wakatime-project
 
