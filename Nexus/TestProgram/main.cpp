@@ -9,6 +9,7 @@
 #include "../Engine/camera.h"
 #include "../Engine/scene.h"
 #include "../Engine/module.h"
+#include "../Core/Renderer/texture.h"
 
 // For basic rotation of our object
 #define GLM_FORCE_RADIANS
@@ -56,6 +57,9 @@ int main() {
 	// Since we use the same shader for both of these objects, just make one
 	Nexus::Shader vert("../shaders/vertex.gl", "../shaders/vert.spv");
 	Nexus::Shader frag("../shaders/frag.gl","../shaders/frag.spv");
+	
+	// Load texture
+	Nexus::Texture* tex = new Nexus::Texture("../images/weezer.jpg");
 
 	Nexus::GameObject gameObject("Test Object");
 
@@ -72,6 +76,7 @@ int main() {
 	};
 
 	gameObject.mesh = new Nexus::Mesh(verts, inds);
+	gameObject.texture = tex;
 	gameObject.setVertShader(&vert);
 	gameObject.setFragShader(&frag);
 
