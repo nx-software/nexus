@@ -26,6 +26,13 @@
 #include <limits>
 #include <algorithm>
 
+#define VULKAN_ENABLED 1
+
+#include "../renderApi.h"
+#include "../../../Engine/config.h"
+//#include "../shader.h"
+#include "../../../Engine/gameObject.h"
+
 #if VULKAN_ENABLED == 1
 #ifdef __linux__
 #include <xcb/xcb.h>
@@ -33,15 +40,10 @@
 #include <vulkan/vulkan_xcb.h>
 #include <X11/Xlib-xcb.h>
 #define GLFW_EXPOSE_NATIVE_X11
-#include <GLFW/glfw3.h>
+//#include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 #endif
 #endif
-
-#include "../renderApi.h"
-#include "../../../Engine/config.h"
-//#include "../shader.h"
-#include "../../../Engine/gameObject.h"
 
 // Logging
 

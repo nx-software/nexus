@@ -1,0 +1,3 @@
+/home/segfault/nexus/build/CMakeFiles/Nexus.dir
+/home/segfault/nexus/build/CMakeFiles/edit_cache.dir
+/home/segfault/nexus/build/CMakeFiles/rebuild_cache.dir

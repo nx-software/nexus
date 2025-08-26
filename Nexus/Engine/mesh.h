@@ -20,7 +20,7 @@
 
 #include "config.h"
 #if VULKAN_ENABLED == 1
-#include <vulkan\vulkan.h>
+#include <vulkan/vulkan.h>
 #endif
 
 #include <array>
