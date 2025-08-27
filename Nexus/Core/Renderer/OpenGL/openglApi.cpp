@@ -16,7 +16,6 @@ Nexus::OpenGLAPI::OpenGLAPI(GLFWwindow* window) {
 	glViewport(0, 0, width, height);
 
 	this->window = window;
-	printf("OpenGL init!\n");
 }
 
 void Nexus::OpenGLAPI::InitConnectionToWindow(GLFWwindow* window) {
@@ -79,14 +78,8 @@ void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
 		// Bind the Index buffer
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glShader.EBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, gm->mesh->getIndsRealSize(), gm->mesh->packInds(), GL_STATIC_DRAW);
-
-		printf("====Vertex Info====\nSize of Vertex array: %d | Size of Index Array: %d\nData: %f %d\n", gm->mesh->getVertsRealSize(), gm->mesh->getIndsRealSize(), gm->mesh->packVerts()[4], gm->mesh->packInds()[1]);
 		
 		float* vals = gm->mesh->packVerts();
-		printf("%d\n", gm->mesh->getVertsRealSize());
-		for (int i = 0; i < gm->mesh->getVertsRealSize() / sizeof(float); i++) {
-			printf("%f ", vals[i]);
-		}
 
 		// Attributes!
 		// Position

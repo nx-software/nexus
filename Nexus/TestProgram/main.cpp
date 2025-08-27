@@ -37,7 +37,7 @@ int main() {
 		break;
 	}
 #endif
-#ifdef __linux
+#ifdef __linux__
 	printf("O for OpenGL, nothing for Vulkan:");
 	if(getchar() == 'o'){
 		api = Nexus::RENDER_GL;

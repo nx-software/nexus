@@ -38,7 +38,6 @@
 #include <vulkan/vulkan_xcb.h>
 #include <X11/Xlib-xcb.h>
 #define GLFW_EXPOSE_NATIVE_X11
-//#include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 #endif
 #endif

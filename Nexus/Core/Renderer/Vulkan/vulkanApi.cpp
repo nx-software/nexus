@@ -1286,7 +1286,6 @@ void Nexus::VulkanAPI::DrawFrame(Scene* scene) {
 
 
 void Nexus::VulkanAPI::debugPrint(std::string caller, std::string text, int level) {
-	printf("%s - %s\n",caller.c_str(), text.c_str());
 #if GRAPHICS_LOG == 1
 	switch (level) {
 	case LOG_INFO:
