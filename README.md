@@ -71,8 +71,8 @@ Currently, the output should look like this:
 ```
 
 ### Linux
-Ever since I converted this stuff into 3 DLLs I haven't tested it out on Linux. <br> 
-I imagine the CMake file should compile everything into a single ELF though.
+CMake files have been generated thanks to the SLN to CMake converter. <br>
+Create a folder called build and then run the usual CMake commands.
 
 ## TO DO LIST:
 - [ ] - [ ] `Module` : Make modules cross platform. Right now only Windows supports them since it's just DLLs
