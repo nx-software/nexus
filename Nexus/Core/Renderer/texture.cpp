@@ -1,3 +1,8 @@
+// Putting this here 
+// because MSVC doesn't like
+// texture.h having this in it??
+#define STB_IMAGE_IMPLEMENTATION
+
 #include "texture.h"
 
 Nexus::Texture::Texture(std::string filePath) {
