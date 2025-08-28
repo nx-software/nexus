@@ -9,6 +9,8 @@ Nexus::OpenGLAPI::OpenGLAPI(GLFWwindow* window) {
 		Error("OpenGL: Failed to init GLAD!");
 	}
 
+	PLOG_DEBUG << "OpenGL: GLAD Initilized!";
+
 	// Get window size
 	glfwGetWindowSize(window, &width, &height);
 
@@ -23,10 +25,12 @@ void Nexus::OpenGLAPI::InitConnectionToWindow(GLFWwindow* window) {
 }
 
 GLFWframebuffersizefun Nexus::OpenGLAPI::SetupWindowResize() {
+	PLOG_DEBUG << "OpenGL: Setting up window resize...";
 	return Nexus::setupOpenGLFrameBufferCallback;
 }
 
 void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
+	PLOG_DEBUG << "OpenGL: Initilize shaders for new scene...";
 	for (auto& gm : scene->getObjects()) {
 		// Compile vertex shader
 		unsigned int vShader = glCreateShader(GL_VERTEX_SHADER);
@@ -36,6 +40,7 @@ void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
 		glCompileShader(vShader);
 		// Did it compile correctly...
 		checkShaderComp(vShader);
+		PLOG_DEBUG << "OpenGL: Vertex shader on " << gm->getName() << " compiled.";
 		// Compile fragment shader
 		unsigned int fShader = glCreateShader(GL_FRAGMENT_SHADER);
 		std::string fCodeInter = generateStringFromArrayShaderCode(gm->getFragShader()->readSource());
@@ -44,6 +49,7 @@ void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
 		glCompileShader(fShader);
 		// Did it compile correctly...
 		checkShaderComp(fShader);
+		PLOG_DEBUG << "OpenGL: Fragment shader on " << gm->getName() << " compiled.";
 
 		// Shader program !
 		unsigned int sProgram = glCreateProgram();
@@ -63,6 +69,9 @@ void Nexus::OpenGLAPI::InitShaders(Scene* scene) {
 		// Add it to our newly created OpenGL shader !
 		OpenGLShader glShader;
 		glShader.shaderProgram = sProgram;
+
+		PLOG_DEBUG << "OpenGL: Shader program for " << gm->getName() << " created.";
+
 
 		// Lets get our data in !
 		glGenVertexArrays(1, &(glShader.VAO));

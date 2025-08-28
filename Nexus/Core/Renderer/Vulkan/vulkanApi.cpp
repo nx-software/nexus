@@ -313,7 +313,7 @@ void Nexus::VulkanAPI::InitShaders(Scene* scene){
 		gm->gShader = new VulkanShader(vkShader);
 
 
-		debugPrint("Nexus::VulkanAPI::InitShaders", std::string{"Loaded 1 object (" + gm->getName() + ")"}, 0);
+		PLOG_DEBUG << std::string{"Loaded 1 object (" + gm->getName() + ")"};
 	}
 
 
@@ -359,7 +359,7 @@ void Nexus::VulkanAPI::vulkanCreateInstance() {
 	if(validLayer && !checkValidLayer()){
 		Error("Vulkan: Validation layers requested but not supported");
 	}else if(validLayer){
-		debugPrint("Nexus::VulkanAPI::vulkanCreateInstance", "Validation layers supported.", 0);
+		PLOG_DEBUG << "Validation layers supported.";
 	}
 	VkInstanceCreateInfo crInfo{};
 	crInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -410,7 +410,7 @@ void Nexus::VulkanAPI::vulkanDevicePick() {
 			VkPhysicalDeviceProperties vkProps;
 			vkGetPhysicalDeviceProperties(dev, &vkProps);
 			chosenGraphicsCard.name = std::string{vkProps.deviceName};
-			debugPrint("Nexus::VulkanAPI::vulkanDevicePick", std::string{"Chose device " + std::string{vkProps.deviceName}}, LOG_INFO);
+			PLOG_DEBUG << std::string{"Chose device " + std::string{vkProps.deviceName}};
 			vkPhysDevice = dev;
 			break;
 		}
@@ -670,13 +670,13 @@ VkSurfaceFormatKHR Nexus::VulkanAPI::chooseSwapSurfFormat(const std::vector<VkSu
 	// Check if its avaliable
 	for (const auto& avalFormat : avaForm) {
 		if (avalFormat.format == VK_FORMAT_B8G8R8A8_SRGB && avalFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
-			debugPrint("Nexus::VulkanAPI::chooseSwapSurfFormat", "Got prefered surface format and color space!", LOG_INFO);
+			PLOG_DEBUG << "Got prefered surface format and color space!";
 			// Got it
 			return avalFormat;
 		}
 	}
 	// gpu dosent have it. ugh. Fine, just use whats avlaible
-	debugPrint("Nexus::VulkanAPI::chooseSwapSurfFormat", "Did not get prefered surface format and color space!", LOG_WARNING);
+	PLOG_WARNING << "Did not get prefered surface format and color space!";
 	return avaForm[0];
 }
 
@@ -685,12 +685,12 @@ VkPresentModeKHR Nexus::VulkanAPI::chooseSwapPresMode(const std::vector<VkPresen
 	
 	for (const auto& avalPres : avaPres) {
 		if (avalPres == vkPreferedSwapPresentationMode) {
-			debugPrint("Nexus::VulkanAPI::chooseSwapPresMode", "Got prefered presentation mode.", LOG_INFO);
+			PLOG_DEBUG << "Got prefered presentation mode.";
 			// Got it
 			return avalPres;
 		}
 	}
-	debugPrint("Nexus::VulkanAPI::chooseSwapPresMode", "Did not get prefered presentation mode! Defaulting to FIFO.", LOG_WARNING);
+	PLOG_WARNING << "Did not get prefered presentation mode! Defaulting to FIFO.";
 	return VK_PRESENT_MODE_FIFO_KHR;
 }
 
@@ -700,7 +700,7 @@ VkExtent2D Nexus::VulkanAPI::chooseSwapExt(const VkSurfaceCapabilitiesKHR& caps)
 		return caps.currentExtent;
 	}
 	else {
-		debugPrint("Nexus::VulkanAPI::chooseSwapExt", "caps.currentExtent.width is equal to 0xFFFFFFFF, manually setting swap extent.", LOG_INFO);
+		PLOG_DEBUG << "caps.currentExtent.width is equal to 0xFFFFFFFF, manually setting swap extent.";
 		// We have to manually set it
 		// Create temp extent
 		VkExtent2D tmp = {
@@ -879,7 +879,7 @@ void Nexus::VulkanAPI::vulkanCreateCommandPool(){
 		Error("Vulkan: Failed to create command pool!");
 	}
 
-	debugPrint("Nexus::VulkanAPI::vulkanCreateCommandPool", "Created Command Pool", 0);
+	PLOG_DEBUG << "Created Command Pool";
 
 	// Create command buffer while we're at it
 	vkCommandBuffer.resize(MAX_FRAME_IN_FLIGHT);
@@ -894,7 +894,7 @@ void Nexus::VulkanAPI::vulkanCreateCommandPool(){
 		Error("Vulkan: Failed to allocate command buffer!");
 	}
 
-	debugPrint("Nexus::VulkanAPI::vulkanCreateCommandPool", "Despite the function name, allocation of command buffer was successful.", 0);
+	PLOG_DEBUG << "Despite the function name, allocation of command buffer was successful.";
 }
 
 void Nexus::VulkanAPI::vulkanCreateVertexBuffer() {
