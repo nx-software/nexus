@@ -13,7 +13,7 @@ void Nexus::Audio::playAudio(const char* file) {
 }
 
 //
-// Module C styel accessors 
+// Module C style accessors 
 //
 
 extern "C" AUDIO_API Nexus::Audio* createClass() {

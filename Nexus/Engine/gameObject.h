@@ -20,6 +20,7 @@
 
 #include "../Core/Renderer/shader.h"
 #include "../Core/Renderer/renderer.h"
+#include "../Core/Renderer/texture.h"
 #include "transform.h"
 #include "mesh.h"
 
@@ -59,6 +60,9 @@ namespace Nexus{
 
         // Our current mesh
         Mesh* mesh = nullptr;
+
+        // Our 1 texture (once UV mapping hits the scene we can get more)
+        Texture* texture = nullptr;
 
         // Setters
         void setId(int id){

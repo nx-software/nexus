@@ -18,10 +18,20 @@
 */
 #pragma once
 
+#ifdef _WIN32
+#ifdef RENDERER_EXPORTS
+#define RENDERER_API __declspec(dllexport)
+#else
+#define RENDERER_API __declspec(dllexport)
+#endif
+#else
+#define RENDERER_API
+#endif
+
 #include "../../CrashHandler/CrashHandler.h"
 
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+
 
 #include <string>
 
@@ -31,18 +41,18 @@ namespace Nexus {
 		int tWidth, tHeight, tChannels;
 		stbi_uc* pixels;
 	public:
-		Texture(std::string filePath);
+		RENDERER_API Texture(std::string filePath);
 
 		// Getters
-		int getWidth() {
+		RENDERER_API int getWidth() {
 			return tWidth;
 		}
 
-		int getHeight() {
+		RENDERER_API int getHeight() {
 			return tHeight;
 		}
 
-		int getChannels() {
+		RENDERER_API int getChannels() {
 			return tChannels;
 		}
 	};

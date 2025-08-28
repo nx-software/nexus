@@ -280,6 +280,9 @@ namespace Nexus {
 		// Shaders
 		VkShaderModule createShaderModule(const std::vector<char>& code);
 
+		// Textures
+
+
 
 		// Create buffer
 		void vulkanCreateBuffer(VkDeviceSize devSize, VkBufferUsageFlags usage, VkMemoryPropertyFlags props, VkBuffer& buffer, VkDeviceMemory& bufMem);
