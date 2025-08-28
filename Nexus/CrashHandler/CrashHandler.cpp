@@ -13,8 +13,11 @@ CRASH_HANDLER_API Nexus::Error::Error(std::string text) {
 	title += "Fatal Error!"
 #endif
 
-	std::cout << title << " " << text << "\n";
-	
+	static plog::ColorConsoleAppender<plog::TxtFormatter> colorConsoleAppender;
+	plog::init(plog::debug).addAppender(&colorConsoleAppender);
+
+	PLOG_ERROR << "\n====================\n" << title << "\n====================\n" << text << "\n";
+
 	// Process for displaying windows/errors varies by system
 
 	// Windows

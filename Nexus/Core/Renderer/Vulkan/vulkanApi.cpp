@@ -1289,7 +1289,7 @@ void Nexus::VulkanAPI::debugPrint(std::string caller, std::string text, int leve
 #if GRAPHICS_LOG == 1
 	switch (level) {
 	case LOG_INFO:
-		PLOG_INFO << caller << " : " << text;
+		PLOG_DEBUG << caller << " : " << text;
 		break;
 	case LOG_WARNING:
 		PLOG_WARNING << caller << " : " << text;

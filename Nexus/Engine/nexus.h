@@ -47,6 +47,7 @@ namespace Nexus {
 
 #define MAJOR_VER_NUM 0
 #define MINOR_VER_NUM 0
+#define COPYRIGHT_YEARS "2024-2025"
 
 	class ENGINE_API GameProperties {
 	public:

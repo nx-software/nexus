@@ -37,13 +37,14 @@ int main() {
 	}
 #endif
 #ifdef __linux__
+	printf("==Nexus Test Program API select==\n");
 	printf("O for OpenGL, nothing for Vulkan:");
 	if(getchar() == 'o'){
 		api = Nexus::RENDER_GL;
 	}else{
 		api = Nexus::RENDER_VULKAN;
 	}
-	printf("\n");
+	printf("Loading...\n");
 #endif
 	// Create properties so Nexus knows whats up
 	Nexus::GameProperties gm;

@@ -10,10 +10,11 @@ Nexus::Engine::Engine(GameProperties gameProperties) {
 	// Init logging
 #if LOGGING == 1
 	static plog::RollingFileAppender<plog::TxtFormatter> fileAppender("nexusLog.txt");
-	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
-	plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
+	static plog::ColorConsoleAppender<plog::TxtFormatter> colorConsoleAppender;
+	plog::init(plog::debug, &fileAppender).addAppender(&colorConsoleAppender);
 
-	PLOG_DEBUG << "Nexus Init - Version " << MAJOR_VER_NUM << "." << MINOR_VER_NUM;
+	PLOG_DEBUG << "NX-Software Nexus Engine - Version " << MAJOR_VER_NUM << "." << MINOR_VER_NUM;
+	PLOG_DEBUG << "(c) NX-Software {@Electro-Corp} " << COPYRIGHT_YEARS << "\n";
 #endif
 	// Init Renderer
 	renderer = new Renderer(gameProperties.gameName, gameProperties.windowHeight, gameProperties.windowWidth, Renderers(gameProperties.renderer));
