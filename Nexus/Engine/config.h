@@ -17,10 +17,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
+
 // Logging
 #define LOGGING 1
 #define GRAPHICS_LOG 1
 
-// Grapics
+// Graphics
 #define VULKAN_ENABLED 1
 #define OPENGL 1

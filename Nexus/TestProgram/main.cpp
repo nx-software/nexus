@@ -94,9 +94,9 @@ int main() {
 
 	// Next object
 	std::vector<Nexus::Vertex> verts_new = {
-		{{-1.0f, -1.0f, 0.0f}, {0.0f, 1.0f, 0.3f}},
-		{{0.0f, -0.0f, 0.0f}, {0.0f, 1.0f, 0.5f}},
-		{{-1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}}
+		{{-0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.3f}},
+		{{0.0f, -0.0f, 1.0f}, {0.0f, 1.0f, 0.5f}},
+		{{-0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 1.0f}}
 	};
 
 	std::vector<uint16_t> inds_new = {

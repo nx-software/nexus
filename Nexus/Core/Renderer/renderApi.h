@@ -1,6 +1,6 @@
 /*
 	NX-Software Nexus 3D Engine
-	renderApi.h - Abstract class for graphic API implementation
+	renderApi.h - Abstract class for graphic API implementations
 	Copyright (C) 2025 Electro-Corp
 
 	This program is free software: you can redistribute it and/or modify

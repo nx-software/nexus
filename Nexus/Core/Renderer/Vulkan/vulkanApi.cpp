@@ -65,6 +65,8 @@ void Nexus::VulkanAPI::CleanScene(Scene* scene){
 
 
 void Nexus::VulkanAPI::Clean() {
+	PLOG_DEBUG << "Cleaning up Vulkan...";
+
 	for (size_t i = 0; i < MAX_FRAME_IN_FLIGHT; i++) {
 		// Destroy semaphores
 		vkDestroySemaphore(vkDevice, vkImageAvaSem[i], nullptr);
@@ -357,7 +359,7 @@ bool Nexus::VulkanAPI::checkValidLayer(){
 void Nexus::VulkanAPI::vulkanCreateInstance() {
 	// check if validation layers
 	if(validLayer && !checkValidLayer()){
-		Error("Vulkan: Validation layers requested but not supported");
+		Error("Vulkan: Validation layers requested but not supported!");
 	}else if(validLayer){
 		PLOG_DEBUG << "Validation layers supported.";
 	}
